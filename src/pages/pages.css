@@ -1,0 +1,13 @@
+/* Login */
+.main-container {
+  margin: 50px 50px 50px 50px;
+  padding: 20px 50px 20px 50px;
+  box-shadow: inset 1px 1px 2px 2px #b8b9be, inset -1px -0px 1px #ffffff;
+  border-radius: 10px;
+  background-color: rgb(252, 252, 252);
+  min-height: 67vh;
+}
+
+.container-header {
+  padding: 10px;
+}
