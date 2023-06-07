@@ -6,7 +6,7 @@ const Pishnihad = () => {
   return (
     <>
       <Header />
-      <div className="main-container">
+      <div className="main-container text-right">
         {" "}
         <h1>نوی پیشنهاد</h1>{" "}
       </div>

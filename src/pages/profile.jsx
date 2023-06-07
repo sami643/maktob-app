@@ -7,7 +7,7 @@ const Profile = () => {
   return (
     <>
       <Header />
-      <div className="main-container">
+      <div className="main-container text-right">
         {" "}
         <h1>Profile</h1>{" "}
       </div>

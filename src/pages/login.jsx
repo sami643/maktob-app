@@ -8,7 +8,7 @@ const Login = () => {
   return (
     <>
       <Header />
-      <div className="main-container">
+      <div className="main-container text-right">
         {" "}
         <h1>Login</h1> <Divider light />
         fdgsdfgfsdg

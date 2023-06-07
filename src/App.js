@@ -15,6 +15,7 @@ const App = () => {
     <BrowserRouter>
       <Sidebar>
         <Routes>
+          <Route path="/" element={<Maktob />} />
           <Route path="/main" element={<Maktob />} />
           <Route path="/maktob" element={<Maktob />} />
           <Route path="/maktoblist" element={<MaktobList />} />

@@ -6,11 +6,10 @@ const Header = () => {
       <div className="header-item">
         <h4> د تخنیکی او مسلکی زده کړو اداره</h4>
       </div>
-      <div className="header-item">
+      <div className="header-item p-0">
         <h3>مکتوب/پیشنهاد</h3>
       </div>
-      <div></div>
-      <img src={Logo} width="3%" className="logo" />
+      <img src={Logo} width="65px" height="65px" className="logo" />
     </div>
   );
 };

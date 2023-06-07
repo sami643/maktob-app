@@ -49,7 +49,7 @@ const Sidebar = ({ children }) => {
   return (
     <>
       {login ? (
-        <div className="container">
+        <div className="container-1">
           <div style={{ width: isOpen ? "200px" : "60px" }} className="sidebar">
             <div className="top_section">
               <h1
@@ -74,6 +74,7 @@ const Sidebar = ({ children }) => {
                 key={index}
                 className="link"
                 activeclassName="active"
+                style={{ textDecoration: "none" }}
               >
                 <div className="icon">{item.icon}</div>
                 <div

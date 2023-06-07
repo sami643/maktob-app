@@ -7,10 +7,9 @@ const LogOut = () => {
   return (
     <>
       <Header />
-      <div className="main-container">
+      <div className="main-container text-right">
         {" "}
-        <h1>Logout</h1> <Divider  />
-        
+        <h1>Logout</h1> <Divider />
       </div>
       <Footer />
     </>

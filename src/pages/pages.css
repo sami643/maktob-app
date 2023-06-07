@@ -5,9 +5,22 @@
   box-shadow: inset 1px 1px 2px 2px #b8b9be, inset -1px -0px 1px #ffffff;
   border-radius: 10px;
   background-color: rgb(252, 252, 252);
-  min-height: 67vh;
+  min-height: 72vh;
+  direction: rtl;
 }
 
 .container-header {
   padding: 10px;
+  direction: rtl;
+}
+
+/* Buttons */
+
+.button-1 {
+  margin: 2%;
+  padding: 0.5% 2.5% 0.5% 2.5%;
+  font-size: 15px;
+  /* color: black; */
+  font-weight: bold; 
+
 }

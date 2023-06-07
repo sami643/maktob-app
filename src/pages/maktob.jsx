@@ -1,45 +1,120 @@
 import React from "react";
+import { useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { Divider } from "@material-ui/core";
 import { Formik, Field, Form } from "formik";
-import { Container, Row, Col, Card, CardBody, Button } from "reactstrap";
-
+import DatePicker from "react-multi-date-picker";
+import arabic from "react-date-object/calendars/arabic";
+import arabic_ar from "react-date-object/locales/arabic_ar";
 import "./pages.css";
+
 const Maktob = () => {
+  const handleChange = (values) => {
+    console.log("Values", values);
+    var input = document.getElementById("maktobDate");
+    console.log("Input", input.value);
+  };
+
   return (
     <>
       <Header />
 
-      <div className="main-container">
-        {" "}
-        <h1 className="container-header">مکتوب</h1> <Divider />
+      <div className="main-container text-right">
+        <h1 className="container-header">مکتوب</h1>
+        <Divider />
         <Formik
-          initialValues={{ name: "Rahimi", email: "sdfsdf" }}
-          onSubmit={async (values) => {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            alert(JSON.stringify(values, null, 2));
+          initialValues={{
+            maktobNo: "23423",
+            maktobDate: "",
+            subject: "ALmart",
+            context: "contect",
           }}
+          onSubmit={handleChange}
         >
-          <Form>
-            <Row className="form-body">
-              <Col>
-                {" "}
-                <Field name="name" type="text" />
-              </Col>
-              <Col>
-                {" "}
-                <textarea name="email" type="email" />
-              </Col>
-              <Col>
-                {" "}
-                <Button type="submit">ذخیره وپرنت</Button>
-              </Col>
-            </Row>
-          </Form>
+          {({ values, setFieldValue, setFieldTouched }) => (
+            <Form className="m-5">
+              <div className="row mb-4">
+                <div className="col">
+                  <div className="form-outline">
+                    <label className="form-label mr-3" htmlFor="maktobNo">
+                      د مکتوب ګڼه/شماره
+                    </label>
+                    <input
+                      type="text"
+                      id="maktobNo"
+                      name="maktobNo"
+                      className="form-control"
+                      value={values.maktobNo}
+                      onChange={(e) =>
+                        setFieldValue("maktobNo", e.target.value)
+                      }
+                      onBlur={() => setFieldTouched("maktobNo", true)}
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-outline">
+                    <label className="form-label mr-3" htmlFor="maktobDate">
+                      نیټه/تاریخ
+                    </label>
+                    <br />
+                    <DatePicker
+                      style={{
+                        width: "inherit",
+                        padding: "16px",
+                        marginTop: "-1px",
+                      }}
+                      calendar={arabic}
+                      locale={arabic_ar}
+                      id="maktobDate"
+                      name="maktobDate"
+                      value={values.maktobDate}
+                      onChange={setFieldValue}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-outline mb-4">
+                <label className="form-label mr-3" htmlFor="subject">
+                  موضوع
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  className="form-control"
+                  value={values.subject}
+                  onChange={(e) => setFieldValue("subject", e.target.value)}
+                  onBlur={() => setFieldTouched("subject", true)}
+                />
+              </div>
+
+              <div className="form-outline mb-4">
+                <label className="form-label mr-3" htmlFor="context">
+                  متن
+                </label>
+                <textarea
+                  className="form-control"
+                  id="context"
+                  name="context"
+                  rows="4"
+                  value={values.context}
+                  onChange={(e) => setFieldValue("context", e.target.value)}
+                  onBlur={() => setFieldTouched("context", true)}
+                ></textarea>
+              </div>
+
+              <div className="text-left">
+                <button type="submit" className="btn btn-success button-1">
+                  ثبت او پرنت
+                </button>
+              </div>
+            </Form>
+          )}
         </Formik>
       </div>
-
       <Footer />
     </>
   );
