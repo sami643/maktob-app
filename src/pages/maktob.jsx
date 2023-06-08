@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import { Divider } from "@material-ui/core";
+import { Checkbox, Divider } from "@material-ui/core";
 import { Formik, Field, Form } from "formik";
 import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
@@ -15,6 +15,8 @@ const Maktob = () => {
     var input = document.getElementById("maktobDate");
     console.log("Input", input.value);
   };
+
+  const [btnChecked, setBtnChecked] = useState(false);
 
   return (
     <>
@@ -29,6 +31,7 @@ const Maktob = () => {
             maktobDate: "",
             subject: "ALmart",
             context: "contect",
+            recipient: "Recipient",
           }}
           onSubmit={handleChange}
         >
@@ -39,6 +42,15 @@ const Maktob = () => {
                   <div className="form-outline">
                     <label className="form-label mr-3" htmlFor="maktobNo">
                       د مکتوب ګڼه/شماره
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -57,6 +69,15 @@ const Maktob = () => {
                   <div className="form-outline">
                     <label className="form-label mr-3" htmlFor="maktobDate">
                       نیټه/تاریخ
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
                     </label>
                     <br />
                     <DatePicker
@@ -76,24 +97,117 @@ const Maktob = () => {
                 </div>
               </div>
 
-              <div className="form-outline mb-4">
-                <label className="form-label mr-3" htmlFor="subject">
-                  موضوع
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  className="form-control"
-                  value={values.subject}
-                  onChange={(e) => setFieldValue("subject", e.target.value)}
-                  onBlur={() => setFieldTouched("subject", true)}
-                />
+              <div className="row ">
+                {!btnChecked ? (
+                  <div className="form-outline col">
+                    <label className="form-label mr-3" htmlFor="subject">
+                      مخاطب
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <select
+                      // class=" "
+                      style={{ height: "35px" }}
+                      className="form-control form-select-lg mb-3"
+                      aria-label=".form-select-lg example"
+                    >
+                      <option selected>Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                ) : (
+                  <div className="form-outline  col">
+                    <label className="form-label mr-3" htmlFor="subject">
+                      مخاطب
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      id="recipient"
+                      name="recipient"
+                      className="form-control"
+                      value={values.recipient}
+                      onChange={(e) =>
+                        setFieldValue("recipient", e.target.value)
+                      }
+                      onBlur={() => setFieldTouched("recipient", true)}
+                    />
+                  </div>
+                )}
+
+                <div className="form-outline mb-4 col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    موضوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    className="form-control"
+                    value={values.subject}
+                    onChange={(e) => setFieldValue("subject", e.target.value)}
+                    onBlur={() => setFieldTouched("subject", true)}
+                  />
+                </div>
               </div>
 
-              <div className="form-outline mb-4">
+              <div class="form-check ">
+                <div style={{ marginTop: "-12px", marginRight: "4px" }}>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckIndeterminate"
+                    onChange={(e) => setBtnChecked(e.target.checked)}
+                  />
+                </div>
+                <label
+                  class="form-check-label"
+                  for="flexCheckIndeterminate"
+                  style={{ marginInline: "24px", fontSize: "11px" }}
+                >
+                  په لست کې شتون نه لري
+                </label>
+              </div>
+
+              <div className="form-outline mb-4 mt-5">
                 <label className="form-label mr-3" htmlFor="context">
                   متن
+                  <span
+                    style={{
+                      color: "red",
+                      marginInline: "5px",
+                      paddingTop: "5px",
+                    }}
+                  >
+                    *
+                  </span>
                 </label>
                 <textarea
                   className="form-control"
@@ -105,9 +219,28 @@ const Maktob = () => {
                   onBlur={() => setFieldTouched("context", true)}
                 ></textarea>
               </div>
-
+              <div>
+                <h3>کاپي:</h3>{" "}
+              </div>
+              <div class="form-check mr-4">
+                <div className="mr-">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckDefault"
+                  />
+                </div>
+                <label
+                  class="form-check-label mr-5 "
+                  for="flexCheckDefault"
+                  checked
+                >
+                  ریاست منابع بشری
+                </label>
+              </div>
               <div className="text-left">
-                <button type="submit" className="btn btn-success button-1">
+                <button type="submit" className="btn btn-primary button-1">
                   ثبت او پرنت
                 </button>
               </div>
