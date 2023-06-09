@@ -1,7 +1,7 @@
 import "./components-style.css";
 const Footer = () => {
   return (
-    <footer class="container-fluid">
+    <footer class="container-fluid pr-0 pl-0">
       <div className="footer-item" id="footer">
         <div>
           <span className="" style={{ fontWeight: "bold" }}>

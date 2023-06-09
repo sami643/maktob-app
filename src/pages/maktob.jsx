@@ -7,6 +7,7 @@ import { Formik, Field, Form } from "formik";
 import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
+import { presidencies } from "./../assets/data/data.js";
 import "./pages.css";
 
 const Maktob = () => {
@@ -17,6 +18,38 @@ const Maktob = () => {
   };
 
   const [btnChecked, setBtnChecked] = useState(false);
+  const [selectedPresidencies, setSelectedPresidencies] = useState([]);
+
+  const selectAllPresidencies = () => {
+    if (selectedPresidencies.length === presidencies.length) {
+      // If all checkboxes are already selected, unselect all
+      setSelectedPresidencies([]);
+    } else {
+      // Otherwise, select all checkboxes
+      const allPresidencyLabels = presidencies.map((item) => item.label);
+      setSelectedPresidencies(allPresidencyLabels);
+    }
+  };
+
+  const handleCheckboxChange = (label) => {
+    if (selectedPresidencies.includes(label)) {
+      // If the checkbox is already selected, remove it from the selectedPresidencies state
+      setSelectedPresidencies(
+        selectedPresidencies.filter((item) => item !== label)
+      );
+    } else {
+      // Otherwise, add it to the selectedPresidencies state
+      setSelectedPresidencies([...selectedPresidencies, label]);
+    }
+  };
+
+  const columns = [];
+  const itemsPerColumn = 7;
+
+  for (let i = 0; i < presidencies.length; i += itemsPerColumn) {
+    const columnItems = presidencies.slice(i, i + itemsPerColumn);
+    columns.push(columnItems);
+  }
 
   return (
     <>
@@ -220,29 +253,70 @@ const Maktob = () => {
                 ></textarea>
               </div>
               <div>
-                <h3>کاپي:</h3>{" "}
+                <h3>کاپي:</h3>
               </div>
-              <div class="form-check mr-4">
-                <div className="mr-">
+              {/* Copy to */}
+              <div className="pb-5">
+                <div className="form-check mr-4 bg-primary p-1 rounded pr-3">
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
+                    id="selectAllCheckbox"
+                    checked={
+                      selectedPresidencies.length === presidencies.length
+                    }
+                    onChange={selectAllPresidencies}
                   />
+                  <label
+                    className="form-check-label mr-4 mb-2  "
+                    htmlFor="selectAllCheckbox"
+                  >
+                    د ټولو انتخاب
+                  </label>
                 </div>
-                <label
-                  class="form-check-label mr-5 "
-                  for="flexCheckDefault"
-                  checked
-                >
-                  ریاست منابع بشری
-                </label>
+                <div className="row">
+                  {columns.map((column, columnIndex) => (
+                    <div className="col" key={columnIndex}>
+                      {column.map((item, itemIndex) => (
+                        <div className="form-outline" key={itemIndex}>
+                          <div className="form-check mr-5">
+                            <div className="">
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                value=""
+                                id={`flexCheckDefault${itemIndex}`}
+                                checked={selectedPresidencies.includes(
+                                  item.label
+                                )}
+                                onChange={() =>
+                                  handleCheckboxChange(item.label)
+                                }
+                              />
+                            </div>
+                            <label
+                              className="form-check-label mr-5"
+                              htmlFor={`flexCheckDefault${itemIndex}`}
+                            >
+                              {item.label}
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="text-left">
-                <button type="submit" className="btn btn-primary button-1">
-                  ثبت او پرنت
-                </button>
+              <div className="row">
+                <div className="text-left col"></div>
+                <div className="text-left col">
+                  <button type="submit" className="btn btn-primary button-1">
+                    ثبت
+                  </button>
+                  <button type="submit" className="btn btn-primary button-1">
+                    ثبت او پرنت
+                  </button>
+                </div>
               </div>
             </Form>
           )}

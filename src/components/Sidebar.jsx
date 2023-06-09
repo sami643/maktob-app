@@ -6,6 +6,7 @@ import {
   FaBookOpen,
   FaThList,
 } from "react-icons/fa";
+import "./components-style.css";
 
 import { NavLink } from "react-router-dom";
 

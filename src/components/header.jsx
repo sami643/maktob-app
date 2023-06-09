@@ -9,7 +9,7 @@ const Header = () => {
       <div className="header-item p-0">
         <h3>مکتوب/پیشنهاد</h3>
       </div>
-      <img src={Logo} width="65px" height="65px" className="logo" />
+      <img src={Logo} width="65px" height="50px" className="logo" />
     </div>
   );
 };
