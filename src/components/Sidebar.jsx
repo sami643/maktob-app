@@ -44,6 +44,11 @@ const Sidebar = ({ children }) => {
       name: "وتل",
       icon: <FaSignOutAlt />,
     },
+    {
+      path: "/login",
+      name: "login",
+      icon: <FaSignOutAlt />,
+    },
   ];
 
   const [login, setLogin] = useState(true);
