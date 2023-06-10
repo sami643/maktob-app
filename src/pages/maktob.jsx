@@ -51,6 +51,24 @@ const Maktob = () => {
     columns.push(columnItems);
   }
 
+  // For addin new copy options
+  const handleInputChange = (e, index) => {
+    const values = [...inputFields];
+    values[index] = e.target.value;
+    setInputFields(values);
+  };
+
+  const handleRemoveField = (index) => {
+    const values = [...inputFields];
+    values.splice(index, 1);
+    setInputFields(values);
+  };
+
+  const handleAddField = () => {
+    setInputFields([...inputFields, ""]);
+  };
+  const [inputFields, setInputFields] = useState([]); // Initialize with one empty input field
+
   return (
     <>
       <Header />
@@ -225,7 +243,7 @@ const Maktob = () => {
                   for="flexCheckIndeterminate"
                   style={{ marginInline: "24px", fontSize: "11px" }}
                 >
-                  په لست کې شتون نه لري
+                  په لست کې شتون نه لري؟
                 </label>
               </div>
 
@@ -251,6 +269,58 @@ const Maktob = () => {
                   onChange={(e) => setFieldValue("context", e.target.value)}
                   onBlur={() => setFieldTouched("context", true)}
                 ></textarea>
+              </div>
+
+              <div className="row ">
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    استونکی
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    className="form-control"
+                    value={values.subject}
+                    onChange={(e) => setFieldValue("subject", e.target.value)}
+                    onBlur={() => setFieldTouched("subject", true)}
+                  />
+                </div>
+
+                <div className="form-outline mb-4 col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    مرجع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    // class=" "
+                    style={{ height: "35px" }}
+                    className="form-control form-select-lg mb-3"
+                    aria-label=".form-select-lg example"
+                  >
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <h3>کاپي:</h3>
@@ -306,14 +376,51 @@ const Maktob = () => {
                     </div>
                   ))}
                 </div>
+                <div className="mt-5">
+                  <button
+                    className="btn bg-primary mt-3 mb-3 mr-5 ml-2"
+                    onClick={handleAddField}
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    +
+                  </button>
+                  <label className="">نور ریاستونه/آمریتونه</label>
+                </div>
+
+                {inputFields.map((value, index) => (
+                  <div className="col" key={index}>
+                    <div class="input-group options-input mr-4 ">
+                      <div>
+                        <input
+                          type="text"
+                          id="other"
+                          name="other"
+                          className="form-control"
+                          onChange={(e) => handleInputChange(e, index)}
+                          value={value}
+                        />
+                      </div>
+                      <div>
+                        <button
+                          className="btn bg-primary"
+                          onClick={() => handleRemoveField(index)}
+                          style={{ fontWeight: "bolder" }}
+                        >
+                          حذف
+                        </button>
+                      </div>{" "}
+                    </div>
+                  </div>
+                ))}
               </div>
+
               <div className="row">
                 <div className="text-left col"></div>
                 <div className="text-left col">
-                  <button type="submit" className="btn btn-primary button-1">
+                  <button type="submit" className="btn bg-primary button-1">
                     ثبت
                   </button>
-                  <button type="submit" className="btn btn-primary button-1">
+                  <button type="submit" className="btn bg-primary button-1">
                     ثبت او پرنت
                   </button>
                 </div>
