@@ -18,7 +18,7 @@
 
 .button-1 {
   margin: 2%;
-  padding: 0.5% 3.5% 0.5% 3.5%;
+  padding: 0.8% 3.5% 0.8% 3.5%;
   font-size: 15px;
   /* color: black; */
   font-weight: bold;
@@ -26,5 +26,9 @@
 
 .shadow {
   box-shadow: inset 1px 1px 2px 2px #b8b9be, inset -1px -0px 1px #ffffff;
+}
 
+.options-input {
+  display: flex;
+  flex-direction: row;
 }
