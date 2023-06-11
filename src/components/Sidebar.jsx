@@ -1,60 +1,40 @@
-import React, { useState } from "react";
-import {
-  FaBars,
-  FaUserAlt,
-  FaSignOutAlt,
-  FaBookOpen,
-  FaThList,
-} from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaBars } from "react-icons/fa";
 import "./components-style.css";
-
 import { NavLink } from "react-router-dom";
+import { sidebarMenuItem } from "./../assets/data/data.js";
+import { useLocation } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
+  console.log("Sidebar=========================");
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const menuItem = [
-    {
-      path: "/main",
-      name: "مکتوب",
-      icon: <FaBookOpen />,
-    },
-    {
-      path: "/maktoblist",
-      name: "د مکتوبونو ټولګه",
-      icon: <FaThList />,
-    },
-    {
-      path: "/pishnihad",
-      name: "پیشنهاد",
-      icon: <FaBookOpen />,
-    },
-    {
-      path: "/pishnihadlist",
-      name: "د پیشنهادونو ټولګه",
-      icon: <FaThList />,
-    },
-    {
-      path: "/profile",
-      name: "پروفایل",
-      icon: <FaUserAlt />,
-    },
-    {
-      path: "/productList",
-      name: "وتل",
-      icon: <FaSignOutAlt />,
-    },
-    {
-      path: "/login",
-      name: "login",
-      icon: <FaSignOutAlt />,
-    },
-  ];
+  const location = useLocation();
+  console.log("Current route:", location);
 
-  const [login, setLogin] = useState(true);
+  const shouldSidebarBeVisible = (pathname) => {
+    if (
+      pathname === "/pishnihadview" ||
+      pathname === "/maktobview" ||
+      pathname === "/login"
+    ) {
+      // THIS IS TRUE TEMPORARILY
+      return true;
+    }
+    return true;
+  };
+
+  const [isSidebarVisible, setIsSidebarVisible] = useState(
+    shouldSidebarBeVisible(location.pathname)
+  );
+
+  useEffect(() => {
+    setIsSidebarVisible(shouldSidebarBeVisible(location.pathname));
+  }, [location]);
+
   return (
     <>
-      {login ? (
+      {isSidebarVisible ? (
         <div className="container-1">
           <div style={{ width: isOpen ? "200px" : "60px" }} className="sidebar">
             <div className="top_section">
@@ -74,7 +54,7 @@ const Sidebar = ({ children }) => {
                 <FaBars onClick={toggle} />
               </div>
             </div>
-            {menuItem.map((item, index) => (
+            {sidebarMenuItem.map((item, index) => (
               <NavLink
                 to={item.path}
                 key={index}
