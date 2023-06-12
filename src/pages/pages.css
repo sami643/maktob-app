@@ -35,42 +35,83 @@
 
 .maktobviewcontainer {
   background-color: #e02121;
+  margin-inline: 3%;
 }
 
-.header-part {
+.header-body {
   display: flex;
   flex-direction: row;
 }
+.header_english {
+  font-style: italic;
+}
 
+.date {
+  display: flex;
+  flex-direction: row;
+  /* margin-left: 50px; */
+  margin-right: 850px;
+}
+
+.owner {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Printing Part */
 @media print {
   .maktobviewcontainer {
     margin-top: 0px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+  .header-body {
+    margin-top: 0px !important;
+    margin-left: 0px !important;
   }
   .print-button {
     display: none;
   }
-  .pashto_header {
-    width: 430px;
+  .pashto_headling_div {
+    min-width: 300px !important;
   }
-  .logo_1 {
-    height: 180px;
-    width: 180px;
-    margin-left: 10px !important;
+  .pashto_headling_img {
+    min-width: 250px !important;
+    margin-right: 10px !important ;
   }
-  .logo_2 {
-    height: 180px;
-    width: 180px;
-    margin-right: 10px !important;
-  }
-  .persian_header-text {
-    min-width: 303px !important;
-    font-size: 30px !important;
-    text-align: center !important;
+  .pashto_headline_text {
+    min-width: 250px !important;
+    font-size: 25px !important;
+    margin-right: 15px !important ;
   }
 
-  .pashto_header-text {
-    min-width: 303px !important;
-    font-size: 30px !important;
-    text-align: center !important;
+  .english_headline_div {
+    min-width: 300px;
+    max-width: 300px;
+    font-style: italic;
   }
+
+  .persian_headline_div {
+    min-width: 300px !important;
+  }
+  .persian_headline_img {
+    min-width: 250px !important;
+    margin-left: 10px !important ;
+  }
+  .persian_headline_text {
+    min-width: 250px !important;
+    font-size: 27px !important;
+    margin-left: 10px !important ;
+  }
+
+  /* .owner {
+    text-align: center;
+    font-weight: bold;
+    margin-top: -10px !important;
+  }
+  .date {
+    margin-top: -20px !important;
+    margin-left: -10px !important;
+  } */
+  /* /////////////////////////////////////// */
 }

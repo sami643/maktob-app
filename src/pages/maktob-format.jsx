@@ -11,37 +11,62 @@ const MaktobFormat = () => {
   };
   return (
     <>
-      <div className="container maktobviewcontainer mt-5 ">
-        <div className="header-part">
-          <div className="ml-1 logo_1">
-            <img src={Imarat_Logo} alt="" width="100" height="100" />
+      <div className="contain maktobviewcontainer mt-5 p-0 ">
+        <div className="header-body ">
+          <div className=" m-0 tvet_logo ">
+            <img src={Imarat_Logo} alt="" min-width="120" height="100" />
           </div>
-          <div className="mt-4 pashto_header pashto_header-text">
-            <img src={ImratName_Pashto} alt="" width="300" height="40" />
-            <h3 className="m-0 text-center">د تخنیکي او مسلکي زده کړو اداره</h3>
+          <div className="mt-4 pashto_headling_div">
+            <img
+              src={ImratName_Pashto}
+              min-width="300"
+              className="pashto_headling_img"
+              height="40"
+            />
+            <h3 className="m-0 text-right  pashto_headline_text">
+              د تخنیکي او مسلکي زده کړو اداره
+            </h3>
           </div>
 
-          <div className="px-2 pt-2">
-            <h4 className="text-center">
-              Islamic Emirate of Afghanistan Technical & Vocational Education
+          <div className=" pt-4 english_headline_div">
+            <h4 className=" text-center m-0 english_headline_text">
+              Islamic Republic of Afghanistan Technical & Vocational Education
               Training Authority
             </h4>
           </div>
 
-          <div className="mt-4 pashto_header">
-            <img src={ImratName} alt="" width="300" height="40" />
-            <h3 className="m-0 text-center  persian_header-text">
+          <div className="mt-4  persian_headline_div">
+            <img
+              src={ImratName}
+              min-width="300"
+              height="40"
+              className="persian_headline_img"
+            />
+            <h3 className="m-0  persian_headline_text">
               اداره تعلیمات تخنیکی و مسلکی
             </h3>
           </div>
 
-          <div className="mr-1 logo_2">
-            <img src={Logo} alt="" width="100" height="100" />
+          <div className="imarat_logo">
+            <img src={Logo} alt="" min-width="120" height="100" />
           </div>
         </div>
+        <div className="owner">
+          <div>معاونیت امور تعلیمی و تحصیلی</div>
+          <div>ریاست نصاب تعلیمی و تحصیلی</div>
+          <div>آمریت تحلیل و ارزیابی</div>
+          <div>مدیریت اجراینه</div>
+        </div>
+        <div className="date">
+          <label htmlFor="">ڼیټه:</label>
+          <p> &#160;1444/12/12</p>
+        </div>
       </div>
-      <div className="container mt-5">
-        <button onClick={handlePrint} className="print-button btn bg-primary">
+      <div className="container text-center mt-5">
+        <button
+          onClick={handlePrint}
+          className="print-button btn bg-primary px-5"
+        >
           Print
         </button>
       </div>
