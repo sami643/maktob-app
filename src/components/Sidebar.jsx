@@ -19,7 +19,7 @@ const Sidebar = ({ children }) => {
       pathname === "/login"
     ) {
       // THIS IS TRUE TEMPORARILY
-      return true;
+      return false;
     }
     return true;
   };

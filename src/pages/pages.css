@@ -32,3 +32,45 @@
   display: flex;
   flex-direction: row;
 }
+
+.maktobviewcontainer {
+  background-color: #e02121;
+}
+
+.header-part {
+  display: flex;
+  flex-direction: row;
+}
+
+@media print {
+  .maktobviewcontainer {
+    margin-top: 0px !important;
+  }
+  .print-button {
+    display: none;
+  }
+  .pashto_header {
+    width: 450px;
+  }
+  .logo_1 {
+    height: 180px;
+    width: 180px;
+    margin-left: 10px !important;
+  }
+  .logo_2 {
+    height: 180px;
+    width: 180px;
+    margin-right: 10px !important;
+  }
+  .persian_header-text {
+    min-width: 303px !important;
+    font-size: 30px !important;
+    text-align: center !important;
+  }
+
+  .pashto_header-text {
+    min-width: 303px !important;
+    font-size: 30px !important;
+    text-align: center !important;
+  }
+}
