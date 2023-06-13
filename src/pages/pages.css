@@ -15,7 +15,6 @@
 }
 
 /* Buttons */
-
 .button-1 {
   margin: 2%;
   padding: 0.8% 3.5% 0.8% 3.5%;
@@ -33,10 +32,18 @@
   flex-direction: row;
 }
 
+.main_container {
+  background-color: #fff;
+  margin: 3%;
+  padding: 3%;
+}
+
 .maktobviewcontainer {
   background-color: #ffffff;
   margin-inline: 3%;
   margin-top: 3%;
+  /* direction: rtl; */
+  text-align: start;
 }
 
 .header-body {
@@ -50,8 +57,10 @@
 .date {
   display: flex;
   flex-direction: row;
-  /* margin-left: 50px; */
-  margin-right: 850px;
+  float: left;
+  margin-top: -50px;
+  margin-left: 23px;
+  font-weight: bold;
 }
 
 .owner {
@@ -59,12 +68,101 @@
   font-weight: bold;
 }
 
+.maktob_type_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -22px;
+  margin-left: 18px;
+  width: 100%;
+  margin-top: -30px;
+}
+.maktob_no {
+  display: flex;
+  flex-direction: row;
+  margin-right: 0.8cm;
+  font-weight: bold;
+}
+.maktob_type {
+  display: flex;
+  flex-direction: row;
+  margin-left: 0.3cm;
+}
+
+.divider {
+  font-weight: bolder;
+  color: #000;
+  margin-top: -20px !important;
+}
+.body_of_maktob {
+  margin: 0px;
+  margin-right: 10px;
+  font-size: 25px;
+  height: 100%;
+}
+.subject_of_maktob {
+  display: flex;
+  flex-direction: row;
+}
+.matktob_context {
+  text-indent: 60px;
+  text-align: justify;
+}
+.closing_signature {
+  text-align: center;
+  font-weight: bold;
+}
+
+.copy_to_div {
+  margin-right: 20px;
+}
+.copy_body_item {
+  width: 30%;
+}
+.copy_to_body {
+  display: flex;
+  flex-direction: row;
+  font-size: 15px;
+  text-indent: 30px;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer-item {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.print_btn_div {
+  width: 100%;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+.print-button {
+  margin-left: 100px;
+}
+
 /* Printing Part */
 @media print {
+  .main_container {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
   .maktobviewcontainer {
     margin-top: 0px !important;
     margin: 0px !important;
     padding: 0px !important;
+    position: relative !important;
+    height: 100%;
   }
   .header-body {
     margin-top: 0px !important;
@@ -105,14 +203,49 @@
     margin-left: 10px !important ;
   }
 
-  /* .owner {
+  .owner {
     text-align: center;
     font-weight: bold;
-    margin-top: -10px !important;
+    font-size: 25px !important;
+    margin-top: -15px !important;
   }
   .date {
-    margin-top: -20px !important;
-    margin-left: -10px !important;
-  } */
+    margin-top: -50px !important;
+    font-weight: bold;
+  }
+
+  .copy_to_div {
+    position: absolute;
+    top: 1150px !important;
+    font-size: 15px;
+    width: 100%;
+  }
+  .copy_to_body {
+    text-indent: 30px;
+    display: flex;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: absolute;
+    top: 1500px;
+    width: 100%;
+  }
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .footer_divider {
+    position: absolute;
+    top: 1450px;
+  }
+  .footer-item {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
   /* /////////////////////////////////////// */
 }
