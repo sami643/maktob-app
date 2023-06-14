@@ -13,7 +13,15 @@
   padding: 10px;
   direction: rtl;
 }
-
+@font-face {
+  font-family: Arabictypesetting;
+  /* src: url("../assets/font/arabtype.ttf"); */
+  src: url("../assets/font/Arabic_typeSetting_regular.ttf");
+}
+@font-face {
+  font-family: AMoshref;
+  src: url("../assets/font/amoshref.ttf");
+}
 /* Buttons */
 .button-1 {
   margin: 2%;
@@ -58,7 +66,16 @@
   display: flex;
   flex-direction: row;
   float: left;
-  margin-top: -50px;
+  margin-top: -55px;
+  margin-left: 23px;
+  font-weight: bold;
+}
+
+.pishnihad_date {
+  display: flex;
+  flex-direction: row;
+  float: left;
+  margin-top: -30px;
   margin-left: 23px;
   font-weight: bold;
 }
@@ -69,13 +86,16 @@
 }
 
 .maktob_type_div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: -22px;
+  position: relative;
+
   margin-left: 18px;
   width: 100%;
   margin-top: -30px;
+}
+.maktob_type_content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .maktob_no {
   display: flex;
@@ -99,10 +119,20 @@
   margin-right: 10px;
   font-size: 25px;
   height: 100%;
+  margin-inline: 20px;
 }
 .subject_of_maktob {
   display: flex;
   flex-direction: row;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-position: under;
+  text-decoration-thickness: 1.4px !important;
+}
+.greating {
+  /* font-family: AMoshref; */
+  font-size: larger;
+  /* font-weight: bolder; */
 }
 .matktob_context {
   text-indent: 60px;
@@ -111,6 +141,7 @@
 .closing_signature {
   text-align: center;
   font-weight: bold;
+  padding-bottom: 200px;
 }
 
 .copy_to_div {
@@ -131,7 +162,12 @@
   flex-direction: row;
   justify-content: space-between;
 }
-.footer-content {
+.footer-content_pishnihad {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.footer-content_maktob {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -149,6 +185,53 @@
 }
 .print-button {
   margin-left: 100px;
+}
+.copy_body_item p {
+  padding: 0px !important;
+  margin: 0%;
+  font-size: 22px !important;
+}
+.copy_to_title {
+  font-weight: bold;
+  font-size: 22px !important;
+}
+.audiance {
+  font-weight: bold;
+  font-size: 35px !important;
+}
+
+/* Pishniahaad code */
+.pishnihad_body_main_div {
+  display: flex;
+  flex-direction: row;
+  margin: 0px !important;
+}
+
+.pishnihad_body {
+  border: #000 solid 1px;
+  width: 50%;
+}
+.ahkaam_div {
+  border: #000 solid 1px;
+  border-right: none;
+  width: 50%;
+}
+.ahkaam_header {
+  border-bottom: solid black 1px;
+  text-align: center;
+}
+.header_of_pishnihad {
+  border-bottom: solid black 1px;
+  text-align: center;
+}
+.pishnihad_body_div {
+  padding: 15px 10px 15px 10px;
+}
+
+@media screen and (max-width: 1140px) {
+  .main_container {
+    width: 1140px;
+  }
 }
 
 /* Printing Part */
@@ -174,6 +257,9 @@
   .pashto_headling_div {
     min-width: 300px !important;
   }
+  .divider {
+    border-top: solid black 1px !important;
+  }
   .pashto_headling_img {
     min-width: 250px !important;
     margin-right: 10px !important ;
@@ -193,6 +279,7 @@
   .persian_headline_div {
     min-width: 300px !important;
   }
+
   .persian_headline_img {
     min-width: 250px !important;
     margin-left: 10px !important ;
@@ -208,10 +295,41 @@
     font-weight: bold;
     font-size: 25px !important;
     margin-top: -15px !important;
+    min-height: 120px !important;
   }
   .date {
-    margin-top: -50px !important;
+    margin-top: -80px !important;
     font-weight: bold;
+    font-size: 25px;
+  }
+  .pishnihad_date {
+    margin-top: -30px !important;
+    font-weight: bold;
+    font-size: 25px !important;
+  }
+
+  .maktob_type_div {
+    width: 100%;
+  }
+
+  .maktob_no {
+    display: flex;
+    flex-direction: row;
+    margin-right: 0.8cm;
+    font-weight: bold;
+    font-size: 25px !important;
+    margin-top: -10px !important;
+  }
+  .maktob_type {
+    display: flex;
+    flex-direction: row;
+    margin-left: -5.7cm;
+    margin-top: -10px;
+    font-size: 25px !important;
+  }
+
+  .closing_signature {
+    padding: 0px !important;
   }
 
   .copy_to_div {
@@ -225,26 +343,67 @@
     display: flex;
   }
 
+  .copy_body_item p {
+    padding: 0px !important;
+    margin: 0%;
+    font-size: 22px !important;
+  }
+  .copy_to_title {
+    font-weight: bold;
+    font-size: 22px !important;
+  }
+
+  .pishnihad_body_main_div {
+    min-height: 76vh;
+    margin-bottom: -50px !important;
+  }
+
+  .footer_divider {
+    position: absolute;
+    top: 1520px;
+    border-top: solid black 1px !important;
+  }
+  .footer_divider_pishnihad {
+    position: absolute;
+    top: 1450px;
+    border-top: solid black 1px !important;
+  }
+  .footer_pishnihad {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: absolute;
+    top: 1480px;
+    width: 100%;
+    margin-bottom: -30px !important;
+    font-size: 14px !important;
+  }
+
   .footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     position: absolute;
-    top: 1500px;
+    top: 1490px;
     width: 100%;
+    margin-bottom: -30px !important;
   }
-  .footer-content {
+  .footer-content_pishnihad {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
-  .footer_divider {
-    position: absolute;
-    top: 1450px;
+
+  .footer-content_maktob {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px !important;
+    width: 100%;
   }
   .footer-item {
     margin-right: 10px;
     margin-left: 10px;
+    font-size: 15px;
   }
 
   /* /////////////////////////////////////// */

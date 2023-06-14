@@ -58,67 +58,62 @@ const PishnihadFormat = () => {
             <div>ریاست نصاب تعلیمی و تحصیلی</div>
             <div>آمریت تحلیل و ارزیابی</div>
             <div>مدیریت اجراینه</div>
+            <div>معاونیت امور تعلیمی و تحصیلی</div>
           </div>
-          <div className="date">
+          <div className="pishnihad_date">
             <label htmlFor="">ڼیټه:</label>
-            <p> &#160;12 &#160;/ 12 / 1444</p>
+            <p> &#160;12/ 12 / 1444</p>
           </div>
           <div className="maktob_type_div">
             <div className="maktob_no">
               <label>ګڼه:</label>
               <p>12</p>
             </div>
-            <div className="maktob_type">
-              <div>
-                <label className="mx-1">عاجل</label>
-                <Checkbox defaultChecked={false} disabled className="ml-3" />
+          </div>
+
+          <Divider className="divider" />
+
+          <div className="pishnihad_body_main_div">
+            <div className="pishnihad_body">
+              <div className="header_of_pishnihad">
+                <h3>پیشنهاد</h3>
               </div>
-              <div>
-                <label className="mx-1">محرم</label>
-                <Checkbox defaultChecked={false} disabled className="ml-3" />
+              <div className="pishnihad_body_div">
+                <p>به مقام محترم ریاست دفتر!</p>
+                <p className="greating">
+                  ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
+                </p>
+                <div className="subject_of_maktob">
+                  <label style={{ textDecoration: "underline" }}> موضوع:</label>
+                  <p>به جواب مکتوب شماره 128 معینیت عواید و گمراکات</p>
+                </div>
+                <p>محترما:</p>
+                <p className="matktob_context">
+                  به تعقیب مکاتیب شماره 786 مورخ 18/9/1444 و شماره 853 مورخ
+                  23/10/1444 نگاشته میشود که جهت تطبیق پلان مالی 1402 و عملی
+                  کردن طرح های دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات
+                  تخنیکی و مسلکی تقاضا به عمل میاید که طرح های دیجیتل سازی خود
+                  را تا اخیر برج اول سال روان به آمریت سیستم معلوماتی و احصائیه
+                  تحویل نماید. در غیر آن مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش
+                  خود ریاست ها میباشد.
+                </p>
+                <br />
+                <div className="closing_signature">
+                  <p>وال سلام</p>
+                  <p>انجنیر شریف احمد راسخ</p>
+                  <p>آمر سیستم های معلوماتی و احصایه</p>
+                </div>
               </div>
-              <div>
-                <label className="mx-1">اطلاعیه</label>
-                <Checkbox indeterminate disabled className="ml-3" />
-              </div>
-              <div>
-                <label className="mx-1">سایر موارد</label>
-                <Checkbox defaultChecked={false} disabled className="ml-3" />
+            </div>
+            <div className="ahkaam_div">
+              <div className="ahkaam_header">
+                <h3>احکام</h3>
               </div>
             </div>
           </div>
-
-          <div className="divider">
-            <Divider />
-          </div>
-          <div className="body_of_maktob">
-            <p>به مقام محترم ریاست دفتر!</p>
-            <p>السلام اعلیکم و رحمته الله و برکاته</p>
-            <div className="subject_of_maktob">
-              <label> موضوع:</label>
-              <p>به جواب مکتوب شماره 128 معینیت عواید و گمراکات</p>
-            </div>
-            <p>محترما:</p>
-            <p className="matktob_context">
-              به تعقیب مکاتیب شماره 786 مورخ 18/9/1444 و شماره 853 مورخ
-              23/10/1444 نگاشته میشود که جهت تطبیق پلان مالی 1402 و عملی کردن
-              طرح های دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات تخنیکی و
-              مسلکی تقاضا به عمل میاید که طرح های دیجیتل سازی خود را تا اخیر برج
-              اول سال روان به آمریت سیستم معلوماتی و احصائیه تحویل نماید. در غیر
-              آن مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش خود ریاست ها میباشد.
-            </p>
-            <br />
-            <div className="closing_signature">
-              <p>والسلام</p>
-              <p>انجنیر شریف احمد راسخ</p>
-              <p>آمر سیستم های معلوماتی و احصایه</p>
-            </div>
-          </div>
-
-          <Divider className="footer_divider" />
-
-          <div className="footer">
-            <div className="footer-content">
+          <Divider className="footer_divider_pishnihad" />
+          <div className="footer_pishnihad">
+            <div className="footer-content_pishnihad">
               <div className="footer-item">
                 آدرس: کارته چهار، جوار وزارت تحصیلات عالی- کابل- افغانستان
               </div>
