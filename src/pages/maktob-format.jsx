@@ -5,8 +5,16 @@ import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
 import { Checkbox, Divider } from "antd";
+import { useLocation } from "react-router-dom";
 
 const MaktobFormat = () => {
+  const { state } = useLocation();
+
+  const formData = state?.formData;
+  const maktobDate = state?.date;
+  console.log("FormData", formData);
+  console.log("MaktobDateINMaktobView", maktobDate);
+
   const handlePrint = () => {
     window.print();
   };

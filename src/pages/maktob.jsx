@@ -8,15 +8,10 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies } from "./../assets/data/data.js";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./pages.css";
 
-const Maktob = () => {
-  const handleChange = (values) => {
-    console.log("Values", values);
-    var input = document.getElementById("maktobDate");
-    console.log("Input", input.value);
-  };
-
+const Maktob = (props) => {
   const [btnChecked, setBtnChecked] = useState(false);
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
 
@@ -68,6 +63,15 @@ const Maktob = () => {
     setInputFields([...inputFields, ""]);
   };
   const [inputFields, setInputFields] = useState([]); // Initialize with one empty input field
+  const navigate = useNavigate();
+  const handleSubmit = (values) => {
+    console.log("Values", values);
+    var maktobDate = document.getElementById("maktobDate");
+    console.log("maktobDate", maktobDate.value);
+    navigate("/maktobview", {
+      state: { formData: values, date: maktobDate.value },
+    });
+  };
 
   return (
     <>
@@ -79,12 +83,11 @@ const Maktob = () => {
         <Formik
           initialValues={{
             maktobNo: "23423",
-            maktobDate: "",
             subject: "ALmart",
             context: "contect",
             recipient: "Recipient",
           }}
-          onSubmit={handleChange}
+          onSubmit={handleSubmit}
         >
           {({ values, setFieldValue, setFieldTouched }) => (
             <Form className="m-5">
@@ -142,7 +145,6 @@ const Maktob = () => {
                       id="maktobDate"
                       name="maktobDate"
                       value={values.maktobDate}
-                      onChange={setFieldValue}
                     />
                   </div>
                 </div>

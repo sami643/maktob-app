@@ -6,11 +6,9 @@ import { sidebarMenuItem } from "./../assets/data/data.js";
 import { useLocation } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
-  console.log("Sidebar=========================");
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const location = useLocation();
-  console.log("Current route:", location);
 
   const shouldSidebarBeVisible = (pathname) => {
     if (
