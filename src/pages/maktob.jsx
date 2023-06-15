@@ -73,19 +73,8 @@ const Maktob = (props) => {
     });
   };
 
-  const [dateInitialValue, setDateInitialValue] = useState("");
-  console.log(dateInitialValue, "dateInisiwialgdljsglkja");
-  // console.log(dateInitialValue, "DateinitialValue");
-
   const onSubmitForm = (values) => {
     console.log("values", values);
-    console.log(dateInitialValue, "dateInisiwialgdljsglkja");
-
-    // console.log("Values", values);
-    // var dateValue = document.getElementById("maktobDate");
-    // setDateInitialValue(dateValue.value);
-    // emtyString = dateValue.value;
-    // console.log("Date", dateValue.value);
   };
 
   return (
@@ -99,9 +88,9 @@ const Maktob = (props) => {
           initialValues={{
             maktobNo: "",
             maktobDate: "",
+            recipent: "",
             subject: "",
             context: "",
-            recipient: "",
           }}
           onSubmit={onSubmitForm}
         >
@@ -161,11 +150,12 @@ const Maktob = (props) => {
                       id="maktobDate"
                       name="maktobDate"
                       value={values.maktobDate}
-                      onChange={(e) => {
-                        setDateInitialValue(
+                      onChange={(e) =>
+                        setFieldValue(
+                          "maktobDate",
                           e.year + "/" + e.month.number + "/" + e.day
-                        );
-                      }}
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -187,15 +177,20 @@ const Maktob = (props) => {
                       </span>
                     </label>
                     <select
-                      // class=" "
+                      id="recipent"
+                      value={values.recipent}
+                      name="recipent"
                       style={{ height: "35px" }}
+                      onChange={(e) =>
+                        setFieldValue("recipent", e.target.value)
+                      }
                       className="form-control form-select-lg mb-3"
                       aria-label=".form-select-lg example"
                     >
                       <option selected>Open this select menu</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                      <option value="نصاب">ریاست نصاب</option>
+                      <option value="بشری">ریاست منابع بشری</option>
+                      <option value="پلان">ریاست پلان</option>
                     </select>
                   </div>
                 ) : (
@@ -214,14 +209,14 @@ const Maktob = (props) => {
                     </label>
                     <input
                       type="text"
-                      id="recipient"
-                      name="recipient"
+                      id="recipent"
+                      name="recipent"
                       className="form-control"
-                      value={values.recipient}
+                      value={values.recipent}
                       onChange={(e) =>
-                        setFieldValue("recipient", e.target.value)
+                        setFieldValue("recipent", e.target.value)
                       }
-                      onBlur={() => setFieldTouched("recipient", true)}
+                      onBlur={() => setFieldTouched("recipent", true)}
                     />
                   </div>
                 )}
@@ -294,7 +289,7 @@ const Maktob = (props) => {
                 ></textarea>
               </div>
 
-              <div className="row ">
+              {/* <div className="row ">
                 <div className="form-outline col">
                   <label className="form-label mr-3" htmlFor="subject">
                     استونکی
@@ -344,7 +339,7 @@ const Maktob = (props) => {
                     <option value="3">Three</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
               <div>
                 <h3>کاپي:</h3>
               </div>
