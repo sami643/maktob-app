@@ -76,7 +76,7 @@ const PishnihadFormat = () => {
           <div className="pishnihad_body_main_div">
             <div className="pishnihad_body">
               <div className="header_of_pishnihad">
-                <h3 className="header_of_pishnihad_text">پیشنهاد</h3>
+                <h3 className="header_of_pishnihad_text">استعلام</h3>
               </div>
               <div className="pishnihad_body_div mx-2">
                 <p className="audiance">به مقام محترم ریاست دفتر!</p>
@@ -100,7 +100,7 @@ const PishnihadFormat = () => {
                 </p>
                 <br />
                 <div className="closing_signature">
-                  <p>وال سلام</p>
+                  <p>والسلام</p>
                   <p>انجنیر شریف احمد راسخ</p>
                   <p>آمر سیستم های معلوماتی و احصایه</p>
                 </div>
@@ -108,7 +108,7 @@ const PishnihadFormat = () => {
             </div>
             <div className="ahkaam_div">
               <div className="ahkaam_header">
-                <h3 className="ahkaam_header_text">احکام</h3>
+                <h3 className="ahkaam_header_text">جواب</h3>
               </div>
             </div>
           </div>
