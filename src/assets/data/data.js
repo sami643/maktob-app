@@ -7,7 +7,6 @@ import {
   FaThList,
 } from "react-icons/fa";
 
-
 export const presidencies = [
   {
     value: "A",
@@ -177,6 +176,51 @@ export const pishnihads = [
   },
 ];
 
+export const istehlaams = [
+  {
+    key: "1",
+    pishnihadNo: 32,
+    recipent: "ریاست دفتر",
+    subject: "Avvvvv",
+    date: "1444/3/12",
+  },
+  {
+    key: "2",
+    pishnihadNo: 13,
+    recipent: "ریاست نصاب",
+    subject: "Avvbvvv",
+    date: "1444/3/12",
+  },
+  {
+    key: "3",
+    pishnihadNo: 14,
+    recipent: "ریاست دفتر",
+    subject: "Avvvvv",
+    date: "1444/3/12",
+  },
+  {
+    key: "4",
+    pishnihadNo: 15,
+    recipent: "ریاست امور تعلیمی و تحصیلی",
+    subject: "Avvbvvv",
+    date: "1444/3/12",
+  },
+  {
+    key: "5",
+    pishnihadNo: 16,
+    recipent: "ریاست پلان",
+    subject: "Avvvvv",
+    date: "1444/3/12",
+  },
+  {
+    key: "6",
+    pishnihadNo: 17,
+    recipent: "ریاست تفتیش",
+    subject: "Avvvvv",
+    date: "1444/3/12",
+  },
+];
+
 export const sidebarMenuItem = [
   {
     path: "/main",
@@ -196,6 +240,16 @@ export const sidebarMenuItem = [
   {
     path: "/pishnihadlist",
     name: "د پیشنهادونو ټولګه",
+    icon: <FaThList />,
+  },
+  {
+    path: "/istehlaam",
+    name: "استعلام",
+    icon: <FaBookOpen />,
+  },
+  {
+    path: "/istehlaamlist",
+    name: "د استعلامونو ټولګه",
     icon: <FaThList />,
   },
   {
@@ -222,5 +276,10 @@ export const sidebarMenuItem = [
     path: "/pishnihadview",
     name: "PishnihadFormat",
     icon: "P_F",
+  },
+  {
+    path: "/istehlamview",
+    name: "IstehlamFormat",
+    icon: "I_F",
   },
 ];

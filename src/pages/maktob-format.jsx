@@ -6,6 +6,7 @@ import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
 import { Checkbox, Divider } from "antd";
 import { useLocation } from "react-router-dom";
+import { BorderInnerOutlined } from "@ant-design/icons";
 
 const MaktobFormat = () => {
   const { state } = useLocation();
@@ -66,45 +67,51 @@ const MaktobFormat = () => {
             <div>ریاست نصاب تعلیمی و تحصیلی</div>
             <div>آمریت تحلیل و ارزیابی</div>
             <div>مدیریت اجراینه</div>
+            <div>مدیریت اجراینه</div>
           </div>
           <div className="date">
             <label htmlFor="">ڼیټه:</label>
             <p> &#160;12 &#160;/ 12 / 1444</p>
           </div>
+
           <div className="maktob_type_div">
-            <div className="maktob_no">
-              <label>ګڼه:</label>
-              <p>12</p>
-            </div>
-            <div className="maktob_type">
-              <div>
-                <label className="mx-1">عاجل</label>
-                <Checkbox defaultChecked={false} disabled className="ml-3" />
+            <div className="maktob_type_content">
+              <div className="maktob_no">
+                <label>ګڼه:</label>
+                <p>12</p>
               </div>
-              <div>
-                <label className="mx-1">محرم</label>
-                <Checkbox defaultChecked={false} disabled className="ml-3" />
-              </div>
-              <div>
-                <label className="mx-1">اطلاعیه</label>
-                <Checkbox indeterminate disabled className="ml-3" />
-              </div>
-              <div>
-                <label className="mx-1">سایر موارد</label>
-                <Checkbox defaultChecked={false} disabled className="ml-3" />
+              <div className="maktob_type">
+                <div>
+                  <label className="mx-1">عاجل</label>
+                  <Checkbox defaultChecked={false} disabled className="ml-3" />
+                </div>
+                <div>
+                  <label className="mx-1">محرم</label>
+                  <Checkbox defaultChecked={false} className="ml-3" />
+                </div>
+                <div>
+                  <label className="mx-1">اطلاعیه</label>
+                  <Checkbox indeterminate disabled className="ml-3" />
+                </div>
+                <div>
+                  <label className="mx-1">سایر موارد</label>
+                  <Checkbox defaultChecked={false} disabled className="ml-3" />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="divider">
-            <Divider />
-          </div>
-          <div className="body_of_maktob">
-            <p>به مقام محترم ریاست دفتر!</p>
-            <p>السلام اعلیکم و رحمته الله و برکاته</p>
+          <Divider className="divider" />
+          <div className="body_of_maktob ">
+            <p className="audiance">به مقام محترم ریاست دفتر!</p>
+            <p className="greating">
+              ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
+            </p>
             <div className="subject_of_maktob">
-              <label style={{ fontStyle: "u" }}> موضوع:</label>
-              <p>به جواب مکتوب شماره 128 معینیت عواید و گمراکات</p>
+              <label> موضوع </label>
+              <p>
+                :&#160;&#160;به جواب مکتوب شماره 128 معینیت عواید و گمراکات{" "}
+              </p>
             </div>
             <p>محترما:</p>
             <p className="matktob_context">
@@ -113,7 +120,13 @@ const MaktobFormat = () => {
               طرح های دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات تخنیکی و
               مسلکی تقاضا به عمل میاید که طرح های دیجیتل سازی خود را تا اخیر برج
               اول سال روان به آمریت سیستم معلوماتی و احصائیه تحویل نماید. در غیر
-              آن مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش خود ریاست ها میباشد.
+              آن مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش خود ریاست ها میباشد. به
+              تعقیب مکاتیب شماره 786 مورخ 18/9/1444 و شماره 853 مورخ 23/10/1444
+              نگاشته میشود که جهت تطبیق پلان مالی 1402 و عملی کردن طرح های
+              دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات تخنیکی و مسلکی
+              تقاضا به عمل میاید که طرح های دیجیتل سازی خود را تا اخیر برج اول
+              سال روان به آمریت سیستم معلوماتی و احصائیه تحویل نماید. در غیر آن
+              مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش خود ریاست ها میباشد.
             </p>
             <br />
             <div className="closing_signature">
@@ -122,6 +135,7 @@ const MaktobFormat = () => {
               <p>آمر سیستم های معلوماتی و احصایه</p>
             </div>
           </div>
+
           <div className="copy_to_div ">
             <p className="copy_to_title">کاپي به:</p>
             <div className="copy_to_body">
@@ -159,9 +173,8 @@ const MaktobFormat = () => {
           </div>
 
           <Divider className="footer_divider" />
-
           <div className="footer">
-            <div className="footer-content">
+            <div className="footer-content_maktob">
               <div className="footer-item">
                 آدرس: کارته چهار، جوار وزارت تحصیلات عالی- کابل- افغانستان
               </div>

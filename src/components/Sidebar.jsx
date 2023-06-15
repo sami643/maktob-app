@@ -14,6 +14,7 @@ const Sidebar = ({ children }) => {
     if (
       pathname === "/pishnihadview" ||
       pathname === "/maktobview" ||
+      pathname === "/istehlamview" ||
       pathname === "/login"
     ) {
       // THIS IS TRUE TEMPORARILY
