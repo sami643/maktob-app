@@ -28,15 +28,10 @@ const MaktobFormat = () => {
               <img src={Imarat_Logo} alt="" min-width="120" height="100" />
             </div>
             <div className="mt-4 pashto_headling_div">
-              <img
-                src={ImratName_Pashto}
-                min-width="300"
-                className="pashto_headling_img"
-                height="40"
-              />
-              <h3 className="m-0 text-right  pashto_headline_text">
+              <img src={ImratName_Pashto} className="pashto_headling_img" />
+              <h4 className="m-0 text-right  pashto_headline_text">
                 د تخنیکي او مسلکي زده کړو اداره
-              </h3>
+              </h4>
             </div>
 
             <div className=" pt-4 english_headline_div">
@@ -47,15 +42,10 @@ const MaktobFormat = () => {
             </div>
 
             <div className="mt-4  persian_headline_div">
-              <img
-                src={ImratName}
-                min-width="300"
-                height="40"
-                className="persian_headline_img"
-              />
-              <h3 className="m-0  persian_headline_text">
+              <img src={ImratName} className="persian_headline_img" />
+              <h4 className="m-0  persian_headline_text">
                 اداره تعلیمات تخنیکی و مسلکی
-              </h3>
+              </h4>
             </div>
 
             <div className="imarat_logo">

@@ -240,17 +240,20 @@
   padding: 15px 10px 15px 10px;
   font-size: 25px;
 }
-
+.pashto_headling_img {
+  width: 100%;
+}
+.persian_headline_img {
+  width: 100%;
+}
 @media screen and (max-width: 1140px) {
-  .main_container {
-    width: 1140px;
-  }
 }
 
 /* Printing Part */
 @media print {
   .main_container {
-    margin: 0px !important;
+    margin: 0px 15px 0px 0px !important;
+    /* margin: 0px !important; */
     padding: 0px !important;
   }
   .maktobviewcontainer {
@@ -262,6 +265,7 @@
   }
   .header-body {
     margin-top: 0px !important;
+    margin-right: 10px !important;
     margin-left: 0px !important;
   }
   .print-button {
@@ -272,6 +276,7 @@
   }
   .divider {
     border-top: solid black 1px !important;
+    margin-right: 1px;
   }
   .pashto_headling_img {
     min-width: 250px !important;
@@ -312,6 +317,7 @@
   }
   .date {
     margin-top: -80px !important;
+    margin-left: -5px;
     font-weight: bold;
     font-size: 25px;
   }
@@ -328,7 +334,7 @@
   .maktob_no {
     display: flex;
     flex-direction: row;
-    margin-right: 0.8cm;
+    margin-right: 0cm;
     font-weight: bold;
     font-size: 25px !important;
     margin-top: -10px !important;
@@ -336,7 +342,7 @@
   .maktob_type {
     display: flex;
     flex-direction: row;
-    margin-left: -5.7cm;
+    margin-left: -5.6cm;
     margin-top: -10px;
     font-size: 25px !important;
   }
