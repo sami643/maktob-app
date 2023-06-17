@@ -421,3 +421,8 @@
 
   /* /////////////////////////////////////// */
 }
+
+.errorMessageStyle {
+  font-weight: bold;
+  color: red;
+}

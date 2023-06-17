@@ -9,6 +9,7 @@ import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies } from "./../assets/data/data.js";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { maktobValidationSchema } from "./../assets/data/validation.js";
 import "./pages.css";
 
 const Maktob = (props) => {
@@ -64,17 +65,17 @@ const Maktob = (props) => {
   };
   const [inputFields, setInputFields] = useState([]); // Initialize with one empty input field
   const navigate = useNavigate();
-  const handleSubmit = (values) => {
-    console.log("Values", values);
-    var maktobDate = document.getElementById("maktobDate");
-    console.log("maktobDate", maktobDate.value);
-    navigate("/maktobview", {
-      state: { formData: values, date: maktobDate.value },
-    });
-  };
 
-  const onSubmitForm = (values) => {
+  const onSubmitForm_1 = (values) => {
     console.log("values", values);
+    console.log("selectedPresidencies", selectedPresidencies);
+    console.log("NewAddedItemsToCopy", inputFields);
+
+    const TransferabeCopyToData = selectedPresidencies.concat(inputFields);
+    console.log("TransferabeCopyToData", TransferabeCopyToData);
+    navigate("/maktobview", {
+      state: { formData: values, copyTo: TransferabeCopyToData },
+    });
   };
 
   return (
@@ -92,13 +93,21 @@ const Maktob = (props) => {
             subject: "",
             context: "",
           }}
-          onSubmit={onSubmitForm}
+          onSubmit={onSubmitForm_1}
+          validationSchema={maktobValidationSchema}
         >
-          {({ values, setFieldValue, setFieldTouched }) => (
+          {({
+            values,
+            setFieldValue,
+            setFieldTouched,
+            handleSubmit,
+            errors,
+            touched,
+          }) => (
             <Form className="m-5">
               <div className="row mb-4">
                 <div className="col">
-                  <div className="form-outline">
+                  <div className="form-outline  ">
                     <label className="form-label mr-3" htmlFor="maktobNo">
                       د مکتوب ګڼه/شماره
                       <span
@@ -112,16 +121,26 @@ const Maktob = (props) => {
                       </span>
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="maktobNo"
                       name="maktobNo"
-                      className="form-control"
+                      className={`form-control ${
+                        errors.maktobNo && touched.maktobNo ? "is-invalid" : ""
+                      }`}
                       value={values.maktobNo}
                       onChange={(e) =>
                         setFieldValue("maktobNo", e.target.value)
                       }
                       onBlur={() => setFieldTouched("maktobNo", true)}
                     />
+                    {errors.maktobNo && touched.maktobNo ? (
+                      <div
+                        className="invalid-feedback d-block errorMessageStyle mr-2"
+                        style={{ fontWieght: "bolder" }}
+                      >
+                        {errors.maktobNo}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
                 <div className="col">
@@ -395,13 +414,13 @@ const Maktob = (props) => {
                   ))}
                 </div>
                 <div className="mt-5">
-                  <button
+                  <a
                     className="btn bg-primary mt-3 mb-3 mr-5 ml-2"
                     onClick={handleAddField}
                     style={{ fontWeight: "bolder" }}
                   >
                     +
-                  </button>
+                  </a>
                   <label className="">نور ریاستونه/آمریتونه</label>
                 </div>
 
@@ -435,10 +454,17 @@ const Maktob = (props) => {
               <div className="row">
                 <div className="text-left col"></div>
                 <div className="text-left col">
-                  <button type="submit" className="btn bg-primary button-1">
+                  <button
+                    onClick={handleSubmit}
+                    className="btn bg-primary button-1"
+                  >
                     ثبت
                   </button>
-                  <button type="submit" className="btn bg-primary button-1">
+                  <button
+                    // onClick={handleSubmit}
+                    type="submit"
+                    className="btn bg-primary button-1"
+                  >
                     ثبت او پرنت
                   </button>
                 </div>

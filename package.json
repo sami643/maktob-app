@@ -19,7 +19,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-to-print": "^2.14.13",
-    "reactstrap": "^9.1.10"
+    "reactstrap": "^9.1.10",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -12,9 +12,9 @@ const MaktobFormat = () => {
   const { state } = useLocation();
 
   const formData = state?.formData;
-  const maktobDate = state?.date;
-  console.log("FormData", formData);
-  console.log("MaktobDateINMaktobView", maktobDate);
+  const copyTo = state?.copyTo;
+  console.log("FormData_from_MaktobFormat", formData);
+  console.log("ListOfPresidenciesPrintedFrom_maktobFOrmat", copyTo);
 
   const handlePrint = () => {
     window.print();
