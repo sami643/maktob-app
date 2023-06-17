@@ -107,7 +107,7 @@ const Maktob = (props) => {
             <Form className="m-5">
               <div className="row mb-4">
                 <div className="col">
-                  <div className="form-outline  ">
+                  <div className="form-outline">
                     <label className="form-label mr-3" htmlFor="maktobNo">
                       د مکتوب ګڼه/شماره
                       <span
@@ -134,10 +134,7 @@ const Maktob = (props) => {
                       onBlur={() => setFieldTouched("maktobNo", true)}
                     />
                     {errors.maktobNo && touched.maktobNo ? (
-                      <div
-                        className="invalid-feedback d-block errorMessageStyle mr-2"
-                        style={{ fontWieght: "bolder" }}
-                      >
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
                         {errors.maktobNo}
                       </div>
                     ) : null}
@@ -163,6 +160,11 @@ const Maktob = (props) => {
                         width: "inherit",
                         padding: "16px",
                         marginTop: "-1px",
+                        border: `${
+                          errors.maktobDate && touched.maktobDate
+                            ? "1px solid red"
+                            : ""
+                        }`,
                       }}
                       calendar={arabic}
                       locale={arabic_ar}
@@ -176,6 +178,11 @@ const Maktob = (props) => {
                         )
                       }
                     />
+                    {errors.maktobDate && touched.maktobDate ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errors.maktobDate}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -203,7 +210,11 @@ const Maktob = (props) => {
                       onChange={(e) =>
                         setFieldValue("recipent", e.target.value)
                       }
-                      className="form-control form-select-lg mb-3"
+                      className={`form-control form-select-lg ${
+                        errors.recipent && touched.recipent
+                          ? "is-invalid form-select-lg    "
+                          : ""
+                      }`}
                       aria-label=".form-select-lg example"
                     >
                       <option selected>Open this select menu</option>
@@ -211,6 +222,11 @@ const Maktob = (props) => {
                       <option value="بشری">ریاست منابع بشری</option>
                       <option value="پلان">ریاست پلان</option>
                     </select>
+                    {errors.recipent && touched.recipent ? (
+                      <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                        {errors.recipent}
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   <div className="form-outline  col">
@@ -230,13 +246,22 @@ const Maktob = (props) => {
                       type="text"
                       id="recipent"
                       name="recipent"
-                      className="form-control"
+                      className={`form-control form-select-lg ${
+                        errors.recipent && touched.recipent
+                          ? "is-invalid form-select-lg    "
+                          : ""
+                      }`}
                       value={values.recipent}
                       onChange={(e) =>
                         setFieldValue("recipent", e.target.value)
                       }
                       onBlur={() => setFieldTouched("recipent", true)}
                     />
+                    {errors.recipent && touched.recipent ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errors.recipent}
+                      </div>
+                    ) : null}
                   </div>
                 )}
 
@@ -257,11 +282,18 @@ const Maktob = (props) => {
                     type="text"
                     id="subject"
                     name="subject"
-                    className="form-control"
+                    className={`form-control ${
+                      errors.subject && touched.subject ? "is-invalid" : ""
+                    }`}
                     value={values.subject}
                     onChange={(e) => setFieldValue("subject", e.target.value)}
                     onBlur={() => setFieldTouched("subject", true)}
                   />
+                  {errors.subject && touched.subject ? (
+                    <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                      {errors.subject}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -298,7 +330,9 @@ const Maktob = (props) => {
                   </span>
                 </label>
                 <textarea
-                  className="form-control"
+                  className={`form-control ${
+                    errors.context && touched.context ? "is-invalid" : ""
+                  }`}
                   id="context"
                   name="context"
                   rows="4"
@@ -306,6 +340,14 @@ const Maktob = (props) => {
                   onChange={(e) => setFieldValue("context", e.target.value)}
                   onBlur={() => setFieldTouched("context", true)}
                 ></textarea>
+                {errors.context && touched.context ? (
+                  <div
+                    className="invalid-feedback d-block errorMessageStyle mr-2"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    {errors.context}
+                  </div>
+                ) : null}
               </div>
 
               {/* <div className="row ">

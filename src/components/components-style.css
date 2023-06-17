@@ -37,7 +37,7 @@ main {
   top: 0px;
   background: #222121;
   color: #fff;
-  height: 100vh;
+  height: fit-content;
   width: 200px;
   transition: all 0.5s;
   /* box-shadow: inset 2px 2px 5px #b8b9be, inset -3px -3px 7px #ffffff; */
@@ -45,8 +45,16 @@ main {
 .top_section {
   display: flex;
   align-items: center;
-  padding: 20px 15px;
+  padding: 20px 10px;
+  /* position: -webkit-sticky;
+  position: sticky;
+  top: 0; */
 }
+.top_section.scrolled {
+  /* background-color: rgb(162, 162, 224); */
+  /* Other styles for the scrolled state */
+}
+
 .logo {
   font-size: 30px;
 }

@@ -26,17 +26,31 @@ const Sidebar = ({ children }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
     shouldSidebarBeVisible(location.pathname)
   );
-
+  const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     setIsSidebarVisible(shouldSidebarBeVisible(location.pathname));
   }, [location]);
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const shouldChangeColor = scrollTop > 0; // Change this condition as needed
+
+      setIsScrolled(shouldChangeColor);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
       {isSidebarVisible ? (
         <div className="container-1">
           <div style={{ width: isOpen ? "200px" : "60px" }} className="sidebar">
-            <div className="top_section">
+            <div className={`top_section ${isScrolled ? "scrolled" : ""}`}>
               <h1
                 style={{
                   display: isOpen ? "block" : "none",
