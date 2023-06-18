@@ -148,7 +148,7 @@
   margin-right: 20px;
 }
 .copy_body_item {
-  width: 30%;
+  width: 33%;
 }
 .copy_to_body {
   display: flex;
@@ -189,7 +189,7 @@
 .copy_body_item p {
   padding: 0px !important;
   margin: 0%;
-  font-size: 22px !important;
+  font-size: 18px !important;
 }
 .copy_to_title {
   font-weight: bold;

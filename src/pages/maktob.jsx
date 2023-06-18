@@ -14,6 +14,7 @@ import "./pages.css";
 
 const Maktob = (props) => {
   const [btnChecked, setBtnChecked] = useState(false);
+
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
 
   const selectAllPresidencies = () => {
@@ -22,20 +23,28 @@ const Maktob = (props) => {
       setSelectedPresidencies([]);
     } else {
       // Otherwise, select all checkboxes
-      const allPresidencyLabels = presidencies.map((item) => item.label);
-      setSelectedPresidencies(allPresidencyLabels);
+      const allPresidencyItems = presidencies.map((item) => ({
+        label: item.label,
+        value: item.value,
+      }));
+      setSelectedPresidencies(allPresidencyItems);
     }
   };
 
-  const handleCheckboxChange = (label) => {
-    if (selectedPresidencies.includes(label)) {
+  const handleCheckboxChange = (label, value) => {
+    const selectedItem = { label, value };
+
+    if (selectedPresidencies.find((item) => item.label === label)) {
       // If the checkbox is already selected, remove it from the selectedPresidencies state
-      setSelectedPresidencies(
-        selectedPresidencies.filter((item) => item !== label)
+      setSelectedPresidencies((prevSelected) =>
+        prevSelected.filter((item) => item.label !== label)
       );
     } else {
       // Otherwise, add it to the selectedPresidencies state
-      setSelectedPresidencies([...selectedPresidencies, label]);
+      setSelectedPresidencies((prevSelected) => [
+        ...prevSelected,
+        selectedItem,
+      ]);
     }
   };
 
@@ -78,6 +87,12 @@ const Maktob = (props) => {
     });
   };
 
+  const presidenciesOpoptions = [
+    { value: "نصاب", label: "ریاست نصاب" },
+    { value: "بشری", label: "ریاست منابع بشری" },
+    { value: "پلان", label: "ریاست پلان" },
+  ];
+
   return (
     <>
       <Header />
@@ -94,7 +109,7 @@ const Maktob = (props) => {
             context: "",
           }}
           onSubmit={onSubmitForm_1}
-          validationSchema={maktobValidationSchema}
+          // validationSchema={maktobValidationSchema}
         >
           {({
             values,
@@ -218,9 +233,11 @@ const Maktob = (props) => {
                       aria-label=".form-select-lg example"
                     >
                       <option selected>Open this select menu</option>
-                      <option value="نصاب">ریاست نصاب</option>
-                      <option value="بشری">ریاست منابع بشری</option>
-                      <option value="پلان">ریاست پلان</option>
+                      {presidenciesOpoptions.map((option) => (
+                        <option key={option.value} value={option.label}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                     {errors.recipent && touched.recipent ? (
                       <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
@@ -426,32 +443,37 @@ const Maktob = (props) => {
                 <div className="row">
                   {columns.map((column, columnIndex) => (
                     <div className="col" key={columnIndex}>
-                      {column.map((item, itemIndex) => (
-                        <div className="form-outline" key={itemIndex}>
-                          <div className="form-check mr-5">
-                            <div className="">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id={`flexCheckDefault${itemIndex}`}
-                                checked={selectedPresidencies.includes(
-                                  item.label
-                                )}
-                                onChange={() =>
-                                  handleCheckboxChange(item.label)
-                                }
-                              />
+                      {column.map((item, itemIndex) => {
+                        const checkboxId = `flexCheckDefault${itemIndex}`;
+                        const isChecked = selectedPresidencies.some(
+                          (selectedItem) => selectedItem.label === item.label
+                        );
+
+                        return (
+                          <div className="form-outline" key={itemIndex}>
+                            <div className="form-check mr-5">
+                              <div className="">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  value=""
+                                  id={checkboxId}
+                                  checked={isChecked}
+                                  onChange={() =>
+                                    handleCheckboxChange(item.label, item.value)
+                                  }
+                                />
+                              </div>
+                              <label
+                                className="form-check-label mr-5"
+                                htmlFor={checkboxId}
+                              >
+                                {item.label}
+                              </label>
                             </div>
-                            <label
-                              className="form-check-label mr-5"
-                              htmlFor={`flexCheckDefault${itemIndex}`}
-                            >
-                              {item.label}
-                            </label>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ))}
                 </div>

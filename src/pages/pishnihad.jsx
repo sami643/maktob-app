@@ -8,48 +8,20 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies } from "./../assets/data/data.js";
+import { pishnihaadValidationSchema } from "./../assets/data/validation.js";
 import "./pages.css";
+import { useNavigate } from "react-router-dom";
 
 const Maktob = () => {
-  const handleChange = (values) => {
-    console.log("Values", values);
-    var input = document.getElementById("maktobDate");
-    console.log("Input", input.value);
-  };
-
   const [btnChecked, setBtnChecked] = useState(false);
-  const [selectedPresidencies, setSelectedPresidencies] = useState([]);
+  const navigate = useNavigate();
 
-  const selectAllPresidencies = () => {
-    if (selectedPresidencies.length === presidencies.length) {
-      // If all checkboxes are already selected, unselect all
-      setSelectedPresidencies([]);
-    } else {
-      // Otherwise, select all checkboxes
-      const allPresidencyLabels = presidencies.map((item) => item.label);
-      setSelectedPresidencies(allPresidencyLabels);
-    }
+  const onSubmitForm_1 = (values) => {
+    console.log("values", values);
+    navigate("/pishnihadview", {
+      state: { formData: values },
+    });
   };
-
-  const handleCheckboxChange = (label) => {
-    if (selectedPresidencies.includes(label)) {
-      // If the checkbox is already selected, remove it from the selectedPresidencies state
-      setSelectedPresidencies(
-        selectedPresidencies.filter((item) => item !== label)
-      );
-    } else {
-      // Otherwise, add it to the selectedPresidencies state
-      setSelectedPresidencies([...selectedPresidencies, label]);
-    }
-  };
-
-  const columns = [];
-  const itemsPerColumn = 7;
-
-  for (let i = 0; i < presidencies.length; i += itemsPerColumn) {
-    const columnItems = presidencies.slice(i, i + itemsPerColumn);
-    columns.push(columnItems);
-  }
 
   return (
     <>
@@ -60,15 +32,16 @@ const Maktob = () => {
         <Divider />
         <Formik
           initialValues={{
-            maktobNo: "23423",
-            maktobDate: "",
-            subject: "ALmart",
-            context: "contect",
-            recipient: "Recipient",
+            pishnihadNo: "",
+            pishnihadDate: "",
+            subject: "",
+            context: "",
+            recipent: "",
           }}
-          onSubmit={handleChange}
+          onSubmit={onSubmitForm_1}
+          validationSchema={pishnihaadValidationSchema}
         >
-          {({ values, setFieldValue, setFieldTouched }) => (
+          {({ values, setFieldValue, setFieldTouched, touched, errors }) => (
             <Form className="m-5">
               <div className="row mb-4">
                 <div className="col">
@@ -86,16 +59,25 @@ const Maktob = () => {
                       </span>
                     </label>
                     <input
-                      type="text"
-                      id="maktobNo"
-                      name="maktobNo"
-                      className="form-control"
-                      value={values.maktobNo}
+                      type="number"
+                      id="pishnihadNo"
+                      name="pishnihadNo"
+                      className={`form-control ${
+                        errors.pishnihadNo && touched.pishnihadNo
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      value={values.pishnihadNo}
                       onChange={(e) =>
-                        setFieldValue("maktobNo", e.target.value)
+                        setFieldValue("pishnihadNo", e.target.value)
                       }
-                      onBlur={() => setFieldTouched("maktobNo", true)}
+                      onBlur={() => setFieldTouched("pishnihadNo", true)}
                     />
+                    {errors.pishnihadNo && touched.pishnihadNo ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errors.pishnihadNo}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
                 <div className="col">
@@ -118,14 +100,29 @@ const Maktob = () => {
                         width: "inherit",
                         padding: "16px",
                         marginTop: "-1px",
+                        border: `${
+                          errors.pishnihadDate && touched.pishnihadDate
+                            ? "1px solid red"
+                            : ""
+                        }`,
                       }}
                       calendar={arabic}
                       locale={arabic_ar}
-                      id="maktobDate"
-                      name="maktobDate"
-                      value={values.maktobDate}
-                      onChange={setFieldValue}
+                      id="pishnihadDate"
+                      name="pishnihadDate"
+                      value={values.pishnihadDate}
+                      onChange={(e) =>
+                        setFieldValue(
+                          "pishnihadDate",
+                          e.year + "/" + e.month.number + "/" + e.day
+                        )
+                      }
                     />
+                    {errors.pishnihadDate && touched.pishnihadDate ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errors.pishnihadDate}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -146,16 +143,30 @@ const Maktob = () => {
                       </span>
                     </label>
                     <select
-                      // class=" "
+                      id="recipent"
+                      value={values.recipent}
+                      name="recipent"
                       style={{ height: "35px" }}
-                      className="form-control form-select-lg mb-3"
+                      onChange={(e) =>
+                        setFieldValue("recipent", e.target.value)
+                      }
+                      className={`form-control form-select-lg ${
+                        errors.recipent && touched.recipent
+                          ? "is-invalid form-select-lg    "
+                          : ""
+                      }`}
                       aria-label=".form-select-lg example"
                     >
                       <option selected>Open this select menu</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                      <option value="نصاب">ریاست نصاب</option>
+                      <option value="بشری">ریاست منابع بشری</option>
+                      <option value="پلان">ریاست پلان</option>
                     </select>
+                    {errors.recipent && touched.recipent ? (
+                      <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                        {errors.recipent}
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   <div className="form-outline  col">
@@ -173,15 +184,24 @@ const Maktob = () => {
                     </label>
                     <input
                       type="text"
-                      id="recipient"
-                      name="recipient"
-                      className="form-control"
-                      value={values.recipient}
+                      id="recipent"
+                      name="recipent"
+                      className={`form-control form-select-lg ${
+                        errors.recipent && touched.recipent
+                          ? "is-invalid form-select-lg    "
+                          : ""
+                      }`}
+                      value={values.recipent}
                       onChange={(e) =>
-                        setFieldValue("recipient", e.target.value)
+                        setFieldValue("recipent", e.target.value)
                       }
-                      onBlur={() => setFieldTouched("recipient", true)}
+                      onBlur={() => setFieldTouched("recipent", true)}
                     />
+                    {errors.recipent && touched.recipent ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errors.recipent}
+                      </div>
+                    ) : null}
                   </div>
                 )}
 
@@ -202,11 +222,18 @@ const Maktob = () => {
                     type="text"
                     id="subject"
                     name="subject"
-                    className="form-control"
+                    className={`form-control ${
+                      errors.subject && touched.subject ? "is-invalid" : ""
+                    }`}
                     value={values.subject}
                     onChange={(e) => setFieldValue("subject", e.target.value)}
                     onBlur={() => setFieldTouched("subject", true)}
                   />
+                  {errors.subject && touched.subject ? (
+                    <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                      {errors.subject}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -243,7 +270,9 @@ const Maktob = () => {
                   </span>
                 </label>
                 <textarea
-                  className="form-control"
+                  className={`form-control ${
+                    errors.context && touched.context ? "is-invalid" : ""
+                  }`}
                   id="context"
                   name="context"
                   rows="4"
@@ -251,9 +280,17 @@ const Maktob = () => {
                   onChange={(e) => setFieldValue("context", e.target.value)}
                   onBlur={() => setFieldTouched("context", true)}
                 ></textarea>
+                {errors.context && touched.context ? (
+                  <div
+                    className="invalid-feedback d-block errorMessageStyle mr-2"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    {errors.context}
+                  </div>
+                ) : null}
               </div>
 
-              <div className="row ">
+              {/* <div className="row ">
                 <div className="form-outline col">
                   <label className="form-label mr-3" htmlFor="subject">
                     استونکی
@@ -303,7 +340,7 @@ const Maktob = () => {
                     <option value="3">Three</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
               <div className="row">
                 <div className="text-left col"></div>
                 <div className="text-left col">

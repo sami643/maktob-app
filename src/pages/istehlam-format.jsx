@@ -4,9 +4,13 @@ import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
+import { useLocation } from "react-router-dom";
 import { Checkbox, Divider } from "antd";
-
 const PishnihadFormat = () => {
+  const { state } = useLocation();
+  const formData = state?.formData;
+  console.log("FromIstehlaam_View_format", formData);
+
   const handlePrint = () => {
     window.print();
   };

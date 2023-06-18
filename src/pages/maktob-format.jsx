@@ -10,15 +10,61 @@ import { BorderInnerOutlined } from "@ant-design/icons";
 
 const MaktobFormat = () => {
   const { state } = useLocation();
-
   const formData = state?.formData;
   const copyTo = state?.copyTo;
   console.log("FormData_from_MaktobFormat", formData);
   console.log("ListOfPresidenciesPrintedFrom_maktobFOrmat", copyTo);
 
+  copyTo.sort((a, b) => a.value - b.value);
+  const copyToRecipents = copyTo.map((obj) => obj.label);
+
+  console.log("copyToRecipentsJustLabel", copyToRecipents);
+  console.log("copyToRecipentsJustLabelWithValue", copyTo);
+
   const handlePrint = () => {
     window.print();
   };
+
+  let arrayA = [];
+  let arrayB = [];
+  let arrayC = [];
+  let counter = 0;
+  let counter_1 = 0;
+  let isDeputOrAdvisoryChecked = false;
+
+  for (let i = 0; i < copyTo.length; i++) {
+    if (
+      copyTo[i] === "معاونیت محترم امور تخنیکی و مسلکی" ||
+      copyTo[i] === "مشاوریت محترم تخنیکی" ||
+      copyTo[i] === "مشاوریت محترم حقوقی"
+    ) {
+      isDeputOrAdvisoryChecked = true;
+
+      counter = 1;
+      for (let j = i; j < copyTo.length; j++) {
+        if (
+          copyTo[j] === "مشاوریت محترم تخنیکی" ||
+          copyTo[j] === "مشاوریت محترم حقوقی"
+        ) {
+          counter_1 = 1;
+          for (let k = j; k <= copyTo.length; k++) {
+            arrayC.push(copyTo[k]);
+          }
+        }
+        if (counter_1 == 0) {
+          arrayB.push(copyTo[j]);
+        }
+      }
+    } else if (counter == 0) {
+      arrayA.push(copyTo[i]);
+    }
+  }
+
+  // Limit the length of arrayA and arrayB to a maximum of 8 elements
+  // arrayA = arrayA.slice(0, 8);
+  // arrayB = arrayB.slice(0, 8);
+  // console.log("ArrayC", arrayC);
+  // console.log("ArrayB", arrayB);
   return (
     <>
       <div className="main_container ">
@@ -48,7 +94,7 @@ const MaktobFormat = () => {
               </h4>
             </div>
 
-            <div className="imarat_logo">
+            <div className="imarat_logo mr-3">
               <img src={Logo} alt="" min-width="120" height="100" />
             </div>
           </div>
@@ -61,14 +107,14 @@ const MaktobFormat = () => {
           </div>
           <div className="date">
             <label htmlFor="">ڼیټه:</label>
-            <p> &#160;12 &#160;/ 12 / 1444</p>
+            <p> &#160;{formData.maktobDate ? formData.maktobDate : ""}</p>
           </div>
 
           <div className="maktob_type_div">
             <div className="maktob_type_content">
               <div className="maktob_no">
                 <label>ګڼه:</label>
-                <p>12</p>
+                <p>{formData.maktobNo}</p>
               </div>
               <div className="maktob_type">
                 <div>
@@ -93,31 +139,16 @@ const MaktobFormat = () => {
 
           <Divider className="divider" />
           <div className="body_of_maktob ">
-            <p className="audiance">به مقام محترم ریاست دفتر!</p>
+            <p className="audiance">{formData.recipent}</p>
             <p className="greating">
               ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
             </p>
             <div className="subject_of_maktob">
               <label> موضوع </label>
-              <p>
-                :&#160;&#160;به جواب مکتوب شماره 128 معینیت عواید و گمراکات{" "}
-              </p>
+              <p>:&#160;&#160; {formData.subject} </p>
             </div>
             <p>محترما:</p>
-            <p className="matktob_context">
-              به تعقیب مکاتیب شماره 786 مورخ 18/9/1444 و شماره 853 مورخ
-              23/10/1444 نگاشته میشود که جهت تطبیق پلان مالی 1402 و عملی کردن
-              طرح های دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات تخنیکی و
-              مسلکی تقاضا به عمل میاید که طرح های دیجیتل سازی خود را تا اخیر برج
-              اول سال روان به آمریت سیستم معلوماتی و احصائیه تحویل نماید. در غیر
-              آن مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش خود ریاست ها میباشد. به
-              تعقیب مکاتیب شماره 786 مورخ 18/9/1444 و شماره 853 مورخ 23/10/1444
-              نگاشته میشود که جهت تطبیق پلان مالی 1402 و عملی کردن طرح های
-              دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات تخنیکی و مسلکی
-              تقاضا به عمل میاید که طرح های دیجیتل سازی خود را تا اخیر برج اول
-              سال روان به آمریت سیستم معلوماتی و احصائیه تحویل نماید. در غیر آن
-              مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش خود ریاست ها میباشد.
-            </p>
+            <p className="matktob_context">{formData.context}</p>
             <br />
             <div className="closing_signature">
               <p>والسلام</p>
@@ -129,36 +160,90 @@ const MaktobFormat = () => {
           <div className="copy_to_div ">
             <p className="copy_to_title">کاپي به:</p>
             <div className="copy_to_body">
+              {/* {isDeputOrAdvisoryChecked ? (
+                <>
+                  <div className="copy_body_item">
+                    {arrayA.map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
+                  {arrayB.length > 0 ? (
+                    <div className="copy_body_item">
+                      {arrayB.map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="copy_body_item">
+                      {arrayC.map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
+                    </div>
+                  )}
+                  {arrayB.length > 0 ? (
+                    <div className="copy_body_item">
+                      {arrayC.map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
+                    </div>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <div className="copy_body_item">
+                    {copyTo.slice(0, 8).map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
+                  <div className="copy_body_item">
+                    {copyTo.slice(8, 16).map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
+                  <div className="copy_body_item">
+                    {copyTo.slice(16, 24).map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
+                </>
+              )} */}
+
+              {/* 
               <div className="copy_body_item">
-                <p>ریاست حسابی ومالی</p>
-                <p>ریاست منابع بشری</p>
-                <p>ریاست دعوت و ارشاد</p>
-                <p>ریاست تدارکات</p>
-                <p>ریاست حسابی ومالی</p>
-                <p>ریاست منابع بشری</p>
-                <p>ریاست دعوت و ارشاد</p>
-                <p>ریاست تدارکات</p>
+                {copyTo
+                  .slice(
+                    0,
+                    copyTo.findIndex(
+                      (item) => item === "معاونیت محترم امور تخنیکی و مسلکی"
+                    )
+                  )
+                  .map((item, index) => (
+                    <p key={index}>{item}</p>
+                  ))}
               </div>
               <div className="copy_body_item">
-                <p>ریاست حسابی ومالی</p>
-                <p>ریاست منابع بشری</p>
-                <p>ریاست دعوت و ارشاد</p>
-                <p>ریاست تدارکات</p>
-                <p>ریاست حسابی ومالی</p>
-                <p>ریاست منابع بشری</p>
-                <p>ریاست دعوت و ارشاد</p>
-                <p>ریاست تدارکات</p>
+                {copyTo
+                  .slice(
+                    copyTo.findIndex(
+                      (item) => item === "معاونیت محترم امور تخنیکی و مسلکی"
+                    ),
+                    copyTo.findIndex((item) => item === "مشاوریت محترم تخنیکی")
+                  )
+                  .map((item, index) => (
+                    <p key={index}>{item}</p>
+                  ))}
               </div>
               <div className="copy_body_item">
-                <p>ریاست حسابی ومالی</p>
-                <p>ریاست منابع بشری</p>
-                <p>ریاست دعوت و ارشاد</p>
-                <p>ریاست تدارکات</p>
-                <p>ریاست حسابی ومالی</p>
-                <p>ریاست منابع بشری</p>
-                <p>ریاست دعوت و ارشاد</p>
-                <p>ریاست تدارکات</p>
-              </div>
+                {copyTo
+                  .slice(
+                    copyTo.findIndex((item) => item === "مشاوریت محترم تخنیکی"),
+                    24
+                  )
+                  .map((item, index) => (
+                    <p key={index}>{item}</p>
+                  ))}
+              </div> */}
             </div>
           </div>
 
