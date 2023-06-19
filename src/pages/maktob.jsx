@@ -80,10 +80,12 @@ const Maktob = (props) => {
     console.log("selectedPresidencies", selectedPresidencies);
     console.log("NewAddedItemsToCopy", inputFields);
 
-    const TransferabeCopyToData = selectedPresidencies.concat(inputFields);
-    console.log("TransferabeCopyToData", TransferabeCopyToData);
     navigate("/maktobview", {
-      state: { formData: values, copyTo: TransferabeCopyToData },
+      state: {
+        formData: values,
+        checkedPresidencies: selectedPresidencies,
+        newpresidencies: inputFields,
+      },
     });
   };
 

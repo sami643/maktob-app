@@ -8,18 +8,31 @@ import { Checkbox, Divider } from "antd";
 import { useLocation } from "react-router-dom";
 import { BorderInnerOutlined } from "@ant-design/icons";
 
+function chunkArray(arr, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    chunks.push(arr.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
 const MaktobFormat = () => {
   const { state } = useLocation();
   const formData = state?.formData;
-  const copyTo = state?.copyTo;
+  const copyTo = state?.checkedPresidencies;
+  const newPresidencies = state?.newpresidencies;
   console.log("FormData_from_MaktobFormat", formData);
-  console.log("ListOfPresidenciesPrintedFrom_maktobFOrmat", copyTo);
 
   copyTo.sort((a, b) => a.value - b.value);
-  const copyToRecipents = copyTo.map((obj) => obj.label);
+  const copyToRecipentsJustLabel = copyTo.map((obj) => obj.label);
+  const listOfpresidenciesJustValue = copyTo.map((obj) => obj.value);
 
-  console.log("copyToRecipentsJustLabel", copyToRecipents);
-  console.log("copyToRecipentsJustLabelWithValue", copyTo);
+  const copyToRecipentsJustLabel_1 =
+    copyToRecipentsJustLabel.concat(newPresidencies);
+
+  console.log("listOfpresidenciesJustValue", listOfpresidenciesJustValue);
+  console.log("listOfpresidenciesBothValueAndLabels", copyTo);
+  console.log("copyToRecipentsJustLabel", copyToRecipentsJustLabel_1);
 
   const handlePrint = () => {
     window.print();
@@ -30,41 +43,58 @@ const MaktobFormat = () => {
   let arrayC = [];
   let counter = 0;
   let counter_1 = 0;
+  let counter_2 = 0;
   let isDeputOrAdvisoryChecked = false;
 
-  for (let i = 0; i < copyTo.length; i++) {
+  for (let i = 0; i < copyToRecipentsJustLabel_1.length; i++) {
     if (
-      copyTo[i] === "معاونیت محترم امور تخنیکی و مسلکی" ||
-      copyTo[i] === "مشاوریت محترم تخنیکی" ||
-      copyTo[i] === "مشاوریت محترم حقوقی"
+      listOfpresidenciesJustValue[i] === 9 ||
+      listOfpresidenciesJustValue[i] === 10 ||
+      listOfpresidenciesJustValue[i] === 11 ||
+      listOfpresidenciesJustValue[i] === 12 ||
+      listOfpresidenciesJustValue[i] === 12 ||
+      listOfpresidenciesJustValue[i] === 13 ||
+      listOfpresidenciesJustValue[i] === 14 ||
+      listOfpresidenciesJustValue[i] === 15 ||
+      listOfpresidenciesJustValue[i] === 16 ||
+      listOfpresidenciesJustValue[i] === 17
     ) {
+      // this works when one of the condition become true
       isDeputOrAdvisoryChecked = true;
-
       counter = 1;
-      for (let j = i; j < copyTo.length; j++) {
+
+      for (let j = i; j < copyToRecipentsJustLabel_1.length; j++) {
         if (
-          copyTo[j] === "مشاوریت محترم تخنیکی" ||
-          copyTo[j] === "مشاوریت محترم حقوقی"
+          listOfpresidenciesJustValue[j] === 16 ||
+          listOfpresidenciesJustValue[j] === 17 ||
+          listOfpresidenciesJustValue[j] === 19 ||
+          listOfpresidenciesJustValue[j] === 19
         ) {
           counter_1 = 1;
-          for (let k = j; k <= copyTo.length; k++) {
-            arrayC.push(copyTo[k]);
+          for (let k = j; k <= copyToRecipentsJustLabel_1.length; k++) {
+            if (counter_2 === 0 && arrayB.length <= 0) {
+              for (let m = k; m <= copyToRecipentsJustLabel_1.length; m++) {
+                arrayB.push(copyToRecipentsJustLabel_1[m]);
+              }
+              counter_2 = 1;
+            } else if (counter_2 === 0) {
+              arrayC.push(copyToRecipentsJustLabel_1[k]);
+            }
           }
+          counter_2 = 1;
         }
+        // This works Until the value become 16 or 17
         if (counter_1 == 0) {
-          arrayB.push(copyTo[j]);
+          arrayB.push(copyToRecipentsJustLabel_1[j]);
         }
       }
-    } else if (counter == 0) {
-      arrayA.push(copyTo[i]);
+    }
+    // This works Until the value become 9,16,or 17
+    else if (counter == 0) {
+      arrayA.push(copyToRecipentsJustLabel_1[i]);
     }
   }
 
-  // Limit the length of arrayA and arrayB to a maximum of 8 elements
-  // arrayA = arrayA.slice(0, 8);
-  // arrayB = arrayB.slice(0, 8);
-  // console.log("ArrayC", arrayC);
-  // console.log("ArrayB", arrayB);
   return (
     <>
       <div className="main_container ">
@@ -160,90 +190,51 @@ const MaktobFormat = () => {
           <div className="copy_to_div ">
             <p className="copy_to_title">کاپي به:</p>
             <div className="copy_to_body">
-              {/* {isDeputOrAdvisoryChecked ? (
+              {isDeputOrAdvisoryChecked ? (
                 <>
                   <div className="copy_body_item">
                     {arrayA.map((item, index) => (
                       <p key={index}>{item}</p>
                     ))}
                   </div>
-                  {arrayB.length > 0 ? (
-                    <div className="copy_body_item">
-                      {arrayB.map((item, index) => (
-                        <p key={index}>{item}</p>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="copy_body_item">
-                      {arrayC.map((item, index) => (
-                        <p key={index}>{item}</p>
-                      ))}
-                    </div>
-                  )}
-                  {arrayB.length > 0 ? (
-                    <div className="copy_body_item">
-                      {arrayC.map((item, index) => (
-                        <p key={index}>{item}</p>
-                      ))}
-                    </div>
-                  ) : null}
+                  <div className="copy_body_item">
+                    {arrayB.map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
+
+                  <div className="copy_body_item">
+                    {arrayC.map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
                 </>
               ) : (
                 <>
                   {" "}
                   <div className="copy_body_item">
-                    {copyTo.slice(0, 8).map((item, index) => (
-                      <p key={index}>{item}</p>
-                    ))}
+                    {copyToRecipentsJustLabel_1
+                      .slice(0, 8)
+                      .map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
                   </div>
                   <div className="copy_body_item">
-                    {copyTo.slice(8, 16).map((item, index) => (
-                      <p key={index}>{item}</p>
-                    ))}
+                    {copyToRecipentsJustLabel_1
+                      .slice(8, 16)
+                      .map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
                   </div>
                   <div className="copy_body_item">
-                    {copyTo.slice(16, 24).map((item, index) => (
-                      <p key={index}>{item}</p>
-                    ))}
+                    {copyToRecipentsJustLabel_1
+                      .slice(16, 24)
+                      .map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
                   </div>
                 </>
-              )} */}
-
-              {/* 
-              <div className="copy_body_item">
-                {copyTo
-                  .slice(
-                    0,
-                    copyTo.findIndex(
-                      (item) => item === "معاونیت محترم امور تخنیکی و مسلکی"
-                    )
-                  )
-                  .map((item, index) => (
-                    <p key={index}>{item}</p>
-                  ))}
-              </div>
-              <div className="copy_body_item">
-                {copyTo
-                  .slice(
-                    copyTo.findIndex(
-                      (item) => item === "معاونیت محترم امور تخنیکی و مسلکی"
-                    ),
-                    copyTo.findIndex((item) => item === "مشاوریت محترم تخنیکی")
-                  )
-                  .map((item, index) => (
-                    <p key={index}>{item}</p>
-                  ))}
-              </div>
-              <div className="copy_body_item">
-                {copyTo
-                  .slice(
-                    copyTo.findIndex((item) => item === "مشاوریت محترم تخنیکی"),
-                    24
-                  )
-                  .map((item, index) => (
-                    <p key={index}>{item}</p>
-                  ))}
-              </div> */}
+              )}
             </div>
           </div>
 
