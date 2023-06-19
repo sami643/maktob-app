@@ -8,15 +8,10 @@ import { Checkbox, Divider } from "antd";
 import { useLocation } from "react-router-dom";
 import { BorderInnerOutlined } from "@ant-design/icons";
 
-function chunkArray(arr, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    chunks.push(arr.slice(i, i + chunkSize));
-  }
-  return chunks;
-}
 
 const MaktobFormat = () => {
+
+  
   const { state } = useLocation();
   const formData = state?.formData;
   const copyTo = state?.checkedPresidencies;

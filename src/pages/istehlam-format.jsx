@@ -66,12 +66,12 @@ const PishnihadFormat = () => {
           </div>
           <div className="pishnihad_date">
             <label htmlFor="">ڼیټه:</label>
-            <p> &#160;12/ 12 / 1444</p>
+            <p> &#160;{formData.istehlaamDate}</p>
           </div>
           <div className="maktob_type_div">
             <div className="maktob_no">
               <label>ګڼه:</label>
-              <p>12</p>
+              <p>{formData.istehlaamNo}</p>
             </div>
           </div>
 
@@ -83,25 +83,17 @@ const PishnihadFormat = () => {
                 <h3 className="header_of_pishnihad_text">استعلام</h3>
               </div>
               <div className="pishnihad_body_div mx-2">
-                <p className="audiance">به مقام محترم ریاست دفتر!</p>
+                <p className="audiance">{formData.recipent}</p>
                 <p className="greating">
                   ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
                 </p>
                 <div className="subject_of_maktob">
                   <label style={{ textDecoration: "underline" }}> موضوع:</label>
-                  <p>به جواب مکتوب شماره 128 معینیت عواید </p>
+                  <p>{formData.subject}</p>
                 </div>
                 <br />
                 <p>محترما:</p>
-                <p className="matktob_context">
-                  به تعقیب مکاتیب شماره 786 مورخ 18/9/1444 و شماره 853 مورخ
-                  23/10/1444 نگاشته میشود که جهت تطبیق پلان مالی 1402 و عملی
-                  کردن طرح های دیجیتل سازی از تمام ریاست های محترم اداره تعلیمات
-                  تخنیکی و مسلکی تقاضا به عمل میاید که طرح های دیجیتل سازی خود
-                  را تا اخیر برج اول سال روان به آمریت سیستم معلوماتی و احصائیه
-                  تحویل نماید. در غیر آن مسؤلیت عملی نشدن طرح دیجیتلی شان بدوش
-                  خود ریاست ها میباشد.
-                </p>
+                <p className="matktob_context">{formData.context}</p>
                 <br />
                 <div className="closing_signature">
                   <p>والسلام</p>

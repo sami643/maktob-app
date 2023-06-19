@@ -184,7 +184,7 @@
   margin-bottom: 100px;
 }
 .print-button {
-  margin-left: 100px;
+ margin-inline: 2%;
 }
 .copy_body_item p {
   padding: 0px !important;
@@ -423,6 +423,10 @@
     margin-right: 10px;
     margin-left: 10px;
     font-size: 15px;
+  }
+
+  .sidebar {
+    display: none !important;
   }
 
   /* /////////////////////////////////////// */

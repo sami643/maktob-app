@@ -11,12 +11,7 @@ const Sidebar = ({ children }) => {
   const location = useLocation();
 
   const shouldSidebarBeVisible = (pathname) => {
-    if (
-      pathname === "/pishnihadview" ||
-      pathname === "/maktobview" ||
-      pathname === "/istehlamview" ||
-      pathname === "/login"
-    ) {
+    if (pathname === "/login") {
       // THIS IS TRUE TEMPORARILY
       return false;
     }

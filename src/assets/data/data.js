@@ -7,21 +7,6 @@ import {
   FaThList,
 } from "react-icons/fa";
 
-// const dep = {
-//   top: [{}, {}]
-//   children: [{}, {}]
-// }
-
-// const dep = {
-//   top: [{}, {}]
-//   children: [{}, {}]
-// }
-
-// const dep = {
-//   top: [{}, {}]
-//   children: [{}, {}]
-// }
-
 export const presidencies = [
   {
     value: 1,
@@ -288,20 +273,5 @@ export const sidebarMenuItem = [
     path: "/login",
     name: "login",
     icon: <FaSignOutAlt />,
-  },
-  {
-    path: "/maktobview",
-    name: "maktobFormat",
-    icon: "M_F",
-  },
-  {
-    path: "/pishnihadview",
-    name: "PishnihadFormat",
-    icon: "P_F",
-  },
-  {
-    path: "/istehlamview",
-    name: "IstehlamFormat",
-    icon: "I_F",
   },
 ];
