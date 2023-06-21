@@ -46,73 +46,107 @@
   padding: 3%;
 }
 
-.maktobviewcontainer {
-  background-color: #ffffff;
-  margin-inline: 3%;
-  margin-top: 3%;
-  /* direction: rtl; */
-  text-align: start;
-}
-
 .header-body {
   display: flex;
   flex-direction: row;
 }
+
+.pashto_headling_div {
+  display: flex;
+  flex-direction: row;
+  /* background-color: gray; */
+  padding: 0;
+}
+
+.pashto_headline_text {
+  font-size: 16.1px;
+  font-weight: 900;
+  padding-right: 3px;
+}
+.pashto-text-div-inner {
+  margin-top: 15px;
+  margin-right: 5px;
+}
+
+.persian_headline_div {
+  display: flex;
+  flex-direction: row;
+  /* background-color: #b8b9be; */
+  padding: 0px;
+}
+
+.persian_headline_text {
+  text-align: right;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.persian-text-div-inner {
+  margin-top: 15px;
+  margin-left: 5px;
+}
+
+.pashto_heading_img {
+  width: 100%;
+}
+
+.persian_headline_img {
+  width: 100%;
+}
+
 .header_english {
   font-style: italic;
 }
 
-.date {
+.date_type_no_div {
   display: flex;
   flex-direction: row;
-  float: left;
-  margin-top: -55px;
-  margin-left: 23px;
-  font-weight: bold;
+  justify-content: space-between;
+  text-align: left;
 }
 
-.pishnihad_date {
+.maktob_type {
   display: flex;
   flex-direction: row;
-  float: left;
-  margin-top: -30px;
-  margin-left: 23px;
-  font-weight: bold;
+  background-color: rgb(140, 0, 255);
+  text-justify: left;
+}
+
+.maktob-type-check {
+  padding: 0px;
 }
 
 .owner {
   text-align: center;
   font-weight: bold;
+  background-color: chocolate;
 }
 
-.maktob_type_div {
-  position: relative;
-
-  margin-left: 18px;
-  width: 100%;
-  margin-top: -30px;
-}
-.maktob_type_content {
+.date {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  background-color: brown;
+  font-weight: bold;
+  padding: 0;
 }
+.date_type_div {
+  padding: 0px;
+  padding-top: 10px;
+}
+
 .maktob_no {
   display: flex;
   flex-direction: row;
-  margin-right: 0.8cm;
+  padding: 0;
   font-weight: bold;
-}
-.maktob_type {
-  display: flex;
-  flex-direction: row;
-  margin-left: 0.3cm;
+  background-color: orange;
 }
 
 .divider {
   font-weight: bolder;
   color: #000;
   margin-top: -20px !important;
+  background-color: #000;
 }
 .body_of_maktob {
   margin: 0px;
@@ -142,6 +176,15 @@
   text-align: center;
   font-weight: bold;
   padding-bottom: 200px;
+}
+
+.pishnihad_date {
+  display: flex;
+  flex-direction: row;
+  float: left;
+  margin-top: -30px;
+  margin-left: 23px;
+  font-weight: bold;
 }
 
 .copy_to_div {
@@ -184,7 +227,7 @@
   margin-bottom: 100px;
 }
 .print-button {
- margin-inline: 2%;
+  margin-inline: 2%;
 }
 .copy_body_item p {
   padding: 0px !important;
@@ -237,200 +280,14 @@
   font-size: 200px;
 }
 .pishnihad_body_div {
-  padding: 15px 10px 15px 10px;
+  padding: 15 px 10px 15px 10px;
   font-size: 25px;
 }
-.pashto_headling_img {
-  width: 100%;
-}
-.persian_headline_img {
-  width: 100%;
-}
+
 @media screen and (max-width: 1140px) {
 }
 
 /* Printing Part */
-@media print {
-  .main_container {
-    margin: 0px 15px 0px 0px !important;
-    /* margin: 0px !important; */
-    padding: 0px !important;
-  }
-  .maktobviewcontainer {
-    margin-top: 0px !important;
-    margin: 0px !important;
-    padding: 0px !important;
-    position: relative !important;
-    height: 100%;
-  }
-  .header-body {
-    margin-top: 0px !important;
-    margin-right: 10px !important;
-    margin-left: 0px !important;
-  }
-  .print-button {
-    display: none;
-  }
-  .pashto_headling_div {
-    min-width: 300px !important;
-  }
-  .divider {
-    border-top: solid black 1px !important;
-    margin-right: 1px;
-  }
-  .pashto_headling_img {
-    min-width: 250px !important;
-    margin-right: 10px !important ;
-  }
-  .pashto_headline_text {
-    min-width: 250px !important;
-    font-size: 25px !important;
-    margin-right: 15px !important ;
-  }
-
-  .english_headline_div {
-    min-width: 300px;
-    max-width: 300px;
-    font-style: italic;
-  }
-
-  .persian_headline_div {
-    min-width: 300px !important;
-  }
-
-  .persian_headline_img {
-    min-width: 250px !important;
-    margin-left: 10px !important ;
-  }
-  .persian_headline_text {
-    min-width: 250px !important;
-    font-size: 27px !important;
-    margin-left: 10px !important ;
-  }
-
-  .owner {
-    text-align: center;
-    font-weight: bold;
-    font-size: 25px !important;
-    margin-top: -15px !important;
-    min-height: 120px !important;
-  }
-  .date {
-    margin-top: -80px !important;
-    margin-left: -5px;
-    font-weight: bold;
-    font-size: 25px;
-  }
-  .pishnihad_date {
-    margin-top: -30px !important;
-    font-weight: bold;
-    font-size: 25px !important;
-  }
-
-  .maktob_type_div {
-    width: 100%;
-  }
-
-  .maktob_no {
-    display: flex;
-    flex-direction: row;
-    margin-right: 0cm;
-    font-weight: bold;
-    font-size: 25px !important;
-    margin-top: -10px !important;
-  }
-  .maktob_type {
-    display: flex;
-    flex-direction: row;
-    margin-left: -5.6cm;
-    margin-top: -10px;
-    font-size: 25px !important;
-  }
-
-  .closing_signature {
-    padding: 0px !important;
-  }
-
-  .copy_to_div {
-    position: absolute;
-    top: 1150px !important;
-    font-size: 15px;
-    width: 100%;
-  }
-  .copy_to_body {
-    text-indent: 30px;
-    display: flex;
-  }
-
-  .copy_body_item p {
-    padding: 0px !important;
-    margin: 0%;
-    font-size: 22px !important;
-  }
-  .copy_to_title {
-    font-weight: bold;
-    font-size: 22px !important;
-  }
-
-  .pishnihad_body_main_div {
-    min-height: 76vh;
-    margin-bottom: -50px !important;
-  }
-
-  .footer_divider {
-    position: absolute;
-    top: 1520px;
-    border-top: solid black 1px !important;
-  }
-  .footer_divider_pishnihad {
-    position: absolute;
-    top: 1450px;
-    border-top: solid black 1px !important;
-  }
-  .footer_pishnihad {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    position: absolute;
-    top: 1480px;
-    width: 100%;
-    margin-bottom: -30px !important;
-    font-size: 14px !important;
-  }
-
-  .footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    position: absolute;
-    top: 1490px;
-    width: 100%;
-    margin-bottom: -30px !important;
-  }
-  .footer-content_pishnihad {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .footer-content_maktob {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 60px !important;
-    width: 100%;
-  }
-  .footer-item {
-    margin-right: 10px;
-    margin-left: 10px;
-    font-size: 15px;
-  }
-
-  .sidebar {
-    display: none !important;
-  }
-
-  /* /////////////////////////////////////// */
-}
 
 .errorMessageStyle {
   font-weight: bold;
@@ -441,4 +298,30 @@
   border-color: rgb(254, 34, 34) !important;
   border-width: 1px;
   /* Other styles for invalid input */
+}
+
+@media print {
+  .sidebar {
+    display: none !important;
+  }
+  .main_container {
+    margin: 0px 15px 0px 0px !important;
+    /* margin: 0px !important; */
+    padding: 0px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .english_headline_div {
+    display: none;
+  }
+  .persian_headline_div {
+    margin-right: 15px;
+  }
+  .pashto_headline_div {
+    margin-left: 15px;
+  }
+  .owner {
+    min-width: 200px;
+  }
 }
