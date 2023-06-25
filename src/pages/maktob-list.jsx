@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Divider, Input, Space, Table, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -6,6 +6,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { maktobs } from "../assets/data/data.js";
 import "./pages.css";
+import axios from "axios";
 
 const MaktobList = () => {
   const [searchText, setSearchText] = useState("");
@@ -94,40 +95,59 @@ const MaktobList = () => {
       ),
   });
 
+  const [listItems, setListItems] = useState({});
+  // Integration
+  useEffect(() => {
+    axios
+      .post("/api/maktob/maktobs", { data: { userId: "10" } })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        setListItems(res.data.Maktobs_List_data);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  }, []);
+
   const columns = [
     {
       title: "د مکتوب ګڼه",
-      dataIndex: "maktobNo",
-      key: "maktobNo",
+      dataIndex: "MaktobNo",
+      key: "MaktobNo",
       width: "20%",
-      ...getColumnSearchProps("maktobNo"),
-      sorter: (a, b) => parseInt(a.maktobNo) - parseInt(b.maktobNo),
+      ...getColumnSearchProps("MaktobNo"),
+      sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
       sortDirections: ["descend", "ascend"],
     },
     {
       title: "مخاطب",
-      dataIndex: "recipent",
-      key: "recipent",
+      dataIndex: "Recipent",
+      key: "Recipent",
       width: "30%",
-      ...getColumnSearchProps("recipent"),
+      ...getColumnSearchProps("Recipent"),
     },
     {
       title: "موضوع",
-      dataIndex: "subject",
+      dataIndex: "Subject",
       key: "subject",
-      ...getColumnSearchProps("subject"),
+      ...getColumnSearchProps("Subject"),
 
       width: "30%",
     },
     {
       title: "نیټه/ تاریخ",
-      dataIndex: "date",
-      key: "date",
-      ...getColumnSearchProps("date"),
+      dataIndex: "MaktobDate",
+      key: "MaktobDate",
+      ...getColumnSearchProps("MaktobDate"),
       width: "20%",
     },
   ];
 
+  // console.log("Maktobs", maktobs);
+  // console.log("type of maktobs", typeof maktobs);
+  // console.log(typeof listItems);
+  const listItemsArray = Object.values(listItems);
+  console.log("listItems32423432", listItemsArray);
   return (
     <>
       <Header />
@@ -136,7 +156,7 @@ const MaktobList = () => {
         <Divider />
         <Table
           columns={columns}
-          dataSource={maktobs.filter((record) =>
+          dataSource={listItemsArray.filter((record) =>
             columns.some(
               (column) =>
                 column.hasOwnProperty("onFilter") &&

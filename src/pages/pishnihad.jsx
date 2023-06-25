@@ -15,7 +15,7 @@ import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
-import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const Pishnihad = () => {
   const [btnChecked, setBtnChecked] = useState(false);
@@ -31,6 +31,26 @@ const Pishnihad = () => {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const onStoreData = () => {
+    axios
+      .post("/api/pishnihad/new-pishnihad", {
+        data: {
+          pishnihadNo: formData.pishnihadNo,
+          pishnihadDate: formData.pishnihadDate,
+          recipent: formData.recipent,
+          subject: formData.subject,
+          context: formData.context,
+          userId: "310",
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+      })
+      .catch((err) => {
+        console.log("ErrorMessage", err.response.data.message);
+      });
   };
   return (
     <>
@@ -445,13 +465,23 @@ const Pishnihad = () => {
                 مخکنۍ صفحه/ صفحه قبلی
               </button>
 
-              <button className="print-button btn bg-primary px-5">ثبت</button>
+              <button
+                className="print-button btn bg-primary px-5"
+                onClick={() => {
+                  onStoreData();
+                }}
+              >
+                ثبت
+              </button>
 
               <button
-                onClick={handlePrint}
+                onClick={() => {
+                  onStoreData();
+                  handlePrint();
+                }}
                 className="print-button btn bg-primary px-5"
               >
-                پرنت
+                پرنت و ثبت
               </button>
             </div>
           </div>

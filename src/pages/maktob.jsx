@@ -14,7 +14,7 @@ import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
-import { BorderInnerOutlined } from "@ant-design/icons";
+import axios from "axios";
 import "./pages.css";
 
 const Maktob = (props) => {
@@ -168,6 +168,29 @@ const Maktob = (props) => {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const onStoreData = () => {
+    console.log("FormData from the onstore data", formData);
+
+    // Integration
+    axios
+      .post("/api/maktob/new-maktob", {
+        data: {
+          maktobNo: formData.maktobNo,
+          maktobDate: formData.maktobDate,
+          recipent: formData.recipent,
+          subject: formData.subject,
+          context: formData.context,
+          userId: "10",
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+      })
+      .catch((err) => {
+        console.log("ErorrMessage: ", err.response.data.message);
+      });
   };
 
   return (
@@ -396,10 +419,10 @@ const Maktob = (props) => {
                     </div>
                   </div>
 
-                  <div class="form-check ">
+                  <div className="form-check ">
                     <div style={{ marginTop: "-12px", marginRight: "4px" }}>
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
                         value=""
                         id="flexCheckIndeterminate"
@@ -407,7 +430,7 @@ const Maktob = (props) => {
                       />
                     </div>
                     <label
-                      class="form-check-label"
+                      className="form-check-label"
                       for="flexCheckIndeterminate"
                       style={{ marginInline: "24px", fontSize: "11px" }}
                     >
@@ -525,7 +548,7 @@ const Maktob = (props) => {
 
                     {inputFields.map((value, index) => (
                       <div className="col" key={index}>
-                        <div class="input-group options-input mr-4 ">
+                        <div className="input-group options-input mr-4 ">
                           <div>
                             <input
                               type="text"
@@ -737,13 +760,23 @@ const Maktob = (props) => {
                 مخکنۍ صفحه/ صفحه قبلی
               </button>
 
-              <button className="print-button btn bg-primary px-5">ثبت</button>
+              <button
+                className="print-button btn bg-primary px-5"
+                onClick={() => {
+                  onStoreData();
+                }}
+              >
+                ثبت
+              </button>
 
               <button
-                onClick={handlePrint}
+                onClick={() => {
+                  handlePrint();
+                  onStoreData();
+                }}
                 className="print-button btn bg-primary px-5"
               >
-                پرنت
+                پرنت و ثبت
               </button>
             </div>
           </div>

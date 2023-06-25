@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Divider, Input, Space, Table, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { istehlaams } from "../assets/data/data.js";
+import axios from "axios";
 import "./pages.css";
 
 const PishnihadList = () => {
@@ -97,36 +98,51 @@ const PishnihadList = () => {
   const columns = [
     {
       title: "د استعلام ګڼه",
-      dataIndex: "pishnihadNo",
-      key: "pishnihadNo",
+      dataIndex: "IstehlaamNo",
+      key: "IstehlaamNo",
       width: "20%",
-      ...getColumnSearchProps("pishnihadNo"),
-      sorter: (a, b) => parseInt(a.pishnihadNo) - parseInt(b.pishnihadNo),
+      ...getColumnSearchProps("IstehlaamNo"),
+      sorter: (a, b) => parseInt(a.IstehlaamNo) - parseInt(b.IstehlaamNo),
       sortDirections: ["descend", "ascend"],
     },
     {
       title: "مخاطب",
-      dataIndex: "recipent",
-      key: "recipent",
+      dataIndex: "Recipent",
+      key: "Recipent",
       width: "30%",
-      ...getColumnSearchProps("recipent"),
+      ...getColumnSearchProps("Recipent"),
     },
     {
       title: "موضوع",
-      dataIndex: "subject",
-      key: "subject",
-      ...getColumnSearchProps("subject"),
+      dataIndex: "Subject",
+      key: "Subject",
+      ...getColumnSearchProps("Subject"),
 
       width: "30%",
     },
     {
       title: "نیټه/ تاریخ",
-      dataIndex: "date",
-      key: "date",
-      ...getColumnSearchProps("date"),
+      dataIndex: "IstehlaamDate",
+      key: "IstehlaamDate",
+      ...getColumnSearchProps("IstehlaamDate"),
       width: "20%",
     },
   ];
+
+  const [listItems, setListItems] = useState({});
+  useEffect(() => {
+    axios
+      .post("/api/istehlaam/istehlaams", { data: { userId: "20" } })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        setListItems(res.data.IstehlaamsList);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  }, []);
+  const listItemsArray = Object.values(listItems);
+  console.log("listItems32423432", listItemsArray);
 
   return (
     <>
@@ -136,7 +152,7 @@ const PishnihadList = () => {
         <Divider />
         <Table
           columns={columns}
-          dataSource={istehlaams.filter((record) =>
+          dataSource={listItemsArray.filter((record) =>
             columns.some(
               (column) =>
                 column.hasOwnProperty("onFilter") &&
