@@ -2,10 +2,10 @@ import React from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { Divider } from "@material-ui/core";
-import "./pages.css";
-
+import axios from "axios";
 import "./pages.css";
 const Login = () => {
+
   return (
     <>
       <Header />{" "}
@@ -42,10 +42,7 @@ const Login = () => {
                     </label>
                   </div>
 
-                  <button
-                    class="btn bg-primary btn-lg btn-block"
-                    type="submit"
-                  >
+                  <button class="btn bg-primary btn-lg btn-block" type="submit">
                     Login
                   </button>
                   <br />

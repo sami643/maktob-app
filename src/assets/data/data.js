@@ -275,9 +275,9 @@ export const sidebarMenuItem = [
     name: "وتل",
     icon: <FaSignOutAlt />,
   },
-  {
-    path: "/login",
-    name: "login",
-    icon: <FaSignOutAlt />,
-  },
+  // {
+  //   path: "/login",
+  //   name: "login",
+  //   icon: <FaSignOutAlt />,
+  // },
 ];

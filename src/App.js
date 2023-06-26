@@ -20,7 +20,7 @@ const App = () => {
     <BrowserRouter>
       <Sidebar>
         <Routes>
-          <Route path="/" element={<Maktob />} />
+          <Route path="/" element={<Login />} />
           <Route path="/main" element={<Maktob />} />
           <Route path="/maktob" element={<Maktob />} />
           <Route path="/maktoblist" element={<MaktobList />} />
@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/istehlaam" element={<Istehlaam />} />
           <Route path="/istehlaamlist" element={<IstehlaamList />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
+          {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/logout" element={<LogOut />} />
           <Route path="/maktobview" element={<MaktobFormat />} />
           <Route path="/pishnihadview" element={<PishnihadFormat />} />

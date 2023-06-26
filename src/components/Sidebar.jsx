@@ -11,7 +11,7 @@ const Sidebar = ({ children }) => {
   const location = useLocation();
 
   const shouldSidebarBeVisible = (pathname) => {
-    if (pathname === "/login") {
+    if (pathname === "/login" || pathname === "/") {
       // THIS IS TRUE TEMPORARILY
       return false;
     }
