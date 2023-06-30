@@ -6,6 +6,7 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies } from "./../assets/data/data.js";
+import axios from "axios";
 import { IstehlaamValidationSchema } from "./../assets/data/validation.js";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +33,26 @@ const Maktob = () => {
     window.print();
   };
   const [isFormState, setIsFromState] = useState(true);
+
+  const onStoreData = () => {
+    axios
+      .post("/api/istehlaam/new-istehlaam", {
+        data: {
+          istehlaamNo: formData.istehlaamNo,
+          istehlaamDate: formData.istehlaamDate,
+          recipent: formData.recipent,
+          subject: formData.subject,
+          context: formData.context,
+          userId: "201",
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+      })
+      .catch((err) => {
+        console.log("ErrorMessage:", err.response.data.message);
+      });
+  };
   return (
     <>
       {isFormState ? (
@@ -308,58 +329,7 @@ const Maktob = () => {
                       </div>
                     ) : null}
                   </div>
-                  {/* 
-              <div className="row ">
-                <div className="form-outline col">
-                  <label className="form-label mr-3" htmlFor="subject">
-                    استونکی
-                    <span
-                      style={{
-                        color: "red",
-                        marginInline: "5px",
-                        paddingTop: "5px",
-                      }}
-                    >
-                      *
-                    </span>
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    className="form-control"
-                    value={values.subject}
-                    onChange={(e) => setFieldValue("subject", e.target.value)}
-                    onBlur={() => setFieldTouched("subject", true)}
-                  />
-                </div>
 
-                <div className="form-outline mb-4 col">
-                  <label className="form-label mr-3" htmlFor="subject">
-                    مرجع
-                    <span
-                      style={{
-                        color: "red",
-                        marginInline: "5px",
-                        paddingTop: "5px",
-                      }}
-                    >
-                      *
-                    </span>
-                  </label>
-                  <select
-                    // class=" "
-                    style={{ height: "35px" }}
-                    className="form-control form-select-lg mb-3"
-                    aria-label=".form-select-lg example"
-                  >
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </select>
-                </div>
-              </div> */}
                   <div className="row">
                     <div className="text-left col"></div>
                     <div className="text-left col">
@@ -438,12 +408,11 @@ const Maktob = () => {
               <div className="maktob_type_div">
                 <div className="maktob_no">
                   <label>ګڼه:</label>
-                  <p>?{formData.istehlaamNo}</p>
+                  <p>{formData.istehlaamNo}</p>
                 </div>
               </div>
 
               <Divider className="divider" />
-
               <div className="pishnihad_body_main_div">
                 <div className="pishnihad_body">
                   <div className="header_of_pishnihad">
@@ -499,13 +468,23 @@ const Maktob = () => {
                 مخکنۍ صفحه/ صفحه قبلی
               </button>
 
-              <button className="print-button btn bg-primary px-5">ثبت</button>
+              <button
+                className="print-button btn bg-primary px-5"
+                onClick={() => {
+                  onStoreData();
+                }}
+              >
+                ثبت
+              </button>
 
               <button
-                onClick={handlePrint}
+                onClick={() => {
+                  handlePrint();
+                  onStoreData();
+                }}
                 className="print-button btn bg-primary px-5"
               >
-                پرنت
+                ثبت و پرنت
               </button>
             </div>
           </div>
