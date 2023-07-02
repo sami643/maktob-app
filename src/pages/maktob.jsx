@@ -1,5 +1,6 @@
 import React from "react";
 import { createContext, useState } from "react";
+import Sidebar from "../components/Sidebar";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { Checkbox, Divider } from "@material-ui/core";
@@ -170,6 +171,10 @@ const Maktob = (props) => {
     window.print();
   };
 
+  // Retrieving data from the LocalStorage
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  console.log("Decoded values", userData);
   const onStoreData = () => {
     console.log("FormData from the onstore data", formData);
 
@@ -182,7 +187,8 @@ const Maktob = (props) => {
           recipent: formData.recipent,
           subject: formData.subject,
           context: formData.context,
-          userId: "10",
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
         },
       })
       .then((res) => {
@@ -194,7 +200,7 @@ const Maktob = (props) => {
   };
 
   return (
-    <>
+    <Sidebar>
       {isFormState ? (
         <>
           <Header />
@@ -782,7 +788,7 @@ const Maktob = (props) => {
           </div>
         </>
       )}
-    </>
+    </Sidebar>
   );
 };
 

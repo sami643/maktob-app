@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Divider, Input, Space, Table, Button } from "antd";
+import Sidebar from "../components/Sidebar";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
@@ -130,9 +131,18 @@ const PishnihadList = () => {
   ];
 
   const [listItems, setListItems] = useState({});
+
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  console.log("Decoded values", userData);
   useEffect(() => {
     axios
-      .post("/api/pishnihad/pishnihads", { data: { userId: "30" } })
+      .post("/api/pishnihad/pishnihads", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+        },
+      })
       .then((res) => {
         console.log("response is: ", res.data);
         setListItems(res.data.pishnihadsList);
@@ -146,7 +156,7 @@ const PishnihadList = () => {
   console.log("listItems32423432", listItemsArray);
 
   return (
-    <>
+    <Sidebar>
       <Header />
       <div className="main-container text-right">
         <h1>د پیشنهادونو لست</h1>
@@ -164,7 +174,7 @@ const PishnihadList = () => {
         />
       </div>
       <Footer />
-    </>
+    </Sidebar>
   );
 };
 

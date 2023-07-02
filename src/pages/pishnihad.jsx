@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import Sidebar from "../components/Sidebar";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { Checkbox, Divider } from "@material-ui/core";
@@ -28,10 +29,15 @@ const Pishnihad = () => {
     setIsFromState(false);
     setInitialValues(values);
   };
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  console.log("Decoded values", userData);
 
   const handlePrint = () => {
     window.print();
   };
+
+  // Retrieving data from the LocalStorage
 
   const onStoreData = () => {
     axios
@@ -42,7 +48,8 @@ const Pishnihad = () => {
           recipent: formData.recipent,
           subject: formData.subject,
           context: formData.context,
-          userId: "310",
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
         },
       })
       .then((res) => {
@@ -53,8 +60,7 @@ const Pishnihad = () => {
       });
   };
   return (
-    <>
-      {" "}
+    <Sidebar>
       {isFormState ? (
         <>
           <Header />
@@ -487,7 +493,7 @@ const Pishnihad = () => {
           </div>
         </>
       )}
-    </>
+    </Sidebar>
   );
 };
 

@@ -1,30 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaBars } from "react-icons/fa";
 import "./components-style.css";
 import { NavLink } from "react-router-dom";
 import { sidebarMenuItem } from "./../assets/data/data.js";
 import { useLocation } from "react-router-dom";
+import { FaSignOutAlt } from "react-icons/fa";
+import { UserContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
+  const { setUser } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const location = useLocation();
-
-  const shouldSidebarBeVisible = (pathname) => {
-    if (pathname === "/login" || pathname === "/") {
-      // THIS IS TRUE TEMPORARILY
-      return false;
-    }
-    return true;
-  };
-
-  const [isSidebarVisible, setIsSidebarVisible] = useState(
-    shouldSidebarBeVisible(location.pathname)
-  );
+  const navigate = useNavigate();
+  // const [isSidebarVisible, setIsSidebarVisible] = useState(
+  //   shouldSidebarBeVisible(location.pathname)
+  // );
   const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    setIsSidebarVisible(shouldSidebarBeVisible(location.pathname));
-  }, [location]);
+  // useEffect(() => {
+  //   setIsSidebarVisible(shouldSidebarBeVisible(location.pathname));
+  // }, [location]);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop =
@@ -40,51 +36,108 @@ const Sidebar = ({ children }) => {
     };
   }, []);
 
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const handleConfirm = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+    // Close the confirmation message
+    // setShowConfirmation(false);
+  };
+  const handleCancel = () => {
+    // Handle cancellation or closing the confirmation message
+    console.log("Cancelled");
+    // TODO: Add your logic here
+
+    // Close the confirmation message
+    setShowConfirmation(false);
+  };
+
+  const openConfirmation = () => {
+    // Open the confirmation message
+    setShowConfirmation(true);
+  };
+
   return (
     <>
-      {isSidebarVisible ? (
-        <div className="container-1">
-          <div style={{ width: isOpen ? "200px" : "60px" }} className="sidebar">
-            <div className={`top_section ${isScrolled ? "scrolled" : ""}`}>
-              <h1
-                style={{
-                  display: isOpen ? "block" : "none",
-                  marginLeft: "50px",
-                }}
-                className="logo"
-              >
-                TVETA
-              </h1>
-              <div
-                style={{ marginLeft: isOpen ? "50px" : "0px" }}
-                className="bars"
-              >
-                <FaBars onClick={toggle} />
-              </div>
+      <div className="container-1">
+        <div style={{ width: isOpen ? "200px" : "60px" }} className="sidebar">
+          <div className={`top_section ${isScrolled ? "scrolled" : ""}`}>
+            <h1
+              style={{
+                display: isOpen ? "block" : "none",
+                marginLeft: "50px",
+              }}
+              className="logo"
+            >
+              TVETA
+            </h1>
+            <div
+              style={{ marginLeft: isOpen ? "50px" : "0px" }}
+              className="bars"
+            >
+              <FaBars onClick={toggle} />
             </div>
-            {sidebarMenuItem.map((item, index) => (
-              <NavLink
-                to={item.path}
-                key={index}
-                className="link"
-                activeclassName="active"
-                style={{ textDecoration: "none" }}
-              >
-                <div className="icon">{item.icon}</div>
-                <div
-                  style={{ display: isOpen ? "block" : "none" }}
-                  className="link_text"
-                >
-                  {item.name}
-                </div>
-              </NavLink>
-            ))}
           </div>
-          <main>{children}</main>
+          {sidebarMenuItem.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              className="link"
+              activeclassName="active"
+              style={{ textDecoration: "none" }}
+            >
+              <div className="icon">{item.icon}</div>
+              <div
+                style={{ display: isOpen ? "block" : "none" }}
+                className="link_text"
+              >
+                {item.name}
+              </div>
+            </NavLink>
+          ))}
+          <a
+            onClick={openConfirmation}
+            className="link mt-5"
+            activeclassName="active"
+          >
+            <div className="icon">
+              <FaSignOutAlt />
+            </div>
+            <div
+              style={{ display: isOpen ? "block" : "none" }}
+              className="link_text"
+            >
+              وتل
+            </div>
+          </a>
         </div>
-      ) : (
-        <main>{children}</main>
-      )}
+
+        <main>
+          <>
+            {showConfirmation && (
+              <div className="confirmation-modal">
+                <p>وتل/ خروج</p>
+                <div className="button-container">
+                  <button
+                    className="cancel-button bg-primary"
+                    onClick={handleCancel}
+                  >
+                    نه/نخیر
+                  </button>
+                  <button
+                    className="confirm-button bg-primary"
+                    onClick={handleConfirm}
+                  >
+                    هو/ بلی
+                  </button>
+                </div>
+              </div>
+            )}
+            {children}
+          </>{" "}
+        </main>
+      </div>
     </>
   );
 };

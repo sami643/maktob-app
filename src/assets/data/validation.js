@@ -45,3 +45,11 @@ export const IstehlaamValidationSchema = Yup.object().shape({
     "د استعلام متن اړینه ده/ متن استعلام ضروری است "
   ),
 });
+
+// Login validation
+export const LoginValidationSchema = Yup.object().shape({
+  userId: Yup.string()
+    .email("ستاسو ایمیل سم ندی/ لطفا ایمیل آدرس درست را وارد نماید")
+    .required("ایمیل آدرس اړین دی/ ایمیل آدرس ضروری است"),
+  password: Yup.string().required("پسورډ اړین دی/ پسور د ضروری است"),
+});

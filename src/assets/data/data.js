@@ -236,7 +236,12 @@ export const istehlaams = [
 
 export const sidebarMenuItem = [
   {
-    path: "/main",
+    path: "/",
+    name: "دشبورد",
+    icon: <FaBookOpen />,
+  },
+  {
+    path: "/maktob",
     name: "مکتوب",
     icon: <FaBookOpen />,
   },
@@ -270,11 +275,17 @@ export const sidebarMenuItem = [
     name: "پروفایل",
     icon: <FaUserAlt />,
   },
-  {
-    path: "/logout",
-    name: "وتل",
-    icon: <FaSignOutAlt />,
-  },
+  // {
+  //   path: "/logout",
+  //   name: "وتل",
+  //   icon: <FaSignOutAlt />,
+  // },
+
+  // {
+  //   path: "/logout",
+  //   name: "وتل",
+  //   icon: <FaSignOutAlt />,
+  // },
   // {
   //   path: "/login",
   //   name: "login",

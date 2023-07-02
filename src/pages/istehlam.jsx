@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Sidebar from "../components/Sidebar";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { Formik, Field, Form } from "formik";
@@ -33,7 +34,9 @@ const Maktob = () => {
     window.print();
   };
   const [isFormState, setIsFromState] = useState(true);
-
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  console.log("Decoded values", userData);
   const onStoreData = () => {
     axios
       .post("/api/istehlaam/new-istehlaam", {
@@ -43,7 +46,8 @@ const Maktob = () => {
           recipent: formData.recipent,
           subject: formData.subject,
           context: formData.context,
-          userId: "201",
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
         },
       })
       .then((res) => {
@@ -54,7 +58,7 @@ const Maktob = () => {
       });
   };
   return (
-    <>
+    <Sidebar>
       {isFormState ? (
         <>
           {" "}
@@ -490,7 +494,7 @@ const Maktob = () => {
           </div>
         </>
       )}
-    </>
+    </Sidebar>
   );
 };
 

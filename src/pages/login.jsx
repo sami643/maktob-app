@@ -1,10 +1,41 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/header";
+import { Formik, Field, Form } from "formik";
 import Footer from "../components/footer";
 import { Divider } from "@material-ui/core";
+import { LoginValidationSchema } from "../assets/data/validation";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import "./pages.css";
+import { UserContext } from "../context/userContext";
 const Login = () => {
+  const { setUser } = useContext(UserContext);
+  const [initialValues, setInitialValues] = useState("");
+  const [userIdErrorMessage, setuserIdErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const onSubmitForm_1 = (values) => {
+    setInitialValues(values);
+    console.log("valuse", values);
+    axios
+      .post("/api/user/login", {
+        data: {
+          userId: values.userId,
+          password: values.password,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data.token);
+        const userData = jwtDecode(res.data.token);
+        console.log("decoded userData: ", userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData);
+      })
+      .catch((err) => {
+        console.log("ErorrMessage: ", err.response.data.message);
+        setuserIdErrorMessage(err.response.data.message);
+      });
+  };
 
   return (
     <>
@@ -17,42 +48,102 @@ const Login = () => {
                 class="card shadow-2-strong shadow"
                 style={{ borderRadius: "1rem" }}
               >
-                <div class="card-body p-5 text-center">
-                  <h3 class="mb-5">ننوتل</h3>
+                <Formik
+                  initialValues={{
+                    userId: "",
+                    password: "",
+                  }}
+                  onSubmit={onSubmitForm_1}
+                  validationSchema={LoginValidationSchema}
+                >
+                  {({
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    handleSubmit,
+                    errors,
+                    touched,
+                  }) => (
+                    <Form className="m-5">
+                      <div class="card-body p-5 text-center">
+                        {userIdErrorMessage ? (
+                          <div
+                            style={{
+                              color: "white",
+                              backgroundColor: "red",
+                              borderRadius: "1rem",
+                              padding: "2px",
+                            }}
+                          >
+                            {userIdErrorMessage}
+                          </div>
+                        ) : null}
+                        <h3 class="mb-5">ننوتل</h3>
 
-                  <div class="form-outline mb-4">
-                    <input
-                      type="email"
-                      id="typeEmailX-2"
-                      class="form-control form-control-lg"
-                    />
-                    <label class="form-label" for="typeEmailX-2">
-                      ایمیل
-                    </label>
-                  </div>
+                        <div class="form-outline mb-4">
+                          <label class="form-label" for="typeEmailX-2">
+                            ایمیل
+                          </label>
+                          <input
+                            // type="email"
+                            id="userId"
+                            name="userId"
+                            class="form-control form-control-lg"
+                            value={values.userId}
+                            onChange={(e) =>
+                              setFieldValue("userId", e.target.value)
+                            }
+                            onBlur={() => setFieldTouched("subject", true)}
+                          />
 
-                  <div class="form-outline mb-4">
-                    <input
-                      type="password"
-                      id="typePasswordX-2"
-                      class="form-control form-control-lg"
-                    />
-                    <label class="form-label" for="typePasswordX-2">
-                      رمز/ پسورډ
-                    </label>
-                  </div>
+                          {errors.userId && touched.userId ? (
+                            <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                              {errors.userId}
+                            </div>
+                          ) : null}
+                        </div>
 
-                  <button class="btn bg-primary btn-lg btn-block" type="submit">
-                    Login
-                  </button>
-                  <br />
-                  <div class="form-check d-flex justify-content-start mb-4">
-                    <a href="#" className="pr-5">
-                      تاسو خپل رمز هیر کړی؟
-                    </a>
-                  </div>
-                  <hr class="my-4" />
-                </div>
+                        <div class="form-outline mb-4">
+                          <label class="form-label" for="typePasswordX-2">
+                            رمز/ پسورډ
+                          </label>
+                          <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control form-control-lg"
+                            value={values.password}
+                            onChange={(e) =>
+                              setFieldValue("password", e.target.value)
+                            }
+                            onBlur={() => setFieldTouched("password", true)}
+                          />
+
+                          {errors.password && touched.password ? (
+                            <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                              {errors.password}
+                            </div>
+                          ) : null}
+                        </div>
+
+                        <button
+                          class="btn bg-primary btn-lg btn-block mt-5"
+                          // onClick={onSubmitForm_1}
+                          type="submit"
+                        >
+                          Login
+                        </button>
+                        <br />
+                        <div class="form-check d-flex justify-content-start mb-4">
+                          <a href="#" className="pr-5">
+                            تاسو خپل رمز هیر کړی؟
+                          </a>
+                        </div>
+                        <hr class="my-4" />
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Divider, Input, Space, Table, Button } from "antd";
+import Sidebar from "../components/Sidebar";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
@@ -96,10 +97,19 @@ const MaktobList = () => {
   });
 
   const [listItems, setListItems] = useState({});
+  // Retrieving data from the LocalStorage
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  console.log("Decoded values", userData);
   // Integration
   useEffect(() => {
     axios
-      .post("/api/maktob/maktobs", { data: { userId: "10" } })
+      .post("/api/maktob/maktobs", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+        },
+      })
       .then((res) => {
         console.log("response is: ", res.data);
         setListItems(res.data.Maktobs_List_data);
@@ -143,13 +153,10 @@ const MaktobList = () => {
     },
   ];
 
-  // console.log("Maktobs", maktobs);
-  // console.log("type of maktobs", typeof maktobs);
-  // console.log(typeof listItems);
   const listItemsArray = Object.values(listItems);
   console.log("listItems32423432", listItemsArray);
   return (
-    <>
+    <Sidebar>
       <Header />
       <div className="main-container text-right">
         <h1>د مکتوبونو لست</h1>
@@ -167,7 +174,7 @@ const MaktobList = () => {
         />
       </div>
       <Footer />
-    </>
+    </Sidebar>
   );
 };
 

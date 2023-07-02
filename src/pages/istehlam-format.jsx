@@ -6,6 +6,7 @@ import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
 import { useLocation } from "react-router-dom";
 import { Checkbox, Divider } from "antd";
+import Sidebar from "../components/Sidebar";
 const PishnihadFormat = () => {
   const { state } = useLocation();
   const formData = state?.formData;
@@ -15,7 +16,7 @@ const PishnihadFormat = () => {
     window.print();
   };
   return (
-    <>
+    <Sidebar>
       <div className="main_container ">
         <div className="contain maktobviewcontainer mt-5 p-0 " dir="rtl">
           <div className="header-body ">
@@ -129,7 +130,7 @@ const PishnihadFormat = () => {
           </button>
         </div>
       </div>
-    </>
+    </Sidebar>
   );
 };
 
