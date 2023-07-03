@@ -5,6 +5,7 @@
   top: 0;
   /* color: white; */
   z-index: 1;
+  /* background: #222121; */
   background: #222121;
   color: #fff;
   display: flex;
@@ -49,7 +50,8 @@ main {
 .top_section {
   display: flex;
   align-items: center;
-  padding: 20px 10px;
+  padding: 0px 10px 10px 10px;
+  /* background-color: blueviolet; */
 }
 
 /* .top_section.scrolled { */
@@ -57,8 +59,10 @@ main {
 /* Other styles for the scrolled state */
 /* } */
 
-.logo {
-  font-size: 30px;
+.sidebarlogo {
+  font-size: 25px;
+  margin-top: 10px;
+  margin-right: 5px;
 }
 .bars {
   display: flex;
@@ -87,7 +91,7 @@ main {
 }
 .icon,
 .link_text {
-  font-size: 20px;
+  font-size: 16px;
   text-decoration: none;
 }
 

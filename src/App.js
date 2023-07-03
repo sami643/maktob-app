@@ -25,7 +25,6 @@ const App = () => {
   useEffect(() => {
     if (!user) {
       localStorage.removeItem("user");
-  
     }
   }, [user]);
   return (

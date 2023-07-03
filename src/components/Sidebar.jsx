@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaBars } from "react-icons/fa";
+import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+
 import "./components-style.css";
 import { NavLink } from "react-router-dom";
 import { sidebarMenuItem } from "./../assets/data/data.js";
@@ -10,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
   const { setUser } = useContext(UserContext);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const location = useLocation();
   const navigate = useNavigate();
@@ -61,22 +63,28 @@ const Sidebar = ({ children }) => {
   return (
     <>
       <div className="container-1">
-        <div style={{ width: isOpen ? "200px" : "60px" }} className="sidebar">
-          <div className={`top_section ${isScrolled ? "scrolled" : ""}`}>
-            <h1
+        <div style={{ width: isOpen ? "180px" : "60px" }} className="sidebar ">
+          <div
+            className={`top_section bg-primary ${isScrolled ? "scrolled" : ""}`}
+          >
+            <h2
               style={{
                 display: isOpen ? "block" : "none",
                 marginLeft: "50px",
               }}
-              className="logo"
+              className="sidebarlogo"
             >
               TVETA
-            </h1>
+            </h2>
             <div
               style={{ marginLeft: isOpen ? "50px" : "0px" }}
               className="bars"
             >
-              <FaBars onClick={toggle} />
+              {isOpen ? (
+                <AiOutlineMenuUnfold onClick={toggle} />
+              ) : (
+                <AiOutlineMenuFold onClick={toggle} />
+              )}
             </div>
           </div>
           {sidebarMenuItem.map((item, index) => (
@@ -98,7 +106,7 @@ const Sidebar = ({ children }) => {
           ))}
           <a
             onClick={openConfirmation}
-            className="link mt-5"
+            className="link "
             activeclassName="active"
           >
             <div className="icon">

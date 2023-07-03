@@ -5,7 +5,10 @@ import {
   FaSignOutAlt,
   FaBookOpen,
   FaThList,
+  FaDashcube,
 } from "react-icons/fa";
+// import { AiFillDashboard } from "react-icons/fa/AiFillDashboard";
+import { AiFillDashboard, AiFillFile,  } from "react-icons/ai";
 
 export const presidencies = [
   {
@@ -238,7 +241,7 @@ export const sidebarMenuItem = [
   {
     path: "/",
     name: "دشبورد",
-    icon: <FaBookOpen />,
+    icon: <AiFillDashboard />,
   },
   {
     path: "/maktob",
@@ -253,7 +256,7 @@ export const sidebarMenuItem = [
   {
     path: "/pishnihad",
     name: "پیشنهاد",
-    icon: <FaBookOpen />,
+    icon: <AiFillFile />,
   },
   {
     path: "/pishnihadlist",

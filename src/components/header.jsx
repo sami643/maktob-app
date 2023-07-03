@@ -2,7 +2,7 @@ import "./components-style.css";
 import Logo from "./../assets/img/AdminLogo.png";
 const Header = () => {
   return (
-    <div id="header">
+    <div id="header" className="bg">
       <div className="header-item">
         <h4> د تخنیکی او مسلکی زده کړو اداره</h4>
       </div>

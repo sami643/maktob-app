@@ -410,7 +410,7 @@ const Maktob = (props) => {
                             }`}
                             aria-label=".form-select-lg example"
                           >
-                            <option selected>Open this select menu</option>
+                            <option selected>وټاکئ/انتخاب</option>
                             {presidenciesOpoptions.map((option) => (
                               <option key={option.value} value={option.label}>
                                 {option.label}
@@ -739,7 +739,10 @@ const Maktob = (props) => {
                         type="checkbox"
                         value=""
                         id="flexCheckChecked"
-                        checked={formData.maktobType === "عادی"}
+                        checked={
+                          formData.maktobType === "عادی" ||
+                          formData.maktobType === undefined
+                        }
                       />
                     </div>
                     <div className="px-2">
