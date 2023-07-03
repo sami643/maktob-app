@@ -1,6 +1,6 @@
 #header {
   padding: 0.1%;
-  margin: 0px 5px 5px 5px;
+  margin: 0px 1px 5px 0px;
   position: sticky;
   top: 0;
   /* color: white; */
@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 25px;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 
 .header-item {
@@ -97,17 +97,22 @@ main {
 
 /* Footer */
 #footer {
-  margin: 15px 5px 0px 5px;
+  margin: 15px 1px 0px 1px;
   z-index: 1;
   background: #222121;
   color: #fff;
   display: flex;
   justify-content: space-between;
-  font-size: 18px;
+  font-size: 14px;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 2px;
 }
-
+.footer-item{
+  justify-content: space-between;
+}
+.footer-text{
+  font-size: 13px;
+}
 @media only screen and (max-width: 1100px) {
   #footer {
     font-size: 12px;

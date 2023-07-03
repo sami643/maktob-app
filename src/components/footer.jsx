@@ -1,23 +1,21 @@
 import "./components-style.css";
 const Footer = () => {
   return (
-    <footer class="container-fluid pr-0 pl-0 " >
+    <footer class="container-fluid pr-0 pl-0 ">
       <div className="footer-item" id="footer">
-        <div>
+        <div className="footer-text">
           <span className="" style={{ fontWeight: "bold" }}>
             Email:{" "}
           </span>
           <span>tvet_mis@tveta.gov.af</span>
         </div>
-        <div>
-          د تخنیکی او مسلکی زده کړو اداره{" "}
-          <span className="">
-            Technical Vocational Education & Training Afghanistan
-          </span>
+        <div className="footer-text">اداره تعلیمات تخنیکی و مسلکی </div>
+        <div className="footer-text ">
+          Technical Vocational Education & Training Afghanistan
         </div>
 
-        <div className="developer">
-          {/* <span className="mr-2 ml-4" style={{ fontWeight: "bold" }}>
+        {/* <div className="developer"> */}
+        {/* <span className="mr-2 ml-4" style={{ fontWeight: "bold" }}>
                 Developer:
               </span>
               <a
@@ -26,7 +24,7 @@ const Footer = () => {
               >
                 Samillah Rahimi{" "}
               </a> */}
-        </div>
+        {/* </div> */}
       </div>
     </footer>
   );
