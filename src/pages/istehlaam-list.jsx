@@ -160,6 +160,12 @@ const PishnihadList = () => {
         <h1>د استعلامونو لست</h1>
         <Divider />
         <Table
+          pagination={{
+            pageSize: 10, // Number of items per page
+            // showSizeChanger: true, // Option to change page size
+            // pageSizeOptions: ["10", "20", "50"], // Available page size options
+            // Other pagination options...
+          }}
           columns={columns}
           dataSource={listItemsArray.filter((record) =>
             columns.some(

@@ -121,7 +121,7 @@ const MaktobList = () => {
 
   const columns = [
     {
-      title: "د مکتوب ګڼه",
+      title: "ګڼه/شماره",
       dataIndex: "MaktobNo",
       key: "MaktobNo",
       width: "20%",

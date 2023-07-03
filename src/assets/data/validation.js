@@ -9,6 +9,7 @@ export const maktobValidationSchema = Yup.object().shape({
   maktobDate: Yup.string().required(
     "د مکتوب نیټه اړینه ده/ تاریخ مکتوب ضروری است"
   ),
+  maktobType: Yup.string().required("د مکتوب ډول اړین دی/ نوع مکتوب ضروری است"),
   recipent: Yup.string().required("مخاطب اړین دی/ مخاطب ضروری است"),
   subject: Yup.string().required("موضوع اړینه ده/ موضوع ضروری است "),
   context: Yup.string().required("د مکتوب متن اړینه ده/ متن مکتوب ضروری است "),

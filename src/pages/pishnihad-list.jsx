@@ -98,7 +98,7 @@ const PishnihadList = () => {
 
   const columns = [
     {
-      title: "د پیشنهاد ګڼه",
+      title: "ګڼه/ شماره",
       dataIndex: "PishnihadNo",
       key: "PishnihadNo",
       width: "20%",

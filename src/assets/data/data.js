@@ -292,3 +292,9 @@ export const sidebarMenuItem = [
   //   icon: <FaSignOutAlt />,
   // },
 ];
+
+export const maktobTypeOptions = [
+  { value: "عادی", label: "عادی" },
+  { value: "عاجل", label: "عاجل" },
+  { value: "محرم", label: "محرم" },
+];

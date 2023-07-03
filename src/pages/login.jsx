@@ -27,12 +27,12 @@ const Login = () => {
       .then((res) => {
         console.log("response is: ", res.data.token);
         const userData = jwtDecode(res.data.token);
-        console.log("decoded userData: ", userData);
+        // console.log("decoded userData: ", userData);
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
       })
       .catch((err) => {
-        console.log("ErorrMessage: ", err.response.data.message);
+        // console.log("ErorrMessage: ", err.response.data.message);
         setuserIdErrorMessage(err.response.data.message);
       });
   };
@@ -78,7 +78,7 @@ const Login = () => {
                             {userIdErrorMessage}
                           </div>
                         ) : null}
-                        <h3 class="mb-5">ننوتل</h3>
+                        <h3 class="mb-5">logo</h3>
 
                         <div class="form-outline mb-4">
                           <label class="form-label" for="typeEmailX-2">
@@ -131,12 +131,12 @@ const Login = () => {
                           // onClick={onSubmitForm_1}
                           type="submit"
                         >
-                          Login
+                          ننوتل/ ورود
                         </button>
                         <br />
                         <div class="form-check d-flex justify-content-start mb-4">
                           <a href="#" className="pr-5">
-                            تاسو خپل رمز هیر کړی؟
+                            پسورډ مو هیر کړی/ پسورد تانرا فراموش کرده اید؟
                           </a>
                         </div>
                         <hr class="my-4" />
