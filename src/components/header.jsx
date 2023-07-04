@@ -3,13 +3,13 @@ import Logo from "./../assets/img/AdminLogo.png";
 const Header = () => {
   return (
     <div id="header" className="bg">
-      {/* <div className="header-item">
+      <div className="header-item">
         <h4> د تخنیکی او مسلکی زده کړو اداره</h4>
       </div>
       <div className="header-item p-0">
         <h3>مکتوب/پیشنهاد</h3>
       </div>
-      <img src={Logo} width="65px" height="50px" className="logo" /> */}
+      <img src={Logo} width="65px" height="50px" className="logo" />
     </div>
   );
 };

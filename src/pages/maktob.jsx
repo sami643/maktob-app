@@ -98,7 +98,7 @@ const Maktob = (props) => {
     copyToRecipentsJustLabel.concat(inputFields);
   // console.log("listOfpresidenciesJustValue", listOfpresidenciesJustValue);
   // console.log("listOfpresidenciesBothValueAndLabels", selectedPresidencies);
-  // console.log("copyToRecipentsJustLabel", copyToRecipentsJustLabel_1);
+  console.log("copyToRecipentsJustLabel", copyToRecipentsJustLabel_1);
 
   let arrayA = [];
   let arrayB = [];
@@ -218,6 +218,11 @@ const Maktob = (props) => {
     console.log("selectedPresidencies", selectedPresidencies);
     console.log("NewAddedItemsToCopy", inputFields);
   };
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  console.log("width", w);
+  console.log("hieght", h);
 
   return (
     <Sidebar>
@@ -782,17 +787,27 @@ const Maktob = (props) => {
             <div className="divider">
               <Divider className="divider" />
             </div>
+
             <div className="body_of_maktob ">
-              <p className="audiance">{formData.recipent}fdgdfgdf</p>
-              <p className="greating">
-                ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
-              </p>
+              <div className="audiance">
+                {" "}
+                <p>{formData.recipent}</p>
+              </div>
+              <div className="greating">
+                <p>ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً </p>
+              </div>
+
               <div className="subject_of_maktob">
                 <label> موضوع </label>
                 <p>:&#160;&#160; {formData.subject} </p>
               </div>
-              <p>محترما:</p>
-              <p className="matktob_context">{formData.context}</p>
+              <div className="mohtarama">
+                <p>محترما:</p>
+              </div>
+              <div className="matktob_context">
+                <p>{formData.context}</p>
+              </div>
+
               <br />
               <div className="closing_signature">
                 <p>والسلام</p>
@@ -801,25 +816,35 @@ const Maktob = (props) => {
               </div>
             </div>
 
-            <div className="copy_to_div ">
-              <p className="copy_to_title">کاپي به:</p>
-              <div className="copy_to_body">
+            <div className="copy_to_div d-flex align-items-start flex-column ">
+              {copyToRecipentsJustLabel_1.length > 0 ? (
+                <div className="copy_to_title align-self-start">
+                  <p>کاپي :</p>
+                </div>
+              ) : null}
+              <div className="copy_to_body ">
                 {isDeputOrAdvisoryChecked ? (
                   <>
                     <div className="copy_body_item">
                       {arrayA.map((item, index) => (
-                        <p key={index}>{item}</p>
+                        <p key={index} className="copy_body_item_text">
+                          {item}
+                        </p>
                       ))}
                     </div>
                     <div className="copy_body_item">
                       {arrayB.map((item, index) => (
-                        <p key={index}>{item}</p>
+                        <p key={index} className="copy_body_item_text">
+                          {item}
+                        </p>
                       ))}
                     </div>
 
                     <div className="copy_body_item">
                       {arrayC.map((item, index) => (
-                        <p key={index}>{item}</p>
+                        <p key={index} className="copy_body_item_text">
+                          {item}
+                        </p>
                       ))}
                     </div>
                   </>
@@ -830,21 +855,27 @@ const Maktob = (props) => {
                       {copyToRecipentsJustLabel_1
                         .slice(0, 8)
                         .map((item, index) => (
-                          <p key={index}>{item}</p>
+                          <p key={index} className="copy_body_item_text">
+                            {item}
+                          </p>
                         ))}
                     </div>
                     <div className="copy_body_item">
                       {copyToRecipentsJustLabel_1
                         .slice(8, 16)
                         .map((item, index) => (
-                          <p key={index}>{item}</p>
+                          <p key={index} className="copy_body_item_text">
+                            {item}
+                          </p>
                         ))}
                     </div>
                     <div className="copy_body_item">
                       {copyToRecipentsJustLabel_1
                         .slice(16, 24)
                         .map((item, index) => (
-                          <p key={index}>{item}</p>
+                          <p key={index} className="copy_body_item_text">
+                            {item}
+                          </p>
                         ))}
                     </div>
                   </>
@@ -888,7 +919,7 @@ const Maktob = (props) => {
                 handlePrint();
                 onStoreData();
               }}
-              className="print-button btn bg-primary px-5"
+              className="print-button btn bg-primary px-5 ml-5"
             >
               پرنت و ثبت
             </button>

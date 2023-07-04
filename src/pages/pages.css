@@ -1,12 +1,34 @@
 /* Login */
+
 .main-container {
   margin: 50px 50px 50px 50px;
+  align-items: center;
+  justify-content: center;
   padding: 20px 50px 20px 50px;
   box-shadow: inset 1px 1px 2px 2px #b8b9be, inset -1px -0px 1px #ffffff;
   border-radius: 10px;
   background-color: rgb(255, 255, 255);
   min-height: 72vh;
   direction: rtl;
+}
+
+.main_container {
+  background-color: #fff;
+  margin: 50px 50px 50px 50px;
+  padding: 3%;
+}
+
+@media screen and (min-width: 1300px) {
+  .main-container {
+    width: 1100px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .main_container {
+    width: 1100px;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 
 .container-header {
@@ -38,12 +60,6 @@
 .options-input {
   display: flex;
   flex-direction: row;
-}
-
-.main_container {
-  background-color: #fff;
-  margin: 3%;
-  padding: 3%;
 }
 
 .header-body {
@@ -125,7 +141,6 @@
 .date {
   display: flex;
   flex-direction: row;
-  /* background-color: brown; */
   font-weight: bold;
   padding: 0;
 }
@@ -161,11 +176,17 @@
   text-decoration: underline;
   text-underline-position: under;
   text-decoration-thickness: 1.4px !important;
+  text-align: right;
+}
+
+.mohtarama {
+  text-align: right;
 }
 .greating {
   font-family: AMoshref;
   font-size: larger;
   /* font-weight: bolder; */
+  text-align: right;
 }
 .matktob_context {
   text-indent: 60px;
@@ -186,17 +207,22 @@
   font-weight: bold;
 }
 
+/* .main_body {
+  display: flex;
+  flex-direction: column;
+} */
+
 .copy_to_div {
   margin-right: 20px;
 }
-.copy_body_item {
-  width: 33%;
-}
+
 .copy_to_body {
   display: flex;
   flex-direction: row;
   font-size: 15px;
   text-indent: 30px;
+  text-align: right;
+  margin-bottom: 40px;
 }
 
 .footer {
@@ -227,19 +253,22 @@
 }
 .print-button {
   margin-inline: 2%;
+  
 }
 .copy_body_item p {
   padding: 0px !important;
   margin: 0%;
-  font-size: 18px !important;
+  font-size: 15px !important;
 }
 .copy_to_title {
   font-weight: bold;
   font-size: 22px !important;
+  text-align: right;
 }
 .audiance {
   font-weight: bold;
   font-size: 35px !important;
+  text-align: right;
 }
 
 /* Pishniahaad code */
