@@ -12,6 +12,32 @@
   direction: rtl;
 }
 
+.main-container_darkbackround {
+  margin: 50px 50px 50px 50px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 50px 20px 50px;
+  box-shadow: inset 1px 1px 2px 2px #b8b9be, inset -1px -0px 1px #ffffff;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  min-height: 72vh;
+  direction: rtl;
+  opacity: 0.2;
+}
+
+.success_custom_message {
+  color: blue;
+  font-size: 25x;
+}
+.error_custom_message {
+  color: blue;
+  padding: 14px;
+}
+
+.confirmation_modal_low_visibility {
+  opacity: 1 !important;
+}
+
 .main_container {
   background-color: #fff;
   margin: 50px 50px 50px 50px;
@@ -66,6 +92,16 @@
   display: flex;
   flex-direction: row;
 }
+.copy_input_body {
+  text-align: right;
+  padding: 0;
+  margin: 0;
+}
+.copy_input_body_main_div {
+  text-align: right;
+  padding: 0;
+  margin: 0;
+}
 
 .pashto_headling_div {
   display: flex;
@@ -75,7 +111,7 @@
 }
 
 .pashto_headline_text {
-  font-size: 16.1px;
+  font-size: 1.45vw;
   font-weight: 900;
   padding-right: 3px;
 }
@@ -93,7 +129,7 @@
 
 .persian_headline_text {
   text-align: right;
-  font-size: 17px;
+  font-size: 1.5vw;
   font-weight: 900;
 }
 
@@ -224,18 +260,17 @@
   text-align: right;
   margin-bottom: 40px;
 }
+.footer_divider {
+  background-color: #000;
+  /* border: solid black 0px */
+}
 
 .footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-.footer-content_pishnihad {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-.footer-content_maktob {
+.footer_div_content {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -246,6 +281,10 @@
   margin-left: 10px;
 }
 
+.removemargin {
+  margin: 0 !important;
+}
+
 .print_btn_div {
   width: 100%;
   margin-top: 100px;
@@ -253,7 +292,6 @@
 }
 .print-button {
   margin-inline: 2%;
-  
 }
 .copy_body_item p {
   padding: 0px !important;
@@ -275,8 +313,8 @@
 .pishnihad_body_main_div {
   display: flex;
   flex-direction: row;
-  margin: 0px !important;
-  min-height: 86vh;
+  margin: 20px 0px 20px 0px !important;
+  min-height: 90vh;
 }
 
 .pishnihad_body {

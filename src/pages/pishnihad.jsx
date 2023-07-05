@@ -94,7 +94,7 @@ const Pishnihad = () => {
                   recipent: initialValues?.recipent,
                 }}
                 onSubmit={onSubmitForm_1}
-                validationSchema={pishnihaadValidationSchema}
+                // validationSchema={pishnihaadValidationSchema}
               >
                 {({
                   values,
@@ -343,7 +343,7 @@ const Pishnihad = () => {
                         }`}
                         id="context"
                         name="context"
-                        rows="4"
+                        rows="6"
                         value={values.context}
                         onChange={(e) =>
                           setFieldValue("context", e.target.value)
@@ -385,141 +385,141 @@ const Pishnihad = () => {
       ) : (
         <>
           <div className="main_container ">
-            <div className="contain maktobviewcontainer mt-5 p-0 " dir="rtl">
-              <div className="header-body ">
-                <div className=" m-0 tvet_logo ">
-                  <img src={Imarat_Logo} alt="" min-width="120" height="100" />
+            <div className="header-body">
+              <div className=" pashto_headling_div col-md-4 col-xl-4 col-sm-6">
+                <div className=" pastho-side ">
+                  <div className="  tvet_logo ">
+                    <img src={Imarat_Logo} alt="" min-width="100" height="80" />
+                  </div>
                 </div>
-                <div className="mt-4 pashto_headling_div">
-                  <img
-                    src={ImratName_Pashto}
-                    min-width="300"
-                    className="pashto_headling_img"
-                    height="40"
-                  />
-                  <h3 className="m-0 text-right  pashto_headline_text">
+                <div className="pashto-text-div-inner">
+                  <img src={ImratName_Pashto} className="pashto_heading_img" />
+                  <p className="m-0 text-right  pashto_headline_text">
                     د تخنیکي او مسلکي زده کړو اداره
-                  </h3>
-                </div>
-
-                <div className=" pt-4 english_headline_div">
-                  <h4 className=" text-center m-0 english_headline_text">
-                    Islamic Imarat of Afghanistan Technical & Vocational
-                    Education Training Authority
-                  </h4>
-                </div>
-
-                <div className="mt-4  persian_headline_div">
-                  <img
-                    src={ImratName}
-                    min-width="300"
-                    height="40"
-                    className="persian_headline_img"
-                  />
-                  <h3 className="m-0  persian_headline_text">
-                    اداره تعلیمات تخنیکی و مسلکی
-                  </h3>
-                </div>
-
-                <div className="imarat_logo">
-                  <img src={Logo} alt="" min-width="120" height="100" />
+                  </p>
                 </div>
               </div>
-              <div className="owner">
+
+              <div className=" pt-4  english_headline_div   col-md-4">
+                <h4 className=" text-center m-0 english_headline_text">
+                  Islamic Imarat of Afghanistan Technical & Vocational Education
+                  Training Authority
+                </h4>
+              </div>
+
+              <div className="col-md-4 col-xl-4 col-sm-6 persian_headline_div">
+                <div className=" persian-text-div-inner ">
+                  <img src={ImratName} className="persian_headline_img " />
+                  <p className="m-0  persian_headline_text">
+                    اداره تعلیمات تخنیکی و مسلکی
+                  </p>
+                </div>
+                <div className="imarat_logo px-0">
+                  <img src={Logo} alt="" min-width="100" height="80" />
+                </div>
+              </div>
+            </div>
+
+            <div className="date_type_no_div   col-12 ">
+              <div className="maktob_no col-4 align-self-end">
+                <label>ګڼه:</label>
+                <p>&#160;{formData.pishnihadNo}</p>
+              </div>
+              <div className="owner col-4">
                 <div>{userData.higherAuthority}</div>
                 <div>{userData.presidencyName}</div>
                 <div>{userData.directorate}</div>
                 <div> اجرائیه مدیریت</div>
               </div>
-              <div className="pishnihad_date">
-                <label htmlFor="">ڼیټه:</label>
-                <p> &#160;{formData.pishnihadDate}</p>
-              </div>
-              <div className="maktob_type_div">
-                <div className="maktob_no">
-                  <label>ګڼه:</label>
-                  <p>{formData.pishnihadNo}</p>
+
+              <div className=" col-4 date_type_div align-self-end ">
+                <div className="date d-flex justify-content-end  ">
+                  <label htmlFor="">نیټه:</label>
+                  <p>&#160;{formData.pishnihadDate}</p>
                 </div>
               </div>
-
+            </div>
+            <div className="divider">
               <Divider className="divider" />
-
-              <div className="pishnihad_body_main_div">
-                <div className="pishnihad_body">
-                  <div className="header_of_pishnihad">
-                    <h3 className="header_of_pishnihad_text">پیشنهاد</h3>
+            </div>
+            <div className="pishnihad_body_main_div">
+              <div className="pishnihad_body">
+                <div className="header_of_pishnihad">
+                  <h3 className="header_of_pishnihad_text">پیشنهاد</h3>
+                </div>
+                <div className="pishnihad_body_div mx-2">
+                  <p className="audiance">{formData.recipent}</p>
+                  <p className="greating">
+                    ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
+                  </p>
+                  <div className="subject_of_maktob">
+                    <label style={{ textDecoration: "underline" }}>
+                      {" "}
+                      موضوع:
+                    </label>
+                    <p>{formData.subject} </p>
                   </div>
-                  <div className="pishnihad_body_div mx-2">
-                    <p className="audiance">{formData.recipent}</p>
-                    <p className="greating">
-                      ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
-                    </p>
-                    <div className="subject_of_maktob">
-                      <label style={{ textDecoration: "underline" }}>
-                        {" "}
-                        موضوع:
-                      </label>
-                      <p>{formData.subject} </p>
-                    </div>
-                    <br />
+                  <br />
+                  <div className="mohtarama">
                     <p>محترما:</p>
-                    <p className="matktob_context">{formData.context}</p>
-                    <br />
-                    <div className="closing_signature">
-                      <p>والسلام</p>
-                      <p>{userData.presidentName}</p>
-                      <p>{userData.presidencyName}</p>
-                    </div>
                   </div>
-                </div>
-                <div className="ahkaam_div">
-                  <div className="ahkaam_header">
-                    <h3 className="ahkaam_header_text">احکام</h3>
+                  <p className="matktob_context">{formData.context}</p>
+                  <br />
+                  <div className="closing_signature">
+                    <p>والسلام</p>
+                    <p>{userData.presidentName}</p>
+                    <p>{userData.presidencyName}</p>
                   </div>
                 </div>
               </div>
-              <Divider className="footer_divider_pishnihad" />
-              <div className="footer_pishnihad">
-                <div className="footer-content_pishnihad">
-                  <div className="footer-item">
-                    آدرس: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل-
-                    افغانستان
-                  </div>
-                  <div className="footer-item">Email: {userData.email}</div>
-                  <div className="footer-item">Tel: {userData.phoneNo}</div>
+              <div className="ahkaam_div">
+                <div className="ahkaam_header">
+                  <h3 className="ahkaam_header_text">احکام</h3>
                 </div>
               </div>
             </div>
-
-            <div className="container print_btn_div ">
-              <button
-                onClick={() => {
-                  setIsFromState(true);
-                }}
-                className="print-button btn bg-primary px-۲"
-              >
-                مخکنۍ صفحه/ صفحه قبلی
-              </button>
-
-              <button
-                className="print-button btn bg-primary px-5"
-                onClick={() => {
-                  onStoreData();
-                }}
-              >
-                ثبت
-              </button>
-
-              <button
-                onClick={() => {
-                  onStoreData();
-                  handlePrint();
-                }}
-                className="print-button btn bg-primary px-5"
-              >
-                پرنت و ثبت
-              </button>
+            <div className="footer_divider">
+              <Divider className="" />
             </div>
+            <div className="footer_div">
+              <div className="footer_div_content">
+                <div className="footer-item">
+                  آدرس: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل- افغانستان
+                </div>
+                <div className="footer-item">Email: {userData.email}</div>
+                <div className="footer-item">Tel: {userData.phoneNo}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="container print_btn_div ">
+            <button
+              onClick={() => {
+                setIsFromState(true);
+              }}
+              className="print-button btn bg-primary px-5"
+            >
+              مخکنۍ صفحه/ صفحه قبلی
+            </button>
+
+            <button
+              className="print-button btn bg-primary px-5"
+              onClick={() => {
+                onStoreData();
+              }}
+            >
+              ثبت
+            </button>
+
+            <button
+              onClick={() => {
+                onStoreData();
+                handlePrint();
+              }}
+              className="print-button btn bg-primary px-5 ml-5"
+            >
+              پرنت و ثبت
+            </button>
           </div>
         </>
       )}

@@ -107,10 +107,10 @@ main {
   padding: 20px;
   border-radius: 2px;
 }
-.footer-item{
+.footer-item {
   justify-content: space-between;
 }
-.footer-text{
+.footer-text {
   font-size: 13px;
 }
 @media only screen and (max-width: 1100px) {
@@ -123,7 +123,6 @@ main {
   #footer {
     font-size: 14px;
   }
-  
 }
 
 @media only screen and (max-width: 1500px) {
@@ -171,4 +170,18 @@ main {
   border-radius: 3px;
   padding: 6px 20px;
   cursor: pointer;
+}
+
+.backDrop_div {
+  width: 100%;
+  height: 100%;
+  background-color: #2e2e2e;
+  position: fixed;
+  opacity: 0.5;
+  z-index: 10;
+}
+
+.confirmation-modal {
+  opacity: 1;
+  z-index: 15;
 }

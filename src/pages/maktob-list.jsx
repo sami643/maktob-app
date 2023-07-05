@@ -6,6 +6,9 @@ import Highlighter from "react-highlight-words";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { maktobs } from "../assets/data/data.js";
+import { BsTrashFill } from "react-icons/bs";
+import { BsPencilSquare } from "react-icons/bs";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import "./pages.css";
 import axios from "axios";
 
@@ -101,8 +104,7 @@ const MaktobList = () => {
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   console.log("Decoded values", userData);
-  // Integration
-  useEffect(() => {
+  const gettingMakbtobs = () => {
     axios
       .post("/api/maktob/maktobs", {
         data: {
@@ -117,18 +119,57 @@ const MaktobList = () => {
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
       });
+  };
+  // Integration
+  useEffect(() => {
+    gettingMakbtobs();
   }, []);
+
+  // Deleting the message
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const handleCancel = () => {
+    console.log("Cancelled");
+    setShowConfirmation(false);
+    setVisibility(false);
+  };
+  const [visibility, setVisibility] = useState(false);
+  const [itemId, setItemId] = useState();
+  const openConfirmation = (recordNo) => {
+    setItemId(recordNo);
+    setVisibility(true);
+    setShowConfirmation(true);
+  };
+
+  // Deleting the maktob
+  const handleDelete = () => {
+    setShowConfirmation(false);
+    setVisibility(false);
+    axios
+      .delete("/api/maktob/delete", {
+        data: {
+          maktobId: itemId,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        gettingMakbtobs();
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
 
   const columns = [
     {
       title: "ګڼه/شماره",
       dataIndex: "MaktobNo",
       key: "MaktobNo",
-      width: "20%",
+      width: "15%",
       ...getColumnSearchProps("MaktobNo"),
       sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
       sortDirections: ["descend", "ascend"],
     },
+
     {
       title: "مخاطب",
       dataIndex: "Recipent",
@@ -149,7 +190,28 @@ const MaktobList = () => {
       dataIndex: "MaktobDate",
       key: "MaktobDate",
       ...getColumnSearchProps("MaktobDate"),
-      width: "20%",
+      width: "15%",
+    },
+
+    {
+      title: "تغیر/حذف",
+      dataIndex: "operation",
+      key: "opeation",
+      width: "30%",
+      render: (_, record) => (
+        <div className="d-flex">
+          <Divider type="vertical" />
+          <BsPencilSquare />
+          <Divider type="vertical" />
+          <a
+            onClick={() => openConfirmation(record.MaktobNo)}
+            className="link  p-0"
+            activeclassName="active"
+          >
+            <BsTrashFill id="deleteIcon" outline />
+          </a>
+        </div>
+      ),
     },
   ];
 
@@ -158,7 +220,13 @@ const MaktobList = () => {
   return (
     <Sidebar>
       <Header />
-      <div className="main-container text-right">
+      <div
+        className={
+          visibility
+            ? "main-container_darkbackround text-right"
+            : "main-container text-right"
+        }
+      >
         <h1>د مکتوبونو لست</h1>
         <Divider />
         <Table
@@ -173,6 +241,22 @@ const MaktobList = () => {
           )}
         />
       </div>
+      {showConfirmation && (
+        <div className="confirmation-modal">
+          <p>وتل/ خروج</p>
+          <div className="button-container">
+            <button className="cancel-button bg-primary" onClick={handleCancel}>
+              نه/نخیر
+            </button>
+            <button
+              className="confirm-button bg-primary"
+              onClick={handleDelete}
+            >
+              هو/ بلی
+            </button>
+          </div>
+        </div>
+      )}
       <Footer />
     </Sidebar>
   );

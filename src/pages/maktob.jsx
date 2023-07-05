@@ -11,13 +11,17 @@ import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies, maktobTypeOptions } from "./../assets/data/data.js";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { maktobValidationSchema } from "./../assets/data/validation.js";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
 import axios from "axios";
 import "./pages.css";
+message.config({
+  top: 100,
+  maxCount: 5,
+});
 
 const Maktob = (props) => {
   const [btnChecked, setBtnChecked] = useState(false);
@@ -167,7 +171,6 @@ const Maktob = (props) => {
   console.log("Decoded values", userData);
   const onStoreData = () => {
     // console.log("FormData from the onstore data", formData);
-
     // Integration
     axios
       .post("/api/maktob/new-maktob", {
@@ -183,9 +186,17 @@ const Maktob = (props) => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
+        message.success({
+          content: res.data.message,
+          className: "success_custom_message",
+        });
       })
       .catch((err) => {
         console.log("ErorrMessage: ", err.response.data.message);
+        message.error({
+          content: err.response.data.message,
+          className: "error_custom_message",
+        });
       });
   };
 
@@ -218,12 +229,21 @@ const Maktob = (props) => {
     console.log("selectedPresidencies", selectedPresidencies);
     console.log("NewAddedItemsToCopy", inputFields);
   };
-
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  console.log("width", w);
-  console.log("hieght", h);
-
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [visibility, setVisibility] = useState(false);
+  // message after submission
+  const openConfirmation = () => {
+    setVisibility(true);
+    setShowConfirmation(true);
+  };
+  const handleCancel = () => {
+    setShowConfirmation(false);
+    setVisibility(false);
+  };
+  const handleConfirmation = () => {
+    setShowConfirmation(false);
+    setVisibility(false);
+  };
   return (
     <Sidebar>
       {isFormState ? (
@@ -243,7 +263,7 @@ const Maktob = (props) => {
                   context: initialValues?.context,
                 }}
                 onSubmit={onSubmitForm_1}
-                // validationSchema={maktobValidationSchema}
+                validationSchema={maktobValidationSchema}
               >
                 {({
                   values,
@@ -539,7 +559,7 @@ const Maktob = (props) => {
                         }`}
                         id="context"
                         name="context"
-                        rows="4"
+                        rows="6"
                         value={values.context}
                         onChange={(e) =>
                           setFieldValue("context", e.target.value)
@@ -563,7 +583,7 @@ const Maktob = (props) => {
                     <div className="pb-5">
                       <div className="form-check mr-4 bg-primary p-1 rounded pr-3">
                         <input
-                          className="form-check-input"
+                          className="form-check-input my-3"
                           type="checkbox"
                           id="selectAllCheckbox"
                           checked={
@@ -572,15 +592,18 @@ const Maktob = (props) => {
                           onChange={selectAllPresidencies}
                         />
                         <label
-                          className="form-check-label mr-4 mb-2  "
+                          className="form-check-label mr-4 my-2  "
                           htmlFor="selectAllCheckbox"
                         >
                           د ټولو انتخاب/ انتخاب همه
                         </label>
                       </div>
-                      <div className="row">
+                      <div className="row copy_input_body_main_div mr-5 mt-2 ">
                         {columns.map((column, columnIndex) => (
-                          <div className="col" key={columnIndex}>
+                          <div
+                            className="col copy_input_body"
+                            key={columnIndex}
+                          >
                             {column.map((item, itemIndex) => {
                               const checkboxId = `flexCheckDefault${itemIndex}`;
                               const isChecked = selectedPresidencies.some(
@@ -590,7 +613,7 @@ const Maktob = (props) => {
 
                               return (
                                 <div className="form-outline" key={itemIndex}>
-                                  <div className="form-check mr-5">
+                                  <div className="form-check">
                                     <div className="">
                                       <input
                                         className="form-check-input"
@@ -717,10 +740,10 @@ const Maktob = (props) => {
               </div>
             </div>
 
-            <div className="date_type_no_div   col-12 ">
+            <div className="date_type_no_div col-12 ">
               <div className="maktob_no col-4 align-self-end">
                 <label>ګڼه:</label>
-                <p>{formData.maktobNo}</p>
+                <p>&#160;{formData.maktobNo}</p>
               </div>
               <div className="owner col-4">
                 <div>{userData.higherAuthority}</div>
@@ -732,7 +755,7 @@ const Maktob = (props) => {
               <div className=" col-4 date_type_div align-self-end ">
                 <div className="date d-flex justify-content-end  ">
                   <label htmlFor="">نیټه:</label>
-                  <p> &#160;{formData.maktobDate}</p>
+                  <p>&#160;{formData.maktobDate}</p>
                 </div>
                 <div className="maktob_type_div d-flex justify-content-end">
                   <div className="maktob_type text-left">
@@ -882,10 +905,12 @@ const Maktob = (props) => {
                 )}
               </div>
             </div>
+            <div className="footer_divider">
+              <Divider className="" />
+            </div>
 
-            <Divider className="footer_divider" />
-            <div className="footer">
-              <div className="footer-content_maktob">
+            <div className="footer_div">
+              <div className="footer_div_content">
                 <div className="footer-item">
                   آدرس: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل- افغانستان
                 </div>
@@ -894,7 +919,25 @@ const Maktob = (props) => {
               </div>
             </div>
           </div>
-
+          {showConfirmation && (
+            <div className="confirmation-modal">
+              <p>وتل/ خروج</p>
+              <div className="button-container">
+                <button
+                  className="cancel-button bg-primary"
+                  onClick={handleCancel}
+                >
+                  نه/نخیر
+                </button>
+                <button
+                  className="confirm-button bg-primary"
+                  onClick={handleConfirmation}
+                >
+                  هو/ بلی
+                </button>
+              </div>
+            </div>
+          )}
           <div className="container print_btn_div ">
             <button
               onClick={() => {
@@ -909,6 +952,7 @@ const Maktob = (props) => {
               className="print-button btn bg-primary px-5"
               onClick={() => {
                 onStoreData();
+                openConfirmation();
               }}
             >
               ثبت

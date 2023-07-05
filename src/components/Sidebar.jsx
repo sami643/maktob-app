@@ -124,6 +124,8 @@ const Sidebar = ({ children }) => {
         <main>
           <>
             {showConfirmation && (
+              <>
+
               <div className="confirmation-modal">
                 <p>وتل/ خروج</p>
                 <div className="button-container">
@@ -140,7 +142,10 @@ const Sidebar = ({ children }) => {
                     هو/ بلی
                   </button>
                 </div>
+             
               </div>
+                 <div className="backDrop_div"></div>
+                 </>
             )}
             {children}
           </>{" "}
