@@ -26,6 +26,7 @@ export default function Application() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/maktob" element={<Maktob />} />
+        <Route path="/maktob/:maktobId" element={<Maktob />} />
         <Route path="/maktoblist" element={<MaktobList />} />
         <Route path="/pishnihadlist" element={<PishnihadList />} />
         <Route path="/pishnihad" element={<Pishnihad />} />

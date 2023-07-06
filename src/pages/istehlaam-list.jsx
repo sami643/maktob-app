@@ -5,6 +5,8 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import { BsTrashFill } from "react-icons/bs";
+import { BsPencilSquare } from "react-icons/bs";
 import { istehlaams } from "../assets/data/data.js";
 import axios from "axios";
 import "./pages.css";
@@ -127,6 +129,26 @@ const PishnihadList = () => {
       key: "IstehlaamDate",
       ...getColumnSearchProps("IstehlaamDate"),
       width: "20%",
+    },
+    {
+      title: "تغیر/حذف",
+      dataIndex: "operation",
+      key: "opeation",
+      width: "20%",
+      render: (_, record) => (
+        <div className="d-flex">
+          <Divider type="vertical" />
+          <BsPencilSquare />
+          <Divider type="vertical" />
+          <a
+            // onClick={() => openConfirmation(record.MaktobNo)}
+            className="link  p-0"
+            activeclassName="active"
+          >
+            <BsTrashFill id="deleteIcon" outline />
+          </a>
+        </div>
+      ),
     },
   ];
 

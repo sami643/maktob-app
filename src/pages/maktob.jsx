@@ -9,7 +9,7 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies, maktobTypeOptions } from "./../assets/data/data.js";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { maktobValidationSchema } from "./../assets/data/validation.js";
 import { Spin, message } from "antd";
 import Logo from "./../assets/img/logo.jpg";
@@ -24,7 +24,18 @@ message.config({
 });
 
 const Maktob = (props) => {
+  const { maktobId } = useParams();
+  // Retrieving data from the LocalStorage
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  const [formData, setFormData] = useState("");
+  const [initialValues, setInitialValues] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [visibility, setVisibility] = useState(false);
+  const [isFormState, setIsFromState] = useState(true);
+  const [uniquemaktob, setUniquemaktob] = useState();
   const [btnChecked, setBtnChecked] = useState(false);
+  const [fetchedCopyTo, setfetchedCopyTo] = useState([]);
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
   const selectAllPresidencies = () => {
     if (selectedPresidencies.length === presidencies.length) {
@@ -58,7 +69,6 @@ const Maktob = (props) => {
 
   const columns = [];
   const itemsPerColumn = 7;
-
   for (let i = 0; i < presidencies.length; i += itemsPerColumn) {
     const columnItems = presidencies.slice(i, i + itemsPerColumn);
     columns.push(columnItems);
@@ -89,21 +99,18 @@ const Maktob = (props) => {
     { value: "پلان", label: "ریاست پلان" },
   ];
 
-  const [isFormState, setIsFromState] = useState(true);
-
   selectedPresidencies?.sort((a, b) => a.value - b.value);
   const copyToRecipentsJustLabel = selectedPresidencies?.map(
     (obj) => obj.label
   );
-  const listOfpresidenciesJustValue = selectedPresidencies?.map(
-    (obj) => obj.value
-  );
-  const copyToRecipentsJustLabel_1 =
-    copyToRecipentsJustLabel.concat(inputFields);
-  // console.log("listOfpresidenciesJustValue", listOfpresidenciesJustValue);
-  // console.log("listOfpresidenciesBothValueAndLabels", selectedPresidencies);
-  console.log("copyToRecipentsJustLabel", copyToRecipentsJustLabel_1);
-
+  let listOfpresidenciesJustValue = [];
+  if (maktobId) listOfpresidenciesJustValue = fetchedCopyTo?.value || [];
+  else
+    listOfpresidenciesJustValue = selectedPresidencies?.map((obj) => obj.value);
+  let copyToRecipentsJustLabel_1 = [];
+  if (maktobId) copyToRecipentsJustLabel_1 = fetchedCopyTo?.label || [];
+  else
+    copyToRecipentsJustLabel_1 = copyToRecipentsJustLabel.concat(inputFields);
   let arrayA = [];
   let arrayB = [];
   let arrayC = [];
@@ -111,7 +118,7 @@ const Maktob = (props) => {
   let counter_1 = 0;
   let counter_2 = 0;
   let isDeputOrAdvisoryChecked = false;
-
+  //display the checkbox
   for (let i = 0; i < copyToRecipentsJustLabel_1.length; i++) {
     if (
       listOfpresidenciesJustValue[i] === 9 ||
@@ -165,13 +172,8 @@ const Maktob = (props) => {
     window.print();
   };
 
-  // Retrieving data from the LocalStorage
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
+  // Integration
   const onStoreData = () => {
-    // console.log("FormData from the onstore data", formData);
-    // Integration
     axios
       .post("/api/maktob/new-maktob", {
         data: {
@@ -182,6 +184,11 @@ const Maktob = (props) => {
           context: formData.context,
           userId: userData.userId,
           presidencyName: userData.presidencyName,
+          maktobType: formData.maktobType,
+          copyTo: {
+            label: copyToRecipentsJustLabel_1,
+            value: listOfpresidenciesJustValue,
+          },
         },
       })
       .then((res) => {
@@ -218,9 +225,6 @@ const Maktob = (props) => {
       });
   }, [totalMaktob]);
 
-  const [formData, setFormData] = useState("");
-  console.log("formData1111111111111111111111111111: ", formData);
-  const [initialValues, setInitialValues] = useState("");
   const onSubmitForm_1 = (values) => {
     console.log("values", values);
     setFormData(values);
@@ -229,8 +233,7 @@ const Maktob = (props) => {
     console.log("selectedPresidencies", selectedPresidencies);
     console.log("NewAddedItemsToCopy", inputFields);
   };
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [visibility, setVisibility] = useState(false);
+
   // message after submission
   const openConfirmation = () => {
     setVisibility(true);
@@ -244,11 +247,34 @@ const Maktob = (props) => {
     setShowConfirmation(false);
     setVisibility(false);
   };
+
+  const gettingSpecificMaktob = () => {
+    axios
+      .post("/api/maktob/uniquemaktob", {
+        data: {
+          maktobId,
+        },
+      })
+      .then((res) => {
+        console.log("Unique MaktobData: ", res.data.uniqueMaktob);
+        setUniquemaktob(res.data.uniqueMaktob);
+        setfetchedCopyTo(res.data.uniqueMaktob.CopyTo[0]);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  useEffect(() => {
+    gettingSpecificMaktob();
+  }, []);
+
   return (
     <Sidebar>
-      {isFormState ? (
+      {isFormState && !maktobId ? (
         <>
           <Header />
+          {/* Form Part */}
           <div className="main-container text-right">
             <h1 className="container-header">مکتوب</h1>
             <Divider />
@@ -743,7 +769,10 @@ const Maktob = (props) => {
             <div className="date_type_no_div col-12 ">
               <div className="maktob_no col-4 align-self-end">
                 <label>ګڼه:</label>
-                <p>&#160;{formData.maktobNo}</p>
+                <p>
+                  &#160;
+                  {maktobId ? uniquemaktob?.MaktobNo : formData.maktobNo}
+                </p>
               </div>
               <div className="owner col-4">
                 <div>{userData.higherAuthority}</div>
@@ -755,7 +784,10 @@ const Maktob = (props) => {
               <div className=" col-4 date_type_div align-self-end ">
                 <div className="date d-flex justify-content-end  ">
                   <label htmlFor="">نیټه:</label>
-                  <p>&#160;{formData.maktobDate}</p>
+                  <p>
+                    &#160;
+                    {maktobId ? uniquemaktob?.MaktobDate : formData.maktobDate}
+                  </p>
                 </div>
                 <div className="maktob_type_div d-flex justify-content-end">
                   <div className="maktob_type text-left">
@@ -766,10 +798,12 @@ const Maktob = (props) => {
                         className="maktob-type-check m-1 "
                         type="checkbox"
                         value=""
-                        id="flexCheckChecked"
+                        id="matkobType"
                         checked={
-                          formData.maktobType === "عادی" ||
-                          formData.maktobType === undefined
+                          maktobId
+                            ? uniquemaktob?.MaktobType === "عادی"
+                            : formData.maktobType === "عادی" ||
+                              formData.maktobType === undefined
                         }
                       />
                     </div>
@@ -780,8 +814,12 @@ const Maktob = (props) => {
                         className="maktob-type-check m-1 "
                         type="checkbox"
                         value=""
-                        id="flexCheckChecked"
-                        checked={formData.maktobType === "عاجل"}
+                        id="matkobType"
+                        checked={
+                          maktobId
+                            ? uniquemaktob?.MaktobType === "عاجل"
+                            : formData.maktobType === "عاجل"
+                        }
                       />
                     </div>
                     <div className="px-2">
@@ -791,18 +829,14 @@ const Maktob = (props) => {
                         className="maktob-type-check m-1 "
                         type="checkbox"
                         value=""
-                        id="flexCheckChecked"
-                        checked={formData.maktobType === "محرم"}
+                        id="matkobType"
+                        checked={
+                          maktobId
+                            ? uniquemaktob?.MaktobType === "محرم"
+                            : formData.maktobType === "محرم"
+                        }
                       />
                     </div>
-                    {/* <div className="px-2">
-                      <label className="">سایر موارد</label>
-                      <Checkbox
-                        defaultChecked={false}
-                        disabled
-                        className="maktob-type-check p-0"
-                      />
-                    </div> */}
                   </div>
                 </div>
               </div>
@@ -814,7 +848,7 @@ const Maktob = (props) => {
             <div className="body_of_maktob ">
               <div className="audiance">
                 {" "}
-                <p>{formData.recipent}</p>
+                <p>{maktobId ? uniquemaktob?.Recipent : formData.recipent}</p>
               </div>
               <div className="greating">
                 <p>ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً </p>
@@ -822,13 +856,16 @@ const Maktob = (props) => {
 
               <div className="subject_of_maktob">
                 <label> موضوع </label>
-                <p>:&#160;&#160; {formData.subject} </p>
+                <p>
+                  :&#160;&#160;{" "}
+                  {maktobId ? uniquemaktob?.Subject : formData.subject}{" "}
+                </p>
               </div>
               <div className="mohtarama">
                 <p>محترما:</p>
               </div>
               <div className="matktob_context">
-                <p>{formData.context}</p>
+                <p>{maktobId ? uniquemaktob?.Context : formData.context}</p>
               </div>
 
               <br />
@@ -938,36 +975,51 @@ const Maktob = (props) => {
               </div>
             </div>
           )}
-          <div className="container print_btn_div ">
-            <button
-              onClick={() => {
-                setIsFromState(true);
-              }}
-              className="print-button btn bg-primary px-۲"
-            >
-              مخکنۍ صفحه/ صفحه قبلی
-            </button>
+          {!maktobId && (
+            <div className="container print_btn_div ">
+              <button
+                onClick={() => {
+                  setIsFromState(true);
+                }}
+                className="print-button btn bg-primary px-۲"
+              >
+                مخکنۍ صفحه/ صفحه قبلی
+              </button>
 
-            <button
-              className="print-button btn bg-primary px-5"
-              onClick={() => {
-                onStoreData();
-                openConfirmation();
-              }}
-            >
-              ثبت
-            </button>
+              <button
+                className="print-button btn bg-primary px-5"
+                onClick={() => {
+                  onStoreData();
+                  openConfirmation();
+                  gettingSpecificMaktob();
+                }}
+              >
+                ثبت
+              </button>
 
-            <button
-              onClick={() => {
-                handlePrint();
-                onStoreData();
-              }}
-              className="print-button btn bg-primary px-5 ml-5"
-            >
-              پرنت و ثبت
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  handlePrint();
+                  onStoreData();
+                }}
+                className="print-button btn bg-primary px-5 ml-5"
+              >
+                پرنت و ثبت
+              </button>
+            </div>
+          )}
+          {maktobId && (
+            <div className="container print_btn_div text-right  ">
+              <button
+                onClick={() => {
+                  window.history.go(-1);
+                }}
+                className="print-button-view btn bg-primary px-5 mr-3 "
+              >
+                مخکنۍ صفحه/ صفحه قبلی
+              </button>
+            </div>
+          )}
         </>
       )}
     </Sidebar>

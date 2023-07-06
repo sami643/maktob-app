@@ -104,6 +104,7 @@ const MaktobList = () => {
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   console.log("Decoded values", userData);
+  
   const gettingMakbtobs = () => {
     axios
       .post("/api/maktob/maktobs", {
@@ -184,6 +185,9 @@ const MaktobList = () => {
       ...getColumnSearchProps("Subject"),
 
       width: "30%",
+      render: (text, record) => (
+        <a href={`/maktob/${record.MaktobNo}`}>{text}</a>
+      ),
     },
     {
       title: "نیټه/ تاریخ",
