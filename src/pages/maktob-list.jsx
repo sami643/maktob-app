@@ -13,6 +13,7 @@ import "./pages.css";
 import axios from "axios";
 
 const MaktobList = () => {
+  const [matkobIdForUpdate, setMaktobIdForUpdate] = useState();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -104,7 +105,7 @@ const MaktobList = () => {
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   console.log("Decoded values", userData);
-  
+
   const gettingMakbtobs = () => {
     axios
       .post("/api/maktob/maktobs", {
@@ -114,7 +115,7 @@ const MaktobList = () => {
         },
       })
       .then((res) => {
-        console.log("response is: ", res.data);
+        console.log("response is1111111111111111: ", res.data);
         setListItems(res.data.Maktobs_List_data);
       })
       .catch((err) => {
@@ -139,6 +140,7 @@ const MaktobList = () => {
     setItemId(recordNo);
     setVisibility(true);
     setShowConfirmation(true);
+    console.log("");
   };
 
   // Deleting the maktob
@@ -153,11 +155,17 @@ const MaktobList = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
+
         gettingMakbtobs();
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
       });
+  };
+
+  const handleUpdate = () => {
+    console.log("Handling update", matkobIdForUpdate);
+    console.log("listId");
   };
 
   const columns = [
@@ -202,10 +210,14 @@ const MaktobList = () => {
       dataIndex: "operation",
       key: "opeation",
       width: "30%",
-      render: (_, record) => (
+      render: (_, record, updateRecord) => (
         <div className="d-flex">
           <Divider type="vertical" />
-          <BsPencilSquare />
+          <a href={`/maktob/${record._id}`}>
+            {" "}
+            <BsPencilSquare />{" "}
+          </a>
+
           <Divider type="vertical" />
           <a
             onClick={() => openConfirmation(record.MaktobNo)}

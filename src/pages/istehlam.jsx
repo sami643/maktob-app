@@ -85,194 +85,156 @@ const Maktob = () => {
           <div className="main-container text-right">
             <h1 className="container-header">استعلام</h1>
             <Divider />
-            {totalIstehlaam ? (
-              <Formik
-                initialValues={{
-                  istehlaamNo: initialValues?.istehlaamNo || totalIstehlaam,
-                  istehlaamDate: initialValues?.istehlaamDate,
-                  subject: initialValues?.subject,
-                  context: initialValues?.context,
-                  recipent: initialValues?.recipent,
-                }}
-                onSubmit={onSubmitForm_1}
-                // validationSchema={IstehlaamValidationSchema}
-              >
-                {({
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                  errors,
-                  touched,
-                }) => (
-                  <Form className="m-5">
-                    <div className="row mb-4">
-                      <div className="col">
-                        <div className="form-outline">
-                          <label className="form-label mr-3" htmlFor="maktobNo">
-                            داستعلام ګڼه/شماره
-                            <span
-                              style={{
-                                color: "red",
-                                marginInline: "5px",
-                                paddingTop: "5px",
-                              }}
-                            >
-                              *
-                            </span>
-                          </label>
-                          <input
-                            type="number"
-                            id="istehlaamNo"
-                            name="istehlaamNo"
-                            className={`form-control ${
-                              errors.istehlaamNo && touched.istehlaamNo
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            value={values.istehlaamNo}
-                            onChange={(e) =>
-                              setFieldValue("istehlaamNo", e.target.value)
-                            }
-                            onBlur={() => setFieldTouched("istehlaamNo", true)}
-                          />
-                          {errors.istehlaamNo && touched.istehlaamNo ? (
-                            <div className="invalid-feedback d-block errorMessageStyle mr-2">
-                              {errors.istehlaamNo}
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="form-outline">
-                          <label
-                            className="form-label mr-3"
-                            htmlFor="maktobDate"
-                          >
-                            نیټه/تاریخ
-                            <span
-                              style={{
-                                color: "red",
-                                marginInline: "5px",
-                                paddingTop: "5px",
-                              }}
-                            >
-                              *
-                            </span>
-                          </label>
-                          <br />
-                          <DatePicker
+
+            <Formik
+              initialValues={{
+                istehlaamNo: initialValues?.istehlaamNo || totalIstehlaam,
+                istehlaamDate: initialValues?.istehlaamDate,
+                subject: initialValues?.subject,
+                context: initialValues?.context,
+                recipent: initialValues?.recipent,
+              }}
+              onSubmit={onSubmitForm_1}
+              enableReinitialize={true}
+              // validationSchema={IstehlaamValidationSchema}
+            >
+              {({
+                values,
+                setFieldValue,
+                setFieldTouched,
+                errors,
+                touched,
+              }) => (
+                <Form className="m-5">
+                  <div className="row mb-4">
+                    <div className="col">
+                      <div className="form-outline">
+                        <label className="form-label mr-3" htmlFor="maktobNo">
+                          داستعلام ګڼه/شماره
+                          <span
                             style={{
-                              width: "inherit",
-                              padding: "16px",
-                              marginTop: "-1px",
-                              border: `${
-                                errors.istehlaamDate && touched.istehlaamDate
-                                  ? "1px solid red"
-                                  : ""
-                              }`,
+                              color: "red",
+                              marginInline: "5px",
+                              paddingTop: "5px",
                             }}
-                            calendar={arabic}
-                            locale={arabic_ar}
-                            id="istehlaamDate"
-                            name="istehlaamDate"
-                            value={values.istehlaamDate}
-                            onChange={(e) =>
-                              setFieldValue(
-                                "istehlaamDate",
-                                e.year + "/" + e.month.number + "/" + e.day
-                              )
-                            }
-                          />
-                          {errors.istehlaamDate && touched.istehlaamDate ? (
-                            <div className="invalid-feedback d-block errorMessageStyle mr-2">
-                              {errors.istehlaamDate}
-                            </div>
-                          ) : null}
-                        </div>
+                          >
+                            *
+                          </span>
+                        </label>
+                        <input
+                          type="number"
+                          id="istehlaamNo"
+                          name="istehlaamNo"
+                          className={`form-control ${
+                            errors.istehlaamNo && touched.istehlaamNo
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          value={values.istehlaamNo}
+                          onChange={(e) =>
+                            setFieldValue("istehlaamNo", e.target.value)
+                          }
+                          onBlur={() => setFieldTouched("istehlaamNo", true)}
+                        />
+                        {errors.istehlaamNo && touched.istehlaamNo ? (
+                          <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                            {errors.istehlaamNo}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
-
-                    <div className="row ">
-                      {!btnChecked ? (
-                        <div className="form-outline col">
-                          <label className="form-label mr-3" htmlFor="subject">
-                            مخاطب
-                            <span
-                              style={{
-                                color: "red",
-                                marginInline: "5px",
-                                paddingTop: "5px",
-                              }}
-                            >
-                              *
-                            </span>
-                          </label>
-                          <select
-                            id="recipent"
-                            value={values.recipent}
-                            name="recipent"
-                            style={{ height: "35px" }}
-                            onChange={(e) =>
-                              setFieldValue("recipent", e.target.value)
-                            }
-                            className={`form-control form-select-lg ${
-                              errors.recipent && touched.recipent
-                                ? "is-invalid form-select-lg    "
-                                : ""
-                            }`}
-                            aria-label=".form-select-lg example"
+                    <div className="col">
+                      <div className="form-outline">
+                        <label className="form-label mr-3" htmlFor="maktobDate">
+                          نیټه/تاریخ
+                          <span
+                            style={{
+                              color: "red",
+                              marginInline: "5px",
+                              paddingTop: "5px",
+                            }}
                           >
-                            <option selected>Open this select menu</option>
-                            <option value="نصاب">ریاست نصاب</option>
-                            <option value="بشری">ریاست منابع بشری</option>
-                            <option value="پلان">ریاست پلان</option>
-                          </select>
-                          {errors.recipent && touched.recipent ? (
-                            <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
-                              {errors.recipent}
-                            </div>
-                          ) : null}
-                        </div>
-                      ) : (
-                        <div className="form-outline  col">
-                          <label className="form-label mr-3" htmlFor="subject">
-                            مخاطب
-                            <span
-                              style={{
-                                color: "red",
-                                marginInline: "5px",
-                                paddingTop: "5px",
-                              }}
-                            >
-                              *
-                            </span>
-                          </label>
-                          <input
-                            type="text"
-                            id="recipent"
-                            name="recipent"
-                            className={`form-control form-select-lg ${
-                              errors.recipent && touched.recipent
-                                ? "is-invalid form-select-lg    "
+                            *
+                          </span>
+                        </label>
+                        <br />
+                        <DatePicker
+                          style={{
+                            width: "inherit",
+                            padding: "16px",
+                            marginTop: "-1px",
+                            border: `${
+                              errors.istehlaamDate && touched.istehlaamDate
+                                ? "1px solid red"
                                 : ""
-                            }`}
-                            value={values.recipent}
-                            onChange={(e) =>
-                              setFieldValue("recipent", e.target.value)
-                            }
-                            onBlur={() => setFieldTouched("recipent", true)}
-                          />
-                          {errors.recipent && touched.recipent ? (
-                            <div className="invalid-feedback d-block errorMessageStyle mr-2">
-                              {errors.recipent}
-                            </div>
-                          ) : null}
-                        </div>
-                      )}
+                            }`,
+                          }}
+                          calendar={arabic}
+                          locale={arabic_ar}
+                          id="istehlaamDate"
+                          name="istehlaamDate"
+                          value={values.istehlaamDate}
+                          onChange={(e) =>
+                            setFieldValue(
+                              "istehlaamDate",
+                              e.year + "/" + e.month.number + "/" + e.day
+                            )
+                          }
+                        />
+                        {errors.istehlaamDate && touched.istehlaamDate ? (
+                          <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                            {errors.istehlaamDate}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
 
-                      <div className="form-outline mb-4 col">
+                  <div className="row ">
+                    {!btnChecked ? (
+                      <div className="form-outline col">
                         <label className="form-label mr-3" htmlFor="subject">
-                          موضوع
+                          مخاطب
+                          <span
+                            style={{
+                              color: "red",
+                              marginInline: "5px",
+                              paddingTop: "5px",
+                            }}
+                          >
+                            *
+                          </span>
+                        </label>
+                        <select
+                          id="recipent"
+                          value={values.recipent}
+                          name="recipent"
+                          style={{ height: "35px" }}
+                          onChange={(e) =>
+                            setFieldValue("recipent", e.target.value)
+                          }
+                          className={`form-control form-select-lg ${
+                            errors.recipent && touched.recipent
+                              ? "is-invalid form-select-lg    "
+                              : ""
+                          }`}
+                          aria-label=".form-select-lg example"
+                        >
+                          <option selected>Open this select menu</option>
+                          <option value="نصاب">ریاست نصاب</option>
+                          <option value="بشری">ریاست منابع بشری</option>
+                          <option value="پلان">ریاست پلان</option>
+                        </select>
+                        {errors.recipent && touched.recipent ? (
+                          <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                            {errors.recipent}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <div className="form-outline  col">
+                        <label className="form-label mr-3" htmlFor="subject">
+                          مخاطب
                           <span
                             style={{
                               color: "red",
@@ -285,49 +247,30 @@ const Maktob = () => {
                         </label>
                         <input
                           type="text"
-                          id="subject"
-                          name="subject"
-                          className={`form-control ${
-                            errors.subject && touched.subject
-                              ? "is-invalid"
+                          id="recipent"
+                          name="recipent"
+                          className={`form-control form-select-lg ${
+                            errors.recipent && touched.recipent
+                              ? "is-invalid form-select-lg    "
                               : ""
                           }`}
-                          value={values.subject}
+                          value={values.recipent}
                           onChange={(e) =>
-                            setFieldValue("subject", e.target.value)
+                            setFieldValue("recipent", e.target.value)
                           }
-                          onBlur={() => setFieldTouched("subject", true)}
+                          onBlur={() => setFieldTouched("recipent", true)}
                         />
-                        {errors.subject && touched.subject ? (
+                        {errors.recipent && touched.recipent ? (
                           <div className="invalid-feedback d-block errorMessageStyle mr-2">
-                            {errors.subject}
+                            {errors.recipent}
                           </div>
                         ) : null}
                       </div>
-                    </div>
+                    )}
 
-                    <div class="form-check ">
-                      <div style={{ marginTop: "-12px", marginRight: "4px" }}>
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckIndeterminate"
-                          onChange={(e) => setBtnChecked(e.target.checked)}
-                        />
-                      </div>
-                      <label
-                        class="form-check-label"
-                        for="flexCheckIndeterminate"
-                        style={{ marginInline: "24px", fontSize: "11px" }}
-                      >
-                        په لست کې شتون نه لري؟
-                      </label>
-                    </div>
-
-                    <div className="form-outline mb-4 mt-5">
-                      <label className="form-label mr-3" htmlFor="context">
-                        متن
+                    <div className="form-outline mb-4 col">
+                      <label className="form-label mr-3" htmlFor="subject">
+                        موضوع
                         <span
                           style={{
                             color: "red",
@@ -338,48 +281,94 @@ const Maktob = () => {
                           *
                         </span>
                       </label>
-                      <textarea
+                      <input
+                        type="text"
+                        id="subject"
+                        name="subject"
                         className={`form-control ${
-                          errors.context && touched.context ? "is-invalid" : ""
+                          errors.subject && touched.subject ? "is-invalid" : ""
                         }`}
-                        id="context"
-                        name="context"
-                        rows="6"
-                        value={values.context}
+                        value={values.subject}
                         onChange={(e) =>
-                          setFieldValue("context", e.target.value)
+                          setFieldValue("subject", e.target.value)
                         }
-                        onBlur={() => setFieldTouched("context", true)}
-                      ></textarea>
-                      {errors.context && touched.context ? (
-                        <div
-                          className="invalid-feedback d-block errorMessageStyle mr-2"
-                          style={{ fontWeight: "bolder" }}
-                        >
-                          {errors.context}
+                        onBlur={() => setFieldTouched("subject", true)}
+                      />
+                      {errors.subject && touched.subject ? (
+                        <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                          {errors.subject}
                         </div>
                       ) : null}
                     </div>
+                  </div>
 
-                    <div className="row">
-                      <div className="text-left col"></div>
-                      <div className="text-left col">
-                        <button
-                          type="submit"
-                          className="btn bg-primary button-1 mt-5"
-                        >
-                          مخته/بعدی
-                        </button>
-                      </div>
+                  <div class="form-check ">
+                    <div style={{ marginTop: "-12px", marginRight: "4px" }}>
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckIndeterminate"
+                        onChange={(e) => setBtnChecked(e.target.checked)}
+                      />
                     </div>
-                  </Form>
-                )}
-              </Formik>
-            ) : (
-              <div className="text-center pt-5 mt-5">
-                <Spin />
-              </div>
-            )}
+                    <label
+                      class="form-check-label"
+                      for="flexCheckIndeterminate"
+                      style={{ marginInline: "24px", fontSize: "11px" }}
+                    >
+                      په لست کې شتون نه لري؟
+                    </label>
+                  </div>
+
+                  <div className="form-outline mb-4 mt-5">
+                    <label className="form-label mr-3" htmlFor="context">
+                      متن
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <textarea
+                      className={`form-control ${
+                        errors.context && touched.context ? "is-invalid" : ""
+                      }`}
+                      id="context"
+                      name="context"
+                      rows="6"
+                      value={values.context}
+                      onChange={(e) => setFieldValue("context", e.target.value)}
+                      onBlur={() => setFieldTouched("context", true)}
+                    ></textarea>
+                    {errors.context && touched.context ? (
+                      <div
+                        className="invalid-feedback d-block errorMessageStyle mr-2"
+                        style={{ fontWeight: "bolder" }}
+                      >
+                        {errors.context}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="row">
+                    <div className="text-left col"></div>
+                    <div className="text-left col">
+                      <button
+                        type="submit"
+                        className="btn bg-primary button-1 mt-5"
+                      >
+                        مخته/بعدی
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
           <Footer />
         </>
