@@ -13,7 +13,8 @@ const Login = () => {
   const { setUser } = useContext(UserContext);
   const [initialValues, setInitialValues] = useState("");
   const [userIdErrorMessage, setuserIdErrorMessage] = useState("");
-  const navigate = useNavigate();
+  const [confirmSessionExpiration, setConfirmSessionExpiration] =
+    useState(false);
   const onSubmitForm_1 = (values) => {
     setInitialValues(values);
     console.log("valuse", values);
@@ -29,10 +30,20 @@ const Login = () => {
         const userData = jwtDecode(res.data.token);
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
+        // setConfirmSessionExpiration(true);
+        setTimeout(() => {
+          window.location.href = "/";
+          localStorage.removeItem("user");
+          setUser(null);
+        }, 60 * 60 * 60 * 1000);
       })
       .catch((err) => {
         setuserIdErrorMessage(err.response.data.message);
       });
+  };
+
+  const handleSessionExpiration = () => {
+    setConfirmSessionExpiration(false);
   };
 
   return (
@@ -142,6 +153,25 @@ const Login = () => {
                     </Form>
                   )}
                 </Formik>
+                {confirmSessionExpiration && (
+                  <>
+                    <div className="confirmation-modal">
+                      <p>
+                        ستاسو د لاگن وخت پوره دی په مهربانۍ سره بیا ځلي دننه شي
+                      </p>
+                      <p>وخت لاگن مسلسل شما تمام است لطفا دوباره لاگن شوید</p>
+                      <div className="button-container">
+                        <button
+                          className="confirm-button bg-primary"
+                          onClick={handleSessionExpiration}
+                        >
+                          تائید
+                        </button>
+                      </div>
+                    </div>
+                    <div className="backDrop_div"></div>
+                  </>
+                )}
               </div>
             </div>
           </div>

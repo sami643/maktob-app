@@ -43,7 +43,6 @@ const Sidebar = ({ children }) => {
     localStorage.removeItem("user");
     setUser(null);
     navigate("/");
-    // Close the confirmation message
     // setShowConfirmation(false);
   };
   const handleCancel = () => {
@@ -125,27 +124,25 @@ const Sidebar = ({ children }) => {
           <>
             {showConfirmation && (
               <>
-
-              <div className="confirmation-modal">
-                <p>وتل/ خروج</p>
-                <div className="button-container">
-                  <button
-                    className="cancel-button bg-primary"
-                    onClick={handleCancel}
-                  >
-                    نه/نخیر
-                  </button>
-                  <button
-                    className="confirm-button bg-primary"
-                    onClick={handleConfirm}
-                  >
-                    هو/ بلی
-                  </button>
+                <div className="confirmation-modal">
+                  <p>وتل/ خروج</p>
+                  <div className="button-container">
+                    <button
+                      className="cancel-button bg-primary"
+                      onClick={handleCancel}
+                    >
+                      نه/نخیر
+                    </button>
+                    <button
+                      className="confirm-button bg-primary"
+                      onClick={handleConfirm}
+                    >
+                      هو/ بلی
+                    </button>
+                  </div>
                 </div>
-             
-              </div>
-                 <div className="backDrop_div"></div>
-                 </>
+                <div className="backDrop_div"></div>
+              </>
             )}
             {children}
           </>{" "}
