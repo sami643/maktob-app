@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import Sidebar from "../components/Sidebar";
-import { useNavigate } from "react-router-dom";
-const LogOut = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    localStorage.clear();
-  }, []);
+const PageNotFound = () => {
+  return (
+    <div className="main_container text-center ">
+      <div>
+        <h1>Page not found</h1>
+      </div>
+    </div>
+  );
 };
-
-export default LogOut;
+export default PageNotFound;

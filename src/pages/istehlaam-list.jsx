@@ -15,8 +15,11 @@ const PishnihadList = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-
   const [searchInputValue, setSearchInputValue] = useState("");
+  const [listItems, setListItems] = useState({});
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  console.log("Decoded values", userData);
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -120,8 +123,10 @@ const PishnihadList = () => {
       dataIndex: "Subject",
       key: "Subject",
       ...getColumnSearchProps("Subject"),
-
       width: "30%",
+      render: (text, record) => (
+        <a href={`/istehlaam/${record.IstehlaamNo}`}>{text}</a>
+      ),
     },
     {
       title: "نیټه/ تاریخ",
@@ -152,10 +157,6 @@ const PishnihadList = () => {
     },
   ];
 
-  const [listItems, setListItems] = useState({});
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
   useEffect(() => {
     axios
       .post("/api/istehlaam/istehlaams", {

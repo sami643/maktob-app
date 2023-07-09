@@ -27,12 +27,10 @@ const Login = () => {
       .then((res) => {
         console.log("response is: ", res.data.token);
         const userData = jwtDecode(res.data.token);
-        // console.log("decoded userData: ", userData);
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
       })
       .catch((err) => {
-        // console.log("ErorrMessage: ", err.response.data.message);
         setuserIdErrorMessage(err.response.data.message);
       });
   };

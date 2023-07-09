@@ -5,7 +5,6 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import { pishnihads } from "../assets/data/data.js";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import "./pages.css";
@@ -120,8 +119,15 @@ const PishnihadList = () => {
       dataIndex: "Subject",
       key: "Subject",
       ...getColumnSearchProps("Subject"),
-
       width: "30%",
+      render: (text, record) => (
+        <a
+          href={`/pishnihad/${record.PishnihadNo}`}
+          // className={{ textDecoration: "none" }}
+        >
+          {text}
+        </a>
+      ),
     },
     {
       title: "نیټه/ تاریخ",

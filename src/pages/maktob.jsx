@@ -25,7 +25,7 @@ message.config({
 
 const Maktob = (props) => {
   const { maktobId } = useParams();
-  console.log(maktobId, "cconsdosjfnosdgn");
+  // console.log(maktobId, "cconsdosjfnosdgn");
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
@@ -38,6 +38,7 @@ const Maktob = (props) => {
   const [btnChecked, setBtnChecked] = useState(false);
   const [fetchedCopyTo, setfetchedCopyTo] = useState([]);
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
+  const [totalMaktob, setTotalMaktob] = useState("");
   const selectAllPresidencies = () => {
     if (selectedPresidencies.length === presidencies.length) {
       // If all checkboxes are already selected, unselect all
@@ -92,7 +93,6 @@ const Maktob = (props) => {
     setInputFields([...inputFields, ""]);
   };
   const [inputFields, setInputFields] = useState([]); // Initialize with one empty input field
-  const navigate = useNavigate();
 
   const presidenciesOpoptions = [
     { value: "نصاب", label: "ریاست نصاب" },
@@ -208,8 +208,6 @@ const Maktob = (props) => {
       });
   };
 
-  const [totalMaktob, setTotalMaktob] = useState("");
-
   // getting MaktobNo
   useEffect(() => {
     axios
@@ -227,13 +225,37 @@ const Maktob = (props) => {
       });
   }, [totalMaktob]);
 
+  //formSubmit and Updating the maktob
   const onSubmitForm_1 = (values) => {
-    console.log("values", values);
-    setFormData(values);
-    setIsFromState(false);
-    setInitialValues(values);
-    console.log("selectedPresidencies", selectedPresidencies);
-    console.log("NewAddedItemsToCopy", inputFields);
+    if (!maktobId) {
+      setIsFromState(false);
+      setFormData(values);
+      setInitialValues(values);
+    } else if (maktobId) {
+      axios
+        .put("/api/maktob/update", {
+          data: {
+            userId: userData.userId,
+            makttobIdForUpdate: maktobId,
+            maktobNo: values.maktobNo,
+            maktobDate: values.maktobDate,
+            recipent: values.recipent,
+            subject: values.subject,
+            context: values.context,
+            maktobType: values.maktobType,
+            // copyTo: selectAllPresidencies,
+          },
+        })
+        .then((res) => {
+          console.log("UpdateResponseFromServer: ", res.data.message);
+        })
+        .catch((err) => {
+          console.log(
+            "Axios Request Error After Calling Update API",
+            err.response.data.message
+          );
+        });
+    }
   };
 
   // message after submission
@@ -258,9 +280,10 @@ const Maktob = (props) => {
         },
       })
       .then((res) => {
-        console.log("Unique MaktobData: ", res.data.uniqueMaktob);
+        // console.log("Unique MaktobData: ", res.data.uniqueMaktob);
         setUniquemaktob(res.data.uniqueMaktob);
         setfetchedCopyTo(res.data.uniqueMaktob.CopyTo[0]);
+        // console.log("copyTo Value: ", res.data.uniqueMaktob.CopyTo[0].label);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -270,7 +293,7 @@ const Maktob = (props) => {
     gettingSpecificMaktob();
   }, []);
 
-  const stateForUpdate = {
+  const updateInitialValues = {
     maktobNo: uniquemaktob.MaktobNo,
     maktobDate: uniquemaktob.MaktobDate,
     maktobType: uniquemaktob.MaktobType,
@@ -279,14 +302,13 @@ const Maktob = (props) => {
     context: uniquemaktob.Context,
     copyTo: uniquemaktob.CopyTo,
   };
-
   const initialStateValue = {
-    maktobNo: initialValues?.maktobNo || totalMaktob,
-    maktobDate: initialValues?.maktobDate,
-    maktobType: initialValues?.maktobType,
-    recipent: initialValues?.recipent,
-    subject: initialValues?.subject,
-    context: initialValues?.context,
+    maktobNo: initialValues.maktobNo || totalMaktob,
+    maktobDate: initialValues.maktobDate,
+    maktobType: initialValues.maktobType,
+    recipent: initialValues.recipent,
+    subject: initialValues.subject,
+    context: initialValues.context,
   };
 
   return (
@@ -299,8 +321,8 @@ const Maktob = (props) => {
             <h1 className="container-header">مکتوب</h1>
             <Divider />
             <Formik
-              initialValues={maktobId ? stateForUpdate : initialStateValue}
               onSubmit={onSubmitForm_1}
+              initialValues={maktobId ? updateInitialValues : initialStateValue}
               validationSchema={maktobValidationSchema}
               enableReinitialize={true}
             >
@@ -709,14 +731,31 @@ const Maktob = (props) => {
                     ))}
                   </div>
 
-                  <div className="row">
-                    <div className="text-left col"></div>
-                    <div className="text-left col">
-                      <button type="submit" className="btn bg-primary button-1">
-                        مخته/بعدی
-                      </button>
+                  {maktobId ? (
+                    <div className="row">
+                      <div className="text-left col"></div>
+                      <div className="text-left col">
+                        <button
+                          type="submit"
+                          className="btn bg-primary button-1 my-4 py-2"
+                        >
+                          ثبت تغیرات/ د تغیراتو ثبت
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="row">
+                      <div className="text-left col"></div>
+                      <div className="text-left col">
+                        <button
+                          type="submit"
+                          className="btn bg-primary button-1"
+                        >
+                          مخته/بعدی
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </Form>
               )}
             </Formik>

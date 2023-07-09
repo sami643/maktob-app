@@ -16,26 +16,31 @@ import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Pishnihad = () => {
+  const { pishnihadId } = useParams();
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  const [totalPishnihad, setTotalPishnihad] = useState("");
+  // console.log("Decoded values", userData);
   const [btnChecked, setBtnChecked] = useState(false);
   const [initialValues, setInitialValues] = useState();
   const [isFormState, setIsFromState] = useState(true);
   const [formData, setFormData] = useState("");
+  const [uniquePishnihadstate, setUniquePishnihadstate] = useState("");
   const onSubmitForm_1 = (values) => {
     console.log("values", values);
     setFormData(values);
     setIsFromState(false);
     setInitialValues(values);
   };
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
 
   const handlePrint = () => {
     window.print();
   };
 
+  // Adding new Istehlaams
   const onStoreData = () => {
     axios
       .post("/api/pishnihad/new-pishnihad", {
@@ -56,9 +61,7 @@ const Pishnihad = () => {
         console.log("ErrorMessage", err.response.data.message);
       });
   };
-
-  const [totalPishnihad, setTotalPishnihad] = useState("");
-  // console.log("fdgdfg   ", totalPishnihad);
+  // Calling API for getting Istehalaam Number
   useEffect(() => {
     axios
       .post("/api/pishnihad/pishnihads", {
@@ -75,10 +78,28 @@ const Pishnihad = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   }, [totalPishnihad]);
+  //Getting mIstehlaam for View component
+  const gettingSpecificPishnihadForView = async () => {
+    await axios
+      .post("/api/pishnihad/uniquePishnihad", {
+        data: {
+          pishnihadId,
+        },
+      })
+      .then((res) => {
+        setUniquePishnihadstate(res.data.uniquePishnihad);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+  useEffect(() => {
+    gettingSpecificPishnihadForView();
+  }, []);
 
   return (
     <Sidebar>
-      {isFormState ? (
+      {isFormState && (!pishnihadId || pishnihadId.length > 12) ? (
         <>
           <Header />
           <div className="main-container text-right">
@@ -94,7 +115,7 @@ const Pishnihad = () => {
               }}
               onSubmit={onSubmitForm_1}
               enableReinitialize={true}
-              // validationSchema={pishnihaadValidationSchema}
+              validationSchema={pishnihaadValidationSchema}
             >
               {({
                 values,
@@ -411,7 +432,12 @@ const Pishnihad = () => {
             <div className="date_type_no_div   col-12 ">
               <div className="maktob_no col-4 align-self-end">
                 <label>ګڼه:</label>
-                <p>&#160;{formData.pishnihadNo}</p>
+                <p>
+                  &#160;
+                  {pishnihadId
+                    ? uniquePishnihadstate?.PishnihadNo
+                    : formData.pishnihadNo}
+                </p>
               </div>
               <div className="owner col-4">
                 <div>{userData.higherAuthority}</div>
@@ -423,7 +449,12 @@ const Pishnihad = () => {
               <div className=" col-4 date_type_div align-self-end ">
                 <div className="date d-flex justify-content-end  ">
                   <label htmlFor="">نیټه:</label>
-                  <p>&#160;{formData.pishnihadDate}</p>
+                  <p>
+                    &#160;
+                    {pishnihadId
+                      ? uniquePishnihadstate?.PishnihadDate
+                      : formData.pishnihadDate}
+                  </p>
                 </div>
               </div>
             </div>
@@ -436,7 +467,11 @@ const Pishnihad = () => {
                   <h3 className="header_of_pishnihad_text">پیشنهاد</h3>
                 </div>
                 <div className="pishnihad_body_div mx-2">
-                  <p className="audiance">{formData.recipent}</p>
+                  <p className="audiance">
+                    {pishnihadId
+                      ? uniquePishnihadstate?.Recipent
+                      : formData.recipent}
+                  </p>
                   <p className="greating">
                     ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
                   </p>
@@ -445,13 +480,21 @@ const Pishnihad = () => {
                       {" "}
                       موضوع:
                     </label>
-                    <p>{formData.subject} </p>
+                    <p>
+                      {pishnihadId
+                        ? uniquePishnihadstate?.Subject
+                        : formData.subject}{" "}
+                    </p>
                   </div>
                   <br />
                   <div className="mohtarama">
                     <p>محترما:</p>
                   </div>
-                  <p className="matktob_context">{formData.context}</p>
+                  <p className="matktob_context">
+                    {pishnihadId
+                      ? uniquePishnihadstate?.Context
+                      : formData.context}
+                  </p>
                   <br />
                   <div className="closing_signature">
                     <p>والسلام</p>
@@ -480,35 +523,49 @@ const Pishnihad = () => {
             </div>
           </div>
 
-          <div className="container print_btn_div ">
-            <button
-              onClick={() => {
-                setIsFromState(true);
-              }}
-              className="print-button btn bg-primary px-5"
-            >
-              مخکنۍ صفحه/ صفحه قبلی
-            </button>
+          {!pishnihadId && (
+            <div className="container print_btn_div ">
+              <button
+                onClick={() => {
+                  setIsFromState(true);
+                }}
+                className="print-button btn bg-primary px-5"
+              >
+                مخکنۍ صفحه/ صفحه قبلی
+              </button>
 
-            <button
-              className="print-button btn bg-primary px-5"
-              onClick={() => {
-                onStoreData();
-              }}
-            >
-              ثبت
-            </button>
+              <button
+                className="print-button btn bg-primary px-5"
+                onClick={() => {
+                  onStoreData();
+                }}
+              >
+                ثبت
+              </button>
 
-            <button
-              onClick={() => {
-                onStoreData();
-                handlePrint();
-              }}
-              className="print-button btn bg-primary px-5 ml-5"
-            >
-              پرنت و ثبت
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  onStoreData();
+                  handlePrint();
+                }}
+                className="print-button btn bg-primary px-5 ml-5"
+              >
+                پرنت و ثبت
+              </button>
+            </div>
+          )}
+          {pishnihadId && (
+            <div className="container print_btn_div text-right  ">
+              <button
+                onClick={() => {
+                  window.history.go(-1);
+                }}
+                className="print-button-view btn bg-primary px-5 mr-3 "
+              >
+                مخکنۍ صفحه/ صفحه قبلی
+              </button>
+            </div>
+          )}
         </>
       )}
     </Sidebar>

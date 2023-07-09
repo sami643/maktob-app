@@ -6,22 +6,28 @@ import { Formik, Field, Form } from "formik";
 import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
-import { presidencies } from "./../assets/data/data.js";
 import axios from "axios";
 import { IstehlaamValidationSchema } from "./../assets/data/validation.js";
 import { Spin } from "antd";
-
 import "./pages.css";
 import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
-import { useLocation } from "react-router-dom";
 import { Checkbox, Divider } from "@material-ui/core";
+import { useParams } from "react-router-dom";
 
 const Maktob = () => {
+  const { istehlaamId } = useParams();
+  const [isFormState, setIsFromState] = useState(true);
+  //Getting Istehlam Number
+  const [totalIstehlaam, setTotalIstehlaam] = useState();
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
   const [btnChecked, setBtnChecked] = useState(false);
   const [initialValues, setInitialValues] = useState();
+  const [uniqueIstehlaamstate, setUniqueIstehlaamstate] = useState("");
+
   const [formData, setFormData] = useState("");
   const onSubmitForm_1 = (values) => {
     console.log("values", values);
@@ -33,10 +39,8 @@ const Maktob = () => {
   const handlePrint = () => {
     window.print();
   };
-  const [isFormState, setIsFromState] = useState(true);
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
+
+  // Adding Maktob
   const onStoreData = () => {
     axios
       .post("/api/istehlaam/new-istehlaam", {
@@ -58,8 +62,7 @@ const Maktob = () => {
       });
   };
 
-  //Getting Istehlam Number
-  const [totalIstehlaam, setTotalIstehlaam] = useState();
+  //GettingMakob initial Maktob Number
   useEffect(() => {
     axios
       .post("/api/istehlaam/istehlaams", {
@@ -76,9 +79,29 @@ const Maktob = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   }, [totalIstehlaam]);
+
+  //Getting mIstehlaam for View component
+  const gettingSpecificIstehlaamForView = async () => {
+    await axios
+      .post("/api/istehlaam/uniqueIstehlaam", {
+        data: {
+          istehlaamId,
+        },
+      })
+      .then((res) => {
+        setUniqueIstehlaamstate(res.data.uniqueIstehlaam);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+  useEffect(() => {
+    gettingSpecificIstehlaamForView();
+  }, []);
+
   return (
     <Sidebar>
-      {isFormState ? (
+      {isFormState && (!istehlaamId || istehlaamId.length > 12) ? (
         <>
           {" "}
           <Header />
@@ -96,7 +119,7 @@ const Maktob = () => {
               }}
               onSubmit={onSubmitForm_1}
               enableReinitialize={true}
-              // validationSchema={IstehlaamValidationSchema}
+              validationSchema={IstehlaamValidationSchema}
             >
               {({
                 values,
@@ -413,7 +436,12 @@ const Maktob = () => {
             <div className="date_type_no_div   col-12 ">
               <div className="maktob_no col-4 align-self-end">
                 <label>ګڼه:</label>
-                <p>&#160;{formData.istehlaamNo}</p>
+                <p>
+                  &#160;
+                  {istehlaamId
+                    ? uniqueIstehlaamstate?.IstehlaamNo
+                    : formData.istehlaamNo}
+                </p>
               </div>
               <div className="owner col-4">
                 <div>{userData.higherAuthority}</div>
@@ -425,7 +453,12 @@ const Maktob = () => {
               <div className=" col-4 date_type_div align-self-end ">
                 <div className="date d-flex justify-content-end  ">
                   <label htmlFor="">نیټه:</label>
-                  <p>&#160;{formData.istehlaamDate}</p>
+                  <p>
+                    &#160;
+                    {istehlaamId
+                      ? uniqueIstehlaamstate?.IstehlaamDate
+                      : formData.istehlaamDate}
+                  </p>
                 </div>
               </div>
             </div>
@@ -439,7 +472,11 @@ const Maktob = () => {
                   <h3 className="header_of_pishnihad_text">استعلام</h3>
                 </div>
                 <div className="pishnihad_body_div mx-2">
-                  <p className="audiance">{formData.recipent}</p>
+                  <p className="audiance">
+                    {istehlaamId
+                      ? uniqueIstehlaamstate?.Recipent
+                      : formData.recipent}
+                  </p>
                   <p className="greating">
                     ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
                   </p>
@@ -448,13 +485,21 @@ const Maktob = () => {
                       {" "}
                       موضوع:
                     </label>
-                    <p>{formData.subject}</p>
+                    <p>
+                      {istehlaamId
+                        ? uniqueIstehlaamstate?.Subject
+                        : formData.subject}
+                    </p>
                   </div>
                   <br />
                   <div className="mohtarama">
                     <p>محترما:</p>
                   </div>
-                  <p className="matktob_context">{formData.context}</p>
+                  <p className="matktob_context">
+                    {istehlaamId
+                      ? uniqueIstehlaamstate?.Context
+                      : formData.context}
+                  </p>
                   <br />
                   <div className="closing_signature">
                     <p>والسلام</p>
@@ -482,36 +527,49 @@ const Maktob = () => {
               </div>
             </div>
           </div>
+          {!istehlaamId && (
+            <div className="container print_btn_div ">
+              <button
+                onClick={() => {
+                  setIsFromState(true);
+                }}
+                className="print-button btn bg-primary px-۲"
+              >
+                مخکنۍ صفحه/ صفحه قبلی
+              </button>
 
-          <div className="container print_btn_div ">
-            <button
-              onClick={() => {
-                setIsFromState(true);
-              }}
-              className="print-button btn bg-primary px-۲"
-            >
-              مخکنۍ صفحه/ صفحه قبلی
-            </button>
+              <button
+                className="print-button btn bg-primary px-5"
+                onClick={() => {
+                  onStoreData();
+                }}
+              >
+                ثبت
+              </button>
 
-            <button
-              className="print-button btn bg-primary px-5"
-              onClick={() => {
-                onStoreData();
-              }}
-            >
-              ثبت
-            </button>
-
-            <button
-              onClick={() => {
-                handlePrint();
-                onStoreData();
-              }}
-              className="print-button btn bg-primary px-5"
-            >
-              ثبت و پرنت
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  handlePrint();
+                  onStoreData();
+                }}
+                className="print-button btn bg-primary px-5"
+              >
+                ثبت و پرنت
+              </button>
+            </div>
+          )}
+          {istehlaamId && (
+            <div className="container print_btn_div text-right  ">
+              <button
+                onClick={() => {
+                  window.history.go(-1);
+                }}
+                className="print-button-view btn bg-primary px-5 mr-3 "
+              >
+                مخکنۍ صفحه/ صفحه قبلی
+              </button>
+            </div>
+          )}
         </>
       )}
     </Sidebar>
