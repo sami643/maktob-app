@@ -13,8 +13,7 @@ const Login = () => {
   const { setUser } = useContext(UserContext);
   const [initialValues, setInitialValues] = useState("");
   const [userIdErrorMessage, setuserIdErrorMessage] = useState("");
-  const [confirmSessionExpiration, setConfirmSessionExpiration] =
-    useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const onSubmitForm_1 = (values) => {
     setInitialValues(values);
     console.log("valuse", values);
@@ -30,31 +29,36 @@ const Login = () => {
         const userData = jwtDecode(res.data.token);
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
-        // setConfirmSessionExpiration(true);
         setTimeout(() => {
           window.location.href = "/";
           localStorage.removeItem("user");
           setUser(null);
         }, 60 * 60 * 60 * 1000);
+        // .then(() => {
+        //   setTimeout(() => {
+        //     setSessionExpiration(true);
+        //     alert("Innier pages is callsed");
+        //   }, 1 * 5 * 1000);
+        // });
       })
       .catch((err) => {
         setuserIdErrorMessage(err.response.data.message);
       });
   };
 
-  const handleSessionExpiration = () => {
-    setConfirmSessionExpiration(false);
+  const handleSessionExpired = () => {
+    setSessionExpired(false);
   };
 
   return (
     <>
       <Header />{" "}
-      <section class="py-5">
-        <div class="container py-5 h-10 ">
-          <div class="row d-flex justify-content-center align-items-center h-100 ">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5 ">
+      <div className=" pt-5 container-wrapper">
+        <div className="container py-5 h-10 ">
+          <div className="row d-flex justify-content-center align-items-center h-100 ">
+            <div className="col-12 col-md-8 col-lg-6 col-xl-5 ">
               <div
-                class="card shadow-2-strong shadow"
+                className="card shadow-2-strong shadow"
                 style={{ borderRadius: "1rem" }}
               >
                 <Formik
@@ -74,7 +78,7 @@ const Login = () => {
                     touched,
                   }) => (
                     <Form className="m-5">
-                      <div class="card-body p-5 text-center">
+                      <div className="card-body p-5 text-center">
                         {userIdErrorMessage ? (
                           <div
                             style={{
@@ -87,17 +91,17 @@ const Login = () => {
                             {userIdErrorMessage}
                           </div>
                         ) : null}
-                        <h3 class="mb-5">logo</h3>
+                        <h3 className="mb-5">logo</h3>
 
-                        <div class="form-outline mb-4">
-                          <label class="form-label" for="typeEmailX-2">
+                        <div className="form-outline mb-4">
+                          <label className="form-label" for="typeEmailX-2">
                             ایمیل
                           </label>
                           <input
                             // type="email"
                             id="userId"
                             name="userId"
-                            class="form-control form-control-lg"
+                            className="form-control form-control-lg"
                             value={values.userId}
                             onChange={(e) =>
                               setFieldValue("userId", e.target.value)
@@ -112,15 +116,15 @@ const Login = () => {
                           ) : null}
                         </div>
 
-                        <div class="form-outline mb-4">
-                          <label class="form-label" for="typePasswordX-2">
+                        <div className="form-outline mb-4">
+                          <label className="form-label" for="typePasswordX-2">
                             رمز/ پسورډ
                           </label>
                           <input
                             type="password"
                             id="password"
                             name="password"
-                            class="form-control form-control-lg"
+                            className="form-control form-control-lg"
                             value={values.password}
                             onChange={(e) =>
                               setFieldValue("password", e.target.value)
@@ -136,24 +140,24 @@ const Login = () => {
                         </div>
 
                         <button
-                          class="btn bg-primary btn-lg btn-block mt-5"
+                          className="btn bg-primary btn-lg btn-block mt-5"
                           // onClick={onSubmitForm_1}
                           type="submit"
                         >
                           ننوتل/ ورود
                         </button>
                         <br />
-                        <div class="form-check d-flex justify-content-start mb-4">
+                        <div className="form-check d-flex justify-content-start mb-4">
                           <a href="#" className="pr-5">
                             پسورډ مو هیر کړی/ پسورد تانرا فراموش کرده اید؟
                           </a>
                         </div>
-                        <hr class="my-4" />
+                        <hr className="my-4" />
                       </div>
                     </Form>
                   )}
                 </Formik>
-                {confirmSessionExpiration && (
+                {sessionExpired && (
                   <>
                     <div className="confirmation-modal">
                       <p>
@@ -163,7 +167,7 @@ const Login = () => {
                       <div className="button-container">
                         <button
                           className="confirm-button bg-primary"
-                          onClick={handleSessionExpiration}
+                          onClick={handleSessionExpired}
                         >
                           تائید
                         </button>
@@ -176,8 +180,8 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </section>
-      <Footer />
+        <Footer />
+      </div>
     </>
   );
 };

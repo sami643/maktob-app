@@ -84,6 +84,7 @@ const Pishnihad = () => {
       .post("/api/pishnihad/uniquePishnihad", {
         data: {
           pishnihadId,
+          userId: userData.userId,
         },
       })
       .then((res) => {
@@ -94,7 +95,7 @@ const Pishnihad = () => {
       });
   };
   useEffect(() => {
-    gettingSpecificPishnihadForView();
+    if (pishnihadId) gettingSpecificPishnihadForView();
   }, []);
 
   return (

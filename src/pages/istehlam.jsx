@@ -86,6 +86,7 @@ const Maktob = () => {
       .post("/api/istehlaam/uniqueIstehlaam", {
         data: {
           istehlaamId,
+          userId: userData.userId,
         },
       })
       .then((res) => {
@@ -96,7 +97,7 @@ const Maktob = () => {
       });
   };
   useEffect(() => {
-    gettingSpecificIstehlaamForView();
+    if (istehlaamId) gettingSpecificIstehlaamForView();
   }, []);
 
   return (

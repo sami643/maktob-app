@@ -391,3 +391,44 @@
     min-width: 200px;
   }
 }
+.container-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the container takes up the full height of the viewport */
+}
+
+.container-wrapperr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Set the container height to match the viewport */
+}
+
+footer {
+  margin-top: auto; /* Push the footer to the bottom */
+}
+
+/* .no-page-found {
+  height: 80%;
+  padding-top: 10%;
+} */
+
+.confirmation-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 25%;
+  width: 30%;
+}
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-button,
+.confirm-button {
+  margin: 0 10px;
+}
+

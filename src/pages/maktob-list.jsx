@@ -5,19 +5,26 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import { maktobs } from "../assets/data/data.js";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import "./pages.css";
 import axios from "axios";
 
 const MaktobList = () => {
+  // Retrieving data from the LocalStorage
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  // console.log("Decoded values", userData);
   const [matkobIdForUpdate, setMaktobIdForUpdate] = useState();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [searchInputValue, setSearchInputValue] = useState("");
+  const [backgroundVisibility, setBackgroundVisibility] = useState(false);
+  const [itemId, setItemId] = useState();
+  const [deleteMaktob, setDeletemaktob] = useState(false);
+  const [listItems, setListItems] = useState({});
+
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -99,74 +106,6 @@ const MaktobList = () => {
       ),
   });
 
-  const [listItems, setListItems] = useState({});
-  // Retrieving data from the LocalStorage
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
-
-  const gettingMakbtobs = () => {
-    axios
-      .post("/api/maktob/maktobs", {
-        data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
-        },
-      })
-      .then((res) => {
-        console.log("response is1111111111111111: ", res.data);
-        setListItems(res.data.Maktobs_List_data);
-      })
-      .catch((err) => {
-        console.log("Axios Request Error After Calling API", err.response);
-      });
-  };
-  // Integration
-  useEffect(() => {
-    gettingMakbtobs();
-  }, []);
-
-  // Deleting the message
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const handleCancel = () => {
-    console.log("Cancelled");
-    setShowConfirmation(false);
-    setVisibility(false);
-  };
-  const [visibility, setVisibility] = useState(false);
-  const [itemId, setItemId] = useState();
-  const openConfirmation = (recordNo) => {
-    setItemId(recordNo);
-    setVisibility(true);
-    setShowConfirmation(true);
-    console.log("");
-  };
-
-  // Deleting the maktob
-  const handleDelete = () => {
-    setShowConfirmation(false);
-    setVisibility(false);
-    axios
-      .delete("/api/maktob/delete", {
-        data: {
-          maktobId: itemId,
-        },
-      })
-      .then((res) => {
-        console.log("response is: ", res.data);
-
-        gettingMakbtobs();
-      })
-      .catch((err) => {
-        console.log("Axios Request Error After Calling API", err.response);
-      });
-  };
-
-  const handleUpdate = () => {
-    console.log("Handling update", matkobIdForUpdate);
-    console.log("listId");
-  };
-
   const columns = [
     {
       title: "ګڼه/شماره",
@@ -219,7 +158,7 @@ const MaktobList = () => {
 
           <Divider type="vertical" />
           <a
-            onClick={() => openConfirmation(record.MaktobNo)}
+            onClick={() => openDeleteConfirmation(record.MaktobNo)}
             className="link  p-0"
             activeclassName="active"
           >
@@ -230,14 +169,67 @@ const MaktobList = () => {
     },
   ];
 
+  const gettingMakbtobs = () => {
+    axios
+      .post("/api/maktob/maktobs", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+        },
+      })
+      .then((res) => {
+        console.log("response is1111111111111111: ", res.data);
+        setListItems(res.data.Maktobs_List_data);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+  // Integration
+  useEffect(() => {
+    gettingMakbtobs();
+  }, []);
+
+  // Deleting the maktob
+  const handleDelete = () => {
+    setDeletemaktob(false);
+    setBackgroundVisibility(false);
+    axios
+      .delete("/api/maktob/delete", {
+        data: {
+          maktobId: itemId,
+          userId: userData.userId,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+
+        gettingMakbtobs();
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  const handleDeleteCancelation = () => {
+    console.log("Cancelled");
+    setDeletemaktob(false);
+    setBackgroundVisibility(false);
+  };
+
+  const openDeleteConfirmation = (recordNo) => {
+    setItemId(recordNo);
+    setBackgroundVisibility(true);
+    setDeletemaktob(true);
+  };
+
   const listItemsArray = Object.values(listItems);
-  console.log("listItems32423432", listItemsArray);
   return (
     <Sidebar>
       <Header />
       <div
         className={
-          visibility
+          backgroundVisibility
             ? "main-container_darkbackround text-right"
             : "main-container text-right"
         }
@@ -256,11 +248,16 @@ const MaktobList = () => {
           )}
         />
       </div>
-      {showConfirmation && (
+      {deleteMaktob && (
         <div className="confirmation-modal">
-          <p>وتل/ خروج</p>
+          <p className="">
+            آیا تاسې غواړۍ مکتوب پاک کړئ / آیا شما میخواهید مکتوب را حذف کنید؟
+          </p>
           <div className="button-container">
-            <button className="cancel-button bg-primary" onClick={handleCancel}>
+            <button
+              className="cancel-button bg-primary"
+              onClick={handleDeleteCancelation}
+            >
               نه/نخیر
             </button>
             <button

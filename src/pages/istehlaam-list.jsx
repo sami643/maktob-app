@@ -7,19 +7,21 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
-import { istehlaams } from "../assets/data/data.js";
 import axios from "axios";
 import "./pages.css";
 
 const PishnihadList = () => {
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  // console.log("Decoded values", userData);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [searchInputValue, setSearchInputValue] = useState("");
   const [listItems, setListItems] = useState({});
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
+  const [backgroundVisibility, setBackgroundVisibility] = useState(false);
+  const [itemId, setItemId] = useState();
+  const [deleteIstehlaam, setDeleteIstehlaam] = useState(false);
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -103,7 +105,7 @@ const PishnihadList = () => {
 
   const columns = [
     {
-      title: "د استعلام ګڼه",
+      title: "ګڼه/شماره",
       dataIndex: "IstehlaamNo",
       key: "IstehlaamNo",
       width: "20%",
@@ -143,10 +145,13 @@ const PishnihadList = () => {
       render: (_, record) => (
         <div className="d-flex">
           <Divider type="vertical" />
-          <BsPencilSquare />
+          <a href={`/istehlaam/${record._id}`}>
+            {" "}
+            <BsPencilSquare />{" "}
+          </a>
           <Divider type="vertical" />
           <a
-            // onClick={() => openConfirmation(record.MaktobNo)}
+            onClick={() => openDeleteConfirmation(record.IstehlaamNo)}
             className="link  p-0"
             activeclassName="active"
           >
@@ -157,7 +162,7 @@ const PishnihadList = () => {
     },
   ];
 
-  useEffect(() => {
+  const gettingIstehlaams = () => {
     axios
       .post("/api/istehlaam/istehlaams", {
         data: {
@@ -172,14 +177,53 @@ const PishnihadList = () => {
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
       });
+  };
+  useEffect(() => {
+    gettingIstehlaams();
   }, []);
-  const listItemsArray = Object.values(listItems);
-  console.log("listItems32423432", listItemsArray);
 
+  // Deleting the Istehlaams
+  const handleDelete = () => {
+    setDeleteIstehlaam(false);
+    setBackgroundVisibility(false);
+    axios
+      .delete("/api/istehlaam/delete", {
+        data: {
+          istehlaamId: itemId,
+          userId: userData.userId,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+
+        gettingIstehlaams();
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  const openDeleteConfirmation = (recordNo) => {
+    setItemId(recordNo);
+    setBackgroundVisibility(true);
+    setDeleteIstehlaam(true);
+  };
+  const handleDeleteCancelation = () => {
+    setDeleteIstehlaam(false);
+    setBackgroundVisibility(false);
+  };
+
+  const listItemsArray = Object.values(listItems);
   return (
     <Sidebar>
       <Header />
-      <div className="main-container text-right">
+      <div
+        className={
+          backgroundVisibility
+            ? "main-container_darkbackround text-right"
+            : "main-container text-right"
+        }
+      >
         <h1>د استعلامونو لست</h1>
         <Divider />
         <Table
@@ -200,6 +244,29 @@ const PishnihadList = () => {
           )}
         />
       </div>
+      {deleteIstehlaam && (
+        <div className="confirmation-modal">
+          <p className="">
+            آیا تاسې غواړۍ استعلام پاک کړئ / آیا شما میخواهید استعلام را حذف
+            کنید؟
+          </p>
+
+          <div className="button-container ">
+            <button
+              className="cancel-button bg-primary mx-5 px-5"
+              onClick={handleDeleteCancelation}
+            >
+              نه/نخیر
+            </button>
+            <button
+              className="confirm-button bg-primary mx-5 px-5"
+              onClick={handleDelete}
+            >
+              هو/ بلی
+            </button>
+          </div>
+        </div>
+      )}
       <Footer />
     </Sidebar>
   );

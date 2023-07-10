@@ -11,9 +11,16 @@ import "./pages.css";
 import axios from "axios";
 
 const PishnihadList = () => {
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  // console.log("Decoded values", userData);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [listItems, setListItems] = useState({});
+  const [backgroundVisibility, setBackgroundVisibility] = useState(false);
+  const [itemId, setItemId] = useState();
+  const [deletePishnihad, setDeletePishnihad] = useState(false);
 
   const [searchInputValue, setSearchInputValue] = useState("");
   const handleSearch = (selectedKeys, dataIndex) => {
@@ -140,14 +147,18 @@ const PishnihadList = () => {
       title: "تغیر/حذف",
       dataIndex: "operation",
       key: "opeation",
-      width: "20%",
-      render: (_, record) => (
+      width: "30%",
+      render: (_, record, updateRecord) => (
         <div className="d-flex">
           <Divider type="vertical" />
-          <BsPencilSquare />
+          <a href={`/maktob/${record._id}`}>
+            {" "}
+            <BsPencilSquare />{" "}
+          </a>
+
           <Divider type="vertical" />
           <a
-            // onClick={() => openConfirmation(record.MaktobNo)}
+            onClick={() => openDeleteConfirmation(record.PishnihadNo)}
             className="link  p-0"
             activeclassName="active"
           >
@@ -158,12 +169,7 @@ const PishnihadList = () => {
     },
   ];
 
-  const [listItems, setListItems] = useState({});
-
-  const storedUserData = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(storedUserData));
-  console.log("Decoded values", userData);
-  useEffect(() => {
+  const gettingPishnihads = () => {
     axios
       .post("/api/pishnihad/pishnihads", {
         data: {
@@ -178,15 +184,55 @@ const PishnihadList = () => {
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
       });
+  };
+
+  useEffect(() => {
+    gettingPishnihads();
   }, []);
 
-  const listItemsArray = Object.values(listItems);
-  console.log("listItems32423432", listItemsArray);
+  // Deleting the pishnihads
+  const handleDelete = () => {
+    setDeletePishnihad(false);
+    setBackgroundVisibility(false);
+    axios
+      .delete("/api/pishnihad/delete", {
+        data: {
+          pishnihadId: itemId,
+          userId: userData.userId,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
 
+        gettingPishnihads();
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  const openDeleteConfirmation = (recordNo) => {
+    setItemId(recordNo);
+    setBackgroundVisibility(true);
+    setDeletePishnihad(true);
+    console.log("");
+  };
+  const handleDeleteCancelation = () => {
+    setDeletePishnihad(false);
+    setBackgroundVisibility(false);
+  };
+
+  const listItemsArray = Object.values(listItems);
   return (
     <Sidebar>
       <Header />
-      <div className="main-container text-right">
+      <div
+        className={
+          backgroundVisibility
+            ? "main-container_darkbackround text-right"
+            : "main-container text-right"
+        }
+      >
         <h1>د پیشنهادونو لست</h1>
         <Divider />
         <Table
@@ -201,6 +247,29 @@ const PishnihadList = () => {
           )}
         />
       </div>
+      {deletePishnihad && (
+        <div className="confirmation-modal">
+          <p className="">
+            آیا تاسې غواړۍ پیشنهاد پاک کړئ / آیا شما میخواهید پیشنهاد را حذف
+            کنید؟
+          </p>
+
+          <div className="button-container ">
+            <button
+              className="cancel-button bg-primary mx-5 px-5"
+              onClick={handleDeleteCancelation}
+            >
+              نه/نخیر
+            </button>
+            <button
+              className="confirm-button bg-primary mx-5 px-5"
+              onClick={handleDelete}
+            >
+              هو/ بلی
+            </button>
+          </div>
+        </div>
+      )}
       <Footer />
     </Sidebar>
   );
