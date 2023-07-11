@@ -8,7 +8,7 @@ import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import axios from "axios";
 import { IstehlaamValidationSchema } from "./../assets/data/validation.js";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import "./pages.css";
 import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
@@ -26,25 +26,19 @@ const Maktob = () => {
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   const [btnChecked, setBtnChecked] = useState(false);
   const [initialValues, setInitialValues] = useState();
-  const [uniqueIstehlaamstate, setUniqueIstehlaamstate] = useState("");
-
+  const [uniqueIstehlaamstate, setUniqueIstehlaamstate] = useState({});
   const [formData, setFormData] = useState("");
-  const onSubmitForm_1 = (values) => {
-    console.log("values", values);
-    setFormData(values);
-    setIsFromState(false);
-    setInitialValues(values);
-  };
 
   const handlePrint = () => {
     window.print();
   };
 
-  // Adding Maktob
+  // Adding and Updating Istehlaam
   const onStoreData = () => {
     axios
       .post("/api/istehlaam/new-istehlaam", {
         data: {
+          istehlaamId: istehlaamId ? istehlaamId : "newIstehlam",
           istehlaamNo: formData.istehlaamNo,
           istehlaamDate: formData.istehlaamDate,
           recipent: formData.recipent,
@@ -56,10 +50,25 @@ const Maktob = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
+        message.success({
+          content: res.data.message,
+          className: "success_custom_message",
+        });
       })
       .catch((err) => {
         console.log("ErrorMessage:", err.response.data.message);
+        message.error({
+          content: err.response.data.message,
+          className: "error_custom_message",
+        });
       });
+  };
+
+  // change FormState
+  const onSubmitForm_1 = (values) => {
+    setFormData(values);
+    setIsFromState(false);
+    setInitialValues(values);
   };
 
   //GettingMakob initial Maktob Number
@@ -90,7 +99,7 @@ const Maktob = () => {
         },
       })
       .then((res) => {
-        setUniqueIstehlaamstate(res.data.uniqueIstehlaam);
+        setUniqueIstehlaamstate(res.data.UniqueIstehlaam);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -99,6 +108,27 @@ const Maktob = () => {
   useEffect(() => {
     if (istehlaamId) gettingSpecificIstehlaamForView();
   }, []);
+
+  const updateInitialValues = {
+    istehlaamNo:
+      uniqueIstehlaamstate.IstehlaamNo || uniqueIstehlaamstate.istehlaamNo,
+    istehlaamDate:
+      uniqueIstehlaamstate.IstehlaamDate || uniqueIstehlaamstate.istehlaamDate,
+    recipent: uniqueIstehlaamstate.Recipent || uniqueIstehlaamstate.recipent,
+    subject: uniqueIstehlaamstate.Subject || uniqueIstehlaamstate.subject,
+    context: uniqueIstehlaamstate.Context || uniqueIstehlaamstate.context,
+  };
+
+  const initialStateValue = {
+    istehlaamNo: initialValues?.istehlaamNo || totalIstehlaam,
+    istehlaamDate: initialValues?.istehlaamDate,
+    subject: initialValues?.subject,
+    context: initialValues?.context,
+    recipent: initialValues?.recipent,
+  };
+
+  console.log("UpdatedInitial Value", updateInitialValues);
+  console.log("Initial Value", initialStateValue);
 
   return (
     <Sidebar>
@@ -111,13 +141,9 @@ const Maktob = () => {
             <Divider />
 
             <Formik
-              initialValues={{
-                istehlaamNo: initialValues?.istehlaamNo || totalIstehlaam,
-                istehlaamDate: initialValues?.istehlaamDate,
-                subject: initialValues?.subject,
-                context: initialValues?.context,
-                recipent: initialValues?.recipent,
-              }}
+              initialValues={
+                istehlaamId ? updateInitialValues : initialStateValue
+              }
               onSubmit={onSubmitForm_1}
               enableReinitialize={true}
               validationSchema={IstehlaamValidationSchema}
@@ -379,17 +405,42 @@ const Maktob = () => {
                     ) : null}
                   </div>
 
-                  <div className="row">
-                    <div className="text-left col"></div>
-                    <div className="text-left col">
-                      <button
-                        type="submit"
-                        className="btn bg-primary button-1 mt-5"
-                      >
-                        مخته/بعدی
-                      </button>
+                  {istehlaamId ? (
+                    <>
+                      <div className="row">
+                        <div className=" col container print_btn_div text-right  ">
+                          <button
+                            onClick={() => {
+                              window.history.go(-1);
+                            }}
+                            className="print-button-view btn bg-primary px-5 mr-3 mt-2 "
+                          >
+                            مخکنۍ صفحه/ صفحه قبلی
+                          </button>
+                        </div>
+                        <div className=" col container print_btn_div text-left  ">
+                          <button
+                            type="submit"
+                            className="btn bg-primary button-1  py-2"
+                          >
+                            ثبت تغیرات/ د تغیراتو ثبت
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="row">
+                      <div className="text-left col"></div>
+                      <div className="text-left col">
+                        <button
+                          type="submit"
+                          className="btn bg-primary button-1"
+                        >
+                          مخته/بعدی
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </Form>
               )}
             </Formik>
@@ -439,7 +490,7 @@ const Maktob = () => {
                 <label>ګڼه:</label>
                 <p>
                   &#160;
-                  {istehlaamId
+                  {istehlaamId && istehlaamId.length < 15
                     ? uniqueIstehlaamstate?.IstehlaamNo
                     : formData.istehlaamNo}
                 </p>
@@ -456,7 +507,7 @@ const Maktob = () => {
                   <label htmlFor="">نیټه:</label>
                   <p>
                     &#160;
-                    {istehlaamId
+                    {istehlaamId && istehlaamId.length < 15
                       ? uniqueIstehlaamstate?.IstehlaamDate
                       : formData.istehlaamDate}
                   </p>
@@ -474,7 +525,7 @@ const Maktob = () => {
                 </div>
                 <div className="pishnihad_body_div mx-2">
                   <p className="audiance">
-                    {istehlaamId
+                    {istehlaamId && istehlaamId.length < 15
                       ? uniqueIstehlaamstate?.Recipent
                       : formData.recipent}
                   </p>
@@ -487,7 +538,7 @@ const Maktob = () => {
                       موضوع:
                     </label>
                     <p>
-                      {istehlaamId
+                      {istehlaamId && istehlaamId.length < 15
                         ? uniqueIstehlaamstate?.Subject
                         : formData.subject}
                     </p>
@@ -497,7 +548,7 @@ const Maktob = () => {
                     <p>محترما:</p>
                   </div>
                   <p className="matktob_context">
-                    {istehlaamId
+                    {istehlaamId && istehlaamId.length < 15
                       ? uniqueIstehlaamstate?.Context
                       : formData.context}
                   </p>
@@ -528,44 +579,48 @@ const Maktob = () => {
               </div>
             </div>
           </div>
-          {!istehlaamId && (
-            <div className="container print_btn_div ">
-              <button
-                onClick={() => {
-                  setIsFromState(true);
-                }}
-                className="print-button btn bg-primary px-۲"
-              >
-                مخکنۍ صفحه/ صفحه قبلی
-              </button>
+          {(!istehlaamId || istehlaamId?.length > 15) && (
+            <div className=" d-flex container  print_btn_div ">
+              <div className=" col-4 text-right mr-3 ">
+                <button
+                  onClick={() => {
+                    setIsFromState(true);
+                    setUniqueIstehlaamstate(initialValues);
+                  }}
+                  className="print-button btn bg-primary px-۲"
+                >
+                  مخکنۍ صفحه/ صفحه قبلی
+                </button>
+              </div>
+              <div className="col-8 text-left">
+                <button
+                  className="print-button btn bg-primary px-5"
+                  onClick={() => {
+                    onStoreData();
+                  }}
+                >
+                  ثبت
+                </button>
 
-              <button
-                className="print-button btn bg-primary px-5"
-                onClick={() => {
-                  onStoreData();
-                }}
-              >
-                ثبت
-              </button>
-
-              <button
-                onClick={() => {
-                  handlePrint();
-                  onStoreData();
-                }}
-                className="print-button btn bg-primary px-5"
-              >
-                ثبت و پرنت
-              </button>
+                <button
+                  onClick={() => {
+                    handlePrint();
+                    onStoreData();
+                  }}
+                  className="print-button btn bg-primary px-5"
+                >
+                  ثبت و پرنت
+                </button>
+              </div>
             </div>
           )}
-          {istehlaamId && (
+          {istehlaamId?.length < 15 && (
             <div className="container print_btn_div text-right  ">
               <button
                 onClick={() => {
                   window.history.go(-1);
                 }}
-                className="print-button-view btn bg-primary px-5 mr-3 "
+                className="print-button-view btn bg-primary px-5 mr-5 "
               >
                 مخکنۍ صفحه/ صفحه قبلی
               </button>

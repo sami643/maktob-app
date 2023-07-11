@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Divider, Input, Space, Table, Button } from "antd";
+import { Divider, Input, Space, Table, Button, message } from "antd";
 import Sidebar from "../components/Sidebar";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -7,6 +7,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
+
 import "./pages.css";
 import axios from "axios";
 
@@ -148,7 +149,7 @@ const MaktobList = () => {
       dataIndex: "operation",
       key: "opeation",
       width: "30%",
-      render: (_, record, updateRecord) => (
+      render: (_, record) => (
         <div className="d-flex">
           <Divider type="vertical" />
           <a href={`/maktob/${record._id}`}>
@@ -203,6 +204,10 @@ const MaktobList = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
+        message.success({
+          content: "مکتوب په بریالیتوب سره پاک شو/ مکتوب موفقانه حذف گردید",
+          className: "success_custom_message",
+        });
 
         gettingMakbtobs();
       })

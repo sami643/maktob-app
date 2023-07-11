@@ -39,7 +39,7 @@ const Maktob = (props) => {
   const [fetchedCopyTo, setfetchedCopyTo] = useState([]);
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
   const [totalMaktob, setTotalMaktob] = useState("");
-  const [isUpdateViewMode, setIsUpdateViewMode] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState("");
   const selectAllPresidencies = () => {
     if (selectedPresidencies.length === presidencies.length) {
       // If all checkboxes are already selected, unselect all
@@ -173,11 +173,12 @@ const Maktob = (props) => {
     window.print();
   };
 
-  // Integration
+  // Adding and updating maktobs
   const onStoreData = () => {
     axios
       .post("/api/maktob/new-maktob", {
         data: {
+          maktobId: maktobId ? maktobId : "newMaktob",
           maktobNo: formData.maktobNo,
           maktobDate: formData.maktobDate,
           recipent: formData.recipent,
@@ -194,10 +195,8 @@ const Maktob = (props) => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        message.success({
-          content: res.data.message,
-          className: "success_custom_message",
-        });
+        openDeleteConfirmation();
+        setSubmissionMessage(res.data.message);
       })
       .catch((err) => {
         console.log("ErorrMessage: ", err.response.data.message);
@@ -230,51 +229,15 @@ const Maktob = (props) => {
     setIsFromState(false);
     setFormData(values);
     setInitialValues(values);
-    if (maktobId) {
-      setIsUpdateViewMode(true);
-      setIsFromState(false);
-    }
-  };
-
-  const updateMaktob = () => {
-    console.log("update is called", formData);
-    axios
-      .put("/api/maktob/update", {
-        data: {
-          userId: userData.userId,
-          makttobIdForUpdate: maktobId,
-          maktobNo: formData.maktobNo,
-          maktobDate: formData.maktobDate,
-          recipent: formData.recipent,
-          subject: formData.subject,
-          context: formData.context,
-          maktobType: formData.maktobType,
-          // copyTo: selectAllPresidencies,
-        },
-      })
-      .then((res) => {
-        message.success(
-          "مکتبوب په بریالیتوب سره اپدیت سو/ مکتوب موفقانه اپدیت شد!"
-        );
-      })
-      .catch((err) => {
-        console.log(
-          "Axios Request Error After Calling Update API",
-          err.response.data.message
-        );
-      });
   };
 
   // message after submission
-  const openConfirmation = () => {
+  const openDeleteConfirmation = () => {
     setVisibility(true);
     setShowConfirmation(true);
   };
-  const handleCancel = () => {
-    setShowConfirmation(false);
-    setVisibility(false);
-  };
-  const handleConfirmation = () => {
+
+  const handleDeleteConfirmation = () => {
     setShowConfirmation(false);
     setVisibility(false);
   };
@@ -304,13 +267,13 @@ const Maktob = (props) => {
   }, []);
 
   const updateInitialValues = {
-    maktobNo: uniquemaktob.MaktobNo,
-    maktobDate: uniquemaktob.MaktobDate,
-    maktobType: uniquemaktob.MaktobType,
-    recipent: uniquemaktob.Recipent,
-    subject: uniquemaktob.Subject,
-    context: uniquemaktob.Context,
-    copyTo: uniquemaktob.CopyTo,
+    maktobNo: uniquemaktob.MaktobNo || uniquemaktob.maktobNo,
+    maktobDate: uniquemaktob.MaktobDate || uniquemaktob.maktobDate,
+    maktobType: uniquemaktob.MaktobType || uniquemaktob.maktobType,
+    recipent: uniquemaktob.Recipent || uniquemaktob.recipent,
+    subject: uniquemaktob.Subject || uniquemaktob.subject,
+    context: uniquemaktob.Context || uniquemaktob.context,
+    copyTo: uniquemaktob.CopyTo || uniquemaktob.copyTo,
   };
   const initialStateValue = {
     maktobNo: initialValues.maktobNo || totalMaktob,
@@ -323,9 +286,7 @@ const Maktob = (props) => {
 
   return (
     <Sidebar>
-      {isFormState &&
-      (!maktobId || maktobId.length > 12) &&
-      !isUpdateViewMode ? (
+      {isFormState && (!maktobId || maktobId?.length > 15) ? (
         <>
           <Header />
           {/* Form Part */}
@@ -828,7 +789,7 @@ const Maktob = (props) => {
                 <label>ګڼه:</label>
                 <p>
                   &#160;
-                  {maktobId && maktobId.length < 12
+                  {maktobId && maktobId.length < 15
                     ? uniquemaktob?.MaktobNo
                     : formData.maktobNo}
                 </p>
@@ -845,7 +806,7 @@ const Maktob = (props) => {
                   <label htmlFor="">نیټه:</label>
                   <p>
                     &#160;
-                    {maktobId && maktobId.length < 12
+                    {maktobId && maktobId.length < 15
                       ? uniquemaktob?.MaktobDate
                       : formData.maktobDate}
                   </p>
@@ -861,7 +822,7 @@ const Maktob = (props) => {
                         value=""
                         id="matkobType"
                         checked={
-                          maktobId && maktobId.length < 12
+                          maktobId && maktobId.length < 15
                             ? uniquemaktob?.MaktobType === "عادی"
                             : formData.maktobType === "عادی" ||
                               formData.maktobType === undefined
@@ -877,7 +838,7 @@ const Maktob = (props) => {
                         value=""
                         id="matkobType"
                         checked={
-                          maktobId && maktobId.length < 12
+                          maktobId && maktobId.length < 15
                             ? uniquemaktob?.MaktobType === "عاجل"
                             : formData.maktobType === "عاجل"
                         }
@@ -892,7 +853,7 @@ const Maktob = (props) => {
                         value=""
                         id="matkobType"
                         checked={
-                          maktobId && maktobId.length < 12
+                          maktobId && maktobId.length < 15
                             ? uniquemaktob?.MaktobType === "محرم"
                             : formData.maktobType === "محرم"
                         }
@@ -911,7 +872,7 @@ const Maktob = (props) => {
                 {" "}
                 <p>
                   {" "}
-                  {maktobId && maktobId.length < 12
+                  {maktobId && maktobId.length < 15
                     ? uniquemaktob?.Recipent
                     : formData.recipent}
                 </p>
@@ -924,7 +885,7 @@ const Maktob = (props) => {
                 <label> موضوع </label>
                 <p>
                   :&#160;&#160;{" "}
-                  {maktobId && maktobId.length < 12
+                  {maktobId && maktobId.length < 15
                     ? uniquemaktob?.Subject
                     : formData.subject}{" "}
                 </p>
@@ -935,7 +896,7 @@ const Maktob = (props) => {
               <div className="matktob_context">
                 <p>
                   {" "}
-                  {maktobId && maktobId.length < 12
+                  {maktobId && maktobId.length < 15
                     ? uniquemaktob?.Context
                     : formData.context}
                 </p>
@@ -1030,31 +991,30 @@ const Maktob = (props) => {
             </div>
           </div>
           {showConfirmation && (
-            <div className="confirmation-modal">
-              <p>وتل/ خروج</p>
-              <div className="button-container">
-                <button
-                  className="cancel-button bg-primary"
-                  onClick={handleCancel}
-                >
-                  نه/نخیر
-                </button>
-                <button
-                  className="confirm-button bg-primary"
-                  onClick={handleConfirmation}
-                >
-                  هو/ بلی
-                </button>
+            <div className="divForBackDrop">
+              <div className="confirmation-modal">
+                <p className="">{submissionMessage}</p>
+                <div className="button-container">
+                  <button
+                    className="confirm-button bg-primary"
+                    onClick={() => {
+                      handleDeleteConfirmation();
+                      window.location.reload(true);
+                    }}
+                  >
+                    بیرته / برگشت
+                  </button>
+                </div>
               </div>
             </div>
           )}
-          {(!maktobId || maktobId.length > 12) && (
+          {(!maktobId || maktobId?.length > 15) && (
             <div className=" d-flex container  print_btn_div ">
               <div className=" col-4 text-right ">
                 <button
                   onClick={() => {
                     setIsFromState(true);
-                    setIsUpdateViewMode(false);
+                    setUniquemaktob(initialValues);
                   }}
                   className=" print-button btn bg-primary px-5"
                 >
@@ -1065,11 +1025,8 @@ const Maktob = (props) => {
                 <button
                   className="print-button btn bg-primary px-5"
                   onClick={() => {
-                    if (!maktobId) {
-                      onStoreData();
-                      openConfirmation();
-                      gettingSpecificMaktob();
-                    } else updateMaktob();
+                    onStoreData();
+                    gettingSpecificMaktob();
                   }}
                 >
                   ثبت
@@ -1088,7 +1045,7 @@ const Maktob = (props) => {
             </div>
           )}
 
-          {maktobId.length < 12 && (
+          {maktobId?.length < 15 && (
             <div className="container print_btn_div text-right  ">
               <button
                 onClick={() => {
@@ -1096,7 +1053,7 @@ const Maktob = (props) => {
                     window.history.go(-1);
                   }
                 }}
-                className="print-button-view btn bg-primary px-5 mr-3 "
+                className="print-button-view btn bg-primary px-5 mr-5 "
               >
                 مخکنۍ صفحه/ صفحه قبلی
               </button>

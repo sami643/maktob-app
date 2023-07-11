@@ -10,7 +10,7 @@ import arabic_ar from "react-date-object/locales/arabic_ar";
 import { presidencies } from "./../assets/data/data.js";
 import { pishnihaadValidationSchema } from "./../assets/data/validation.js";
 import "./pages.css";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
@@ -28,39 +28,12 @@ const Pishnihad = () => {
   const [initialValues, setInitialValues] = useState();
   const [isFormState, setIsFromState] = useState(true);
   const [formData, setFormData] = useState("");
-  const [uniquePishnihadstate, setUniquePishnihadstate] = useState("");
-  const onSubmitForm_1 = (values) => {
-    console.log("values", values);
-    setFormData(values);
-    setIsFromState(false);
-    setInitialValues(values);
-  };
+  const [uniquePishnihadstate, setUniquePishnihadstate] = useState({});
 
   const handlePrint = () => {
     window.print();
   };
 
-  // Adding new Istehlaams
-  const onStoreData = () => {
-    axios
-      .post("/api/pishnihad/new-pishnihad", {
-        data: {
-          pishnihadNo: formData.pishnihadNo,
-          pishnihadDate: formData.pishnihadDate,
-          recipent: formData.recipent,
-          subject: formData.subject,
-          context: formData.context,
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
-        },
-      })
-      .then((res) => {
-        console.log("response is: ", res.data);
-      })
-      .catch((err) => {
-        console.log("ErrorMessage", err.response.data.message);
-      });
-  };
   // Calling API for getting Istehalaam Number
   useEffect(() => {
     axios
@@ -78,6 +51,45 @@ const Pishnihad = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   }, [totalPishnihad]);
+
+  // Adding new Istehlaams and Update Istehlaam
+  const onStoreData = () => {
+    axios
+      .post("/api/pishnihad/new-pishnihad", {
+        data: {
+          pishnihadId: pishnihadId ? pishnihadId : "newPishnihad",
+          pishnihadNo: formData.pishnihadNo,
+          pishnihadDate: formData.pishnihadDate,
+          recipent: formData.recipent,
+          subject: formData.subject,
+          context: formData.context,
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        message.success({
+          content: res.data.message,
+          className: "success_custom_message",
+        });
+      })
+      .catch((err) => {
+        console.log("ErrorMessage", err.response.data.message);
+        message.error({
+          content: err.response.data.message,
+          className: "error_custom_message",
+        });
+      });
+  };
+
+  const onSubmitForm_1 = (values) => {
+    console.log("values", values);
+    setFormData(values);
+    setIsFromState(false);
+    setInitialValues(values);
+  };
+
   //Getting mIstehlaam for View component
   const gettingSpecificPishnihadForView = async () => {
     await axios
@@ -98,22 +110,34 @@ const Pishnihad = () => {
     if (pishnihadId) gettingSpecificPishnihadForView();
   }, []);
 
+  const updateInitialValues = {
+    pishnihadNo: uniquePishnihadstate.PishnihadNo,
+    pishnihadDate: uniquePishnihadstate.PishnihadDate,
+    recipent: uniquePishnihadstate.Recipent,
+    subject: uniquePishnihadstate.Subject,
+    context: uniquePishnihadstate.Context,
+  };
+
+  const initialStateValue = {
+    pishnihadNo: initialValues?.pishnihadNo || totalPishnihad,
+    pishnihadDate: initialValues?.pishnihadDate,
+    subject: initialValues?.subject,
+    context: initialValues?.context,
+    recipent: initialValues?.recipent,
+  };
+
   return (
     <Sidebar>
-      {isFormState && (!pishnihadId || pishnihadId.length > 12) ? (
+      {isFormState && (!pishnihadId || pishnihadId.length > 15) ? (
         <>
           <Header />
           <div className="main-container text-right">
             <h1 className="container-header">پیشنهاد</h1>
             <Divider />
             <Formik
-              initialValues={{
-                pishnihadNo: initialValues?.pishnihadNo || totalPishnihad,
-                pishnihadDate: initialValues?.pishnihadDate,
-                subject: initialValues?.subject,
-                context: initialValues?.context,
-                recipent: initialValues?.recipent,
-              }}
+              initialValues={
+                pishnihadId ? updateInitialValues : initialStateValue
+              }
               onSubmit={onSubmitForm_1}
               enableReinitialize={true}
               validationSchema={pishnihaadValidationSchema}
@@ -375,17 +399,42 @@ const Pishnihad = () => {
                     ) : null}
                   </div>
 
-                  <div className="row">
-                    <div className="text-left col"></div>
-                    <div className="text-left col">
-                      <button
-                        type="submit"
-                        className="btn bg-primary button-1 mt-5"
-                      >
-                        مخته/ بعدی
-                      </button>
+                  {pishnihadId ? (
+                    <>
+                      <div className="row">
+                        <div className=" col container print_btn_div text-right  ">
+                          <button
+                            onClick={() => {
+                              window.history.go(-1);
+                            }}
+                            className="print-button-view btn bg-primary px-5 mr-3 mt-2 "
+                          >
+                            مخکنۍ صفحه/ صفحه قبلی
+                          </button>
+                        </div>
+                        <div className=" col container print_btn_div text-left  ">
+                          <button
+                            type="submit"
+                            className="btn bg-primary button-1  py-2"
+                          >
+                            ثبت تغیرات/ د تغیراتو ثبت
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="row">
+                      <div className="text-left col"></div>
+                      <div className="text-left col">
+                        <button
+                          type="submit"
+                          className="btn bg-primary button-1"
+                        >
+                          مخته/بعدی
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </Form>
               )}
             </Formik>
@@ -435,7 +484,7 @@ const Pishnihad = () => {
                 <label>ګڼه:</label>
                 <p>
                   &#160;
-                  {pishnihadId
+                  {pishnihadId && pishnihadId.length < 15
                     ? uniquePishnihadstate?.PishnihadNo
                     : formData.pishnihadNo}
                 </p>
@@ -452,7 +501,7 @@ const Pishnihad = () => {
                   <label htmlFor="">نیټه:</label>
                   <p>
                     &#160;
-                    {pishnihadId
+                    {pishnihadId && pishnihadId.length < 15
                       ? uniquePishnihadstate?.PishnihadDate
                       : formData.pishnihadDate}
                   </p>
@@ -469,7 +518,7 @@ const Pishnihad = () => {
                 </div>
                 <div className="pishnihad_body_div mx-2">
                   <p className="audiance">
-                    {pishnihadId
+                    {pishnihadId && pishnihadId.length < 15
                       ? uniquePishnihadstate?.Recipent
                       : formData.recipent}
                   </p>
@@ -482,7 +531,7 @@ const Pishnihad = () => {
                       موضوع:
                     </label>
                     <p>
-                      {pishnihadId
+                      {pishnihadId && pishnihadId.length < 15
                         ? uniquePishnihadstate?.Subject
                         : formData.subject}{" "}
                     </p>
@@ -492,7 +541,7 @@ const Pishnihad = () => {
                     <p>محترما:</p>
                   </div>
                   <p className="matktob_context">
-                    {pishnihadId
+                    {pishnihadId && pishnihadId.length < 15
                       ? uniquePishnihadstate?.Context
                       : formData.context}
                   </p>
@@ -524,39 +573,43 @@ const Pishnihad = () => {
             </div>
           </div>
 
-          {!pishnihadId && (
-            <div className="container print_btn_div ">
-              <button
-                onClick={() => {
-                  setIsFromState(true);
-                }}
-                className="print-button btn bg-primary px-5"
-              >
-                مخکنۍ صفحه/ صفحه قبلی
-              </button>
+          {(!pishnihadId || pishnihadId?.length > 15) && (
+            <div className=" d-flex container  print_btn_div ">
+              <div className=" col-4 text-right mr-3 ">
+                <button
+                  onClick={() => {
+                    setIsFromState(true);
+                    setUniquePishnihadstate(initialValues);
+                  }}
+                  className="print-button btn bg-primary px-5"
+                >
+                  مخکنۍ صفحه/ صفحه قبلی
+                </button>
+              </div>
+              <div className="col-8 text-left">
+                <button
+                  className="print-button btn bg-primary px-5"
+                  onClick={() => {
+                    onStoreData();
+                  }}
+                >
+                  ثبت
+                </button>
 
-              <button
-                className="print-button btn bg-primary px-5"
-                onClick={() => {
-                  onStoreData();
-                }}
-              >
-                ثبت
-              </button>
-
-              <button
-                onClick={() => {
-                  onStoreData();
-                  handlePrint();
-                }}
-                className="print-button btn bg-primary px-5 ml-5"
-              >
-                پرنت و ثبت
-              </button>
+                <button
+                  onClick={() => {
+                    onStoreData();
+                    handlePrint();
+                  }}
+                  className="print-button btn bg-primary px-5 ml-5"
+                >
+                  پرنت و ثبت
+                </button>
+              </div>
             </div>
           )}
-          {pishnihadId && (
-            <div className="container print_btn_div text-right  ">
+          {pishnihadId?.length < 15 && (
+            <div className="container print_btn_div text-right mr-5 ">
               <button
                 onClick={() => {
                   window.history.go(-1);

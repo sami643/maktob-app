@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Divider, Input, Space, Table, Button } from "antd";
+import { Divider, Input, Space, Table, Button, message } from "antd";
 import Sidebar from "../components/Sidebar";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -128,12 +128,7 @@ const PishnihadList = () => {
       ...getColumnSearchProps("Subject"),
       width: "30%",
       render: (text, record) => (
-        <a
-          href={`/pishnihad/${record.PishnihadNo}`}
-          // className={{ textDecoration: "none" }}
-        >
-          {text}
-        </a>
+        <a href={`/pishnihad/${record.PishnihadNo}`}>{text}</a>
       ),
     },
     {
@@ -148,10 +143,10 @@ const PishnihadList = () => {
       dataIndex: "operation",
       key: "opeation",
       width: "30%",
-      render: (_, record, updateRecord) => (
+      render: (_, record) => (
         <div className="d-flex">
           <Divider type="vertical" />
-          <a href={`/maktob/${record._id}`}>
+          <a href={`/pishnihad/${record._id}`}>
             {" "}
             <BsPencilSquare />{" "}
           </a>
@@ -203,6 +198,10 @@ const PishnihadList = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
+        message.success({
+          content: "پیشنهاد په بریالیتوب سره پاک شو/ پیشنهاد موفقانه حذف گردید",
+          className: "success_custom_message",
+        });
 
         gettingPishnihads();
       })

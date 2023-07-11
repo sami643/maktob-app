@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
-import { Divider, Input, Space, Table, Button } from "antd";
+import { Divider, Input, Space, Table, Button, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import Header from "../components/header";
@@ -195,6 +195,10 @@ const PishnihadList = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
+        message.success({
+          content: "استعلام په بریالیتوب سره پاک شو/ استعلام موفقانه حذف گردید",
+          className: "success_custom_message",
+        });
 
         gettingIstehlaams();
       })
