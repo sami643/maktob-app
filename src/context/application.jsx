@@ -6,11 +6,6 @@ import MaktobList from "../pages/maktob-list.jsx";
 import Pishnihad from "../pages/pishnihad.jsx";
 import PishnihadList from "../pages/pishnihad-list.jsx";
 import Profile from "../pages/profile.jsx";
-import LogOut from "../pages/no-page-found.jsx";
-import Login from "../pages/login.jsx";
-import MaktobFormat from "../pages/maktob-format";
-import PishnihadFormat from "../pages/pishnihad-format";
-import IstehlaamFormat from "../pages/istehlam-format";
 import Istehlaam from "../pages/istehlam";
 import IstehlaamList from "../pages/istehlaam-list";
 import Dashboard from "../pages/dashboard";
@@ -32,9 +27,6 @@ export default function Application() {
         <Route path="/istehlaam" element={<Istehlaam />} />
         <Route path="/istehlaamlist" element={<IstehlaamList />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/maktobview" element={<MaktobFormat />} />
-        <Route path="/pishnihadview" element={<PishnihadFormat />} />
-        <Route path="/istehlamview" element={<IstehlaamFormat />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

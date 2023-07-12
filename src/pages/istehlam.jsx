@@ -7,6 +7,7 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import axios from "axios";
+import { presidenciesForSelectOptions } from "./../assets/data/data.js";
 import { IstehlaamValidationSchema } from "./../assets/data/validation.js";
 import { Spin, message } from "antd";
 import "./pages.css";
@@ -20,7 +21,7 @@ import { useParams } from "react-router-dom";
 const Maktob = () => {
   const { istehlaamId } = useParams();
   const [isFormState, setIsFromState] = useState(true);
-  //Getting Istehlam Number
+  // Total istehlaam is for getting istehlaam number
   const [totalIstehlaam, setTotalIstehlaam] = useState();
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
@@ -28,6 +29,8 @@ const Maktob = () => {
   const [initialValues, setInitialValues] = useState();
   const [uniqueIstehlaamstate, setUniqueIstehlaamstate] = useState({});
   const [formData, setFormData] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState("");
 
   const handlePrint = () => {
     window.print();
@@ -50,10 +53,8 @@ const Maktob = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        message.success({
-          content: res.data.message,
-          className: "success_custom_message",
-        });
+        openDeleteConfirmation();
+        setSubmissionMessage(res.data.message);
       })
       .catch((err) => {
         console.log("ErrorMessage:", err.response.data.message);
@@ -69,6 +70,15 @@ const Maktob = () => {
     setFormData(values);
     setIsFromState(false);
     setInitialValues(values);
+  };
+
+  // message after submission
+  const openDeleteConfirmation = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
   };
 
   //GettingMakob initial Maktob Number
@@ -270,10 +280,19 @@ const Maktob = () => {
                           }`}
                           aria-label=".form-select-lg example"
                         >
-                          <option selected>Open this select menu</option>
-                          <option value="نصاب">ریاست نصاب</option>
-                          <option value="بشری">ریاست منابع بشری</option>
-                          <option value="پلان">ریاست پلان</option>
+                          <option selected>وټاکئ/انتخاب</option>
+                          {presidenciesForSelectOptions.map((group) => (
+                            <optgroup
+                              key={group.optgroup}
+                              label={group.optgroup}
+                            >
+                              {group.options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ))}
                         </select>
                         {errors.recipent && touched.recipent ? (
                           <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
@@ -615,15 +634,49 @@ const Maktob = () => {
             </div>
           )}
           {istehlaamId?.length < 15 && (
-            <div className="container print_btn_div text-right  ">
-              <button
-                onClick={() => {
-                  window.history.go(-1);
-                }}
-                className="print-button-view btn bg-primary px-5 mr-5 "
-              >
-                مخکنۍ صفحه/ صفحه قبلی
-              </button>
+            <div className="container d-flex  print_btn_div">
+              <div className=" col-6 text-right">
+                <button
+                  onClick={() => {
+                    {
+                      window.history.go(-1);
+                    }
+                  }}
+                  className="print-button-view btn bg-primary px-5 "
+                >
+                  مخکنۍ صفحه/ صفحه قبلی
+                </button>
+              </div>
+              <div className="text-left col-6">
+                <button
+                  onClick={() => {
+                    {
+                      handlePrint();
+                    }
+                  }}
+                  className=" text-right btn bg-primary px-5  "
+                >
+                  پرنت
+                </button>
+              </div>
+            </div>
+          )}
+          {showDeleteConfirmation && (
+            <div className="divForBackDrop">
+              <div className="confirmation-modal">
+                <p className="">{submissionMessage}</p>
+                <div className="button-container">
+                  <button
+                    className="confirm-button bg-primary"
+                    onClick={() => {
+                      handleDeleteConfirmation();
+                      window.location.reload(true);
+                    }}
+                  >
+                    بیرته / برگشت
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </>

@@ -229,6 +229,9 @@ const MaktobList = () => {
   };
 
   const listItemsArray = Object.values(listItems);
+  const sortedListItemsArray = listItemsArray.sort(
+    (a, b) => parseInt(b.MaktobNo) - parseInt(a.MaktobNo)
+  );
   return (
     <Sidebar>
       <Header />
@@ -243,7 +246,7 @@ const MaktobList = () => {
         <Divider />
         <Table
           columns={columns}
-          dataSource={listItemsArray.filter((record) =>
+          dataSource={sortedListItemsArray.filter((record) =>
             columns.some(
               (column) =>
                 column.hasOwnProperty("onFilter") &&

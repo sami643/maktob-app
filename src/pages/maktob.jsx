@@ -8,7 +8,11 @@ import { Formik, Field, Form } from "formik";
 import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
-import { presidencies, maktobTypeOptions } from "./../assets/data/data.js";
+import {
+  presidencies,
+  maktobTypeOptions,
+  presidenciesForSelectOptions,
+} from "./../assets/data/data.js";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { maktobValidationSchema } from "./../assets/data/validation.js";
 import { Spin, message } from "antd";
@@ -31,8 +35,7 @@ const Maktob = (props) => {
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   const [formData, setFormData] = useState("");
   const [initialValues, setInitialValues] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [visibility, setVisibility] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isFormState, setIsFromState] = useState(true);
   const [uniquemaktob, setUniquemaktob] = useState({});
   const [btnChecked, setBtnChecked] = useState(false);
@@ -95,12 +98,6 @@ const Maktob = (props) => {
   };
   const [inputFields, setInputFields] = useState([]); // Initialize with one empty input field
 
-  const presidenciesOpoptions = [
-    { value: "نصاب", label: "ریاست نصاب" },
-    { value: "بشری", label: "ریاست منابع بشری" },
-    { value: "پلان", label: "ریاست پلان" },
-  ];
-
   selectedPresidencies?.sort((a, b) => a.value - b.value);
   const copyToRecipentsJustLabel = selectedPresidencies?.map(
     (obj) => obj.label
@@ -139,10 +136,11 @@ const Maktob = (props) => {
 
       for (let j = i; j < copyToRecipentsJustLabel_1.length; j++) {
         if (
-          listOfpresidenciesJustValue[j] === 16 ||
           listOfpresidenciesJustValue[j] === 17 ||
+          listOfpresidenciesJustValue[j] === 18 ||
           listOfpresidenciesJustValue[j] === 19 ||
-          listOfpresidenciesJustValue[j] === 19
+          listOfpresidenciesJustValue[j] === 20 ||
+          listOfpresidenciesJustValue[j] === 21
         ) {
           counter_1 = 1;
           for (let k = j; k <= copyToRecipentsJustLabel_1.length; k++) {
@@ -233,13 +231,11 @@ const Maktob = (props) => {
 
   // message after submission
   const openDeleteConfirmation = () => {
-    setVisibility(true);
-    setShowConfirmation(true);
+    setShowDeleteConfirmation(true);
   };
 
   const handleDeleteConfirmation = () => {
-    setShowConfirmation(false);
-    setVisibility(false);
+    setShowDeleteConfirmation(false);
   };
 
   const gettingSpecificMaktob = () => {
@@ -467,10 +463,18 @@ const Maktob = (props) => {
                           aria-label=".form-select-lg example"
                         >
                           <option selected>وټاکئ/انتخاب</option>
-                          {presidenciesOpoptions.map((option) => (
-                            <option key={option.value} value={option.label}>
-                              {option.label}
-                            </option>
+
+                          {presidenciesForSelectOptions.map((group) => (
+                            <optgroup
+                              key={group.optgroup}
+                              label={group.optgroup}
+                            >
+                              {group.options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </optgroup>
                           ))}
                         </select>
                         {errors.recipent && touched.recipent ? (
@@ -990,24 +994,7 @@ const Maktob = (props) => {
               </div>
             </div>
           </div>
-          {showConfirmation && (
-            <div className="divForBackDrop">
-              <div className="confirmation-modal">
-                <p className="">{submissionMessage}</p>
-                <div className="button-container">
-                  <button
-                    className="confirm-button bg-primary"
-                    onClick={() => {
-                      handleDeleteConfirmation();
-                      window.location.reload(true);
-                    }}
-                  >
-                    بیرته / برگشت
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+
           {(!maktobId || maktobId?.length > 15) && (
             <div className=" d-flex container  print_btn_div ">
               <div className=" col-4 text-right ">
@@ -1046,17 +1033,50 @@ const Maktob = (props) => {
           )}
 
           {maktobId?.length < 15 && (
-            <div className="container print_btn_div text-right  ">
-              <button
-                onClick={() => {
-                  {
-                    window.history.go(-1);
-                  }
-                }}
-                className="print-button-view btn bg-primary px-5 mr-5 "
-              >
-                مخکنۍ صفحه/ صفحه قبلی
-              </button>
+            <div className="container d-flex  print_btn_div   ">
+              <div className=" col-6 text-right">
+                <button
+                  onClick={() => {
+                    {
+                      window.history.go(-1);
+                    }
+                  }}
+                  className="print-button-view btn bg-primary px-5 "
+                >
+                  مخکنۍ صفحه/ صفحه قبلی
+                </button>
+              </div>
+              <div className="text-left col-6">
+                <button
+                  onClick={() => {
+                    {
+                      handlePrint();
+                    }
+                  }}
+                  className=" text-right btn bg-primary px-5  "
+                >
+                  پرنت
+                </button>
+              </div>
+            </div>
+          )}
+
+          {showDeleteConfirmation && (
+            <div className="divForBackDrop">
+              <div className="confirmation-modal">
+                <p className="">{submissionMessage}</p>
+                <div className="button-container">
+                  <button
+                    className="confirm-button bg-primary"
+                    onClick={() => {
+                      handleDeleteConfirmation();
+                      window.location.reload(true);
+                    }}
+                  >
+                    بیرته / برگشت
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </>

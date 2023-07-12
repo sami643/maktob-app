@@ -56,6 +56,11 @@
     margin-left: auto;
   }
 }
+@media screen and (max-width: 993px) {
+  .profileHeader {
+    text-align: center !important;
+  }
+}
 
 .container-header {
   padding: 10px;
@@ -448,4 +453,8 @@ footer {
 .confirmation-modal p {
   font-weight: bold;
   font-size: 15px;
+}
+
+.profileEditButtonDiv {
+  margin: 20% 0px 3% 9.2%;
 }

@@ -222,6 +222,10 @@ const PishnihadList = () => {
   };
 
   const listItemsArray = Object.values(listItems);
+
+  const sortedListItemsArray = listItemsArray.sort(
+    (a, b) => parseInt(b.PishnihadNo) - parseInt(a.PishnihadNo)
+  );
   return (
     <Sidebar>
       <Header />
@@ -236,7 +240,7 @@ const PishnihadList = () => {
         <Divider />
         <Table
           columns={columns}
-          dataSource={listItemsArray.filter((record) =>
+          dataSource={sortedListItemsArray.filter((record) =>
             columns.some(
               (column) =>
                 column.hasOwnProperty("onFilter") &&

@@ -7,7 +7,7 @@ import { Formik, Field, Form } from "formik";
 import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
-import { presidencies } from "./../assets/data/data.js";
+import { presidenciesForSelectOptions } from "./../assets/data/data.js";
 import { pishnihaadValidationSchema } from "./../assets/data/validation.js";
 import "./pages.css";
 import { Spin, message } from "antd";
@@ -29,6 +29,8 @@ const Pishnihad = () => {
   const [isFormState, setIsFromState] = useState(true);
   const [formData, setFormData] = useState("");
   const [uniquePishnihadstate, setUniquePishnihadstate] = useState({});
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState("");
 
   const handlePrint = () => {
     window.print();
@@ -69,10 +71,8 @@ const Pishnihad = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        message.success({
-          content: res.data.message,
-          className: "success_custom_message",
-        });
+        openDeleteConfirmation();
+        setSubmissionMessage(res.data.message);
       })
       .catch((err) => {
         console.log("ErrorMessage", err.response.data.message);
@@ -88,6 +88,15 @@ const Pishnihad = () => {
     setFormData(values);
     setIsFromState(false);
     setInitialValues(values);
+  };
+
+  // message after submission
+  const openDeleteConfirmation = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
   };
 
   //Getting mIstehlaam for View component
@@ -111,11 +120,13 @@ const Pishnihad = () => {
   }, []);
 
   const updateInitialValues = {
-    pishnihadNo: uniquePishnihadstate.PishnihadNo,
-    pishnihadDate: uniquePishnihadstate.PishnihadDate,
-    recipent: uniquePishnihadstate.Recipent,
-    subject: uniquePishnihadstate.Subject,
-    context: uniquePishnihadstate.Context,
+    pishnihadNo:
+      uniquePishnihadstate.PishnihadNo || uniquePishnihadstate.pishnihadNo,
+    pishnihadDate:
+      uniquePishnihadstate.PishnihadDate || uniquePishnihadstate.pishnihadDate,
+    recipent: uniquePishnihadstate.Recipent || uniquePishnihadstate.recipent,
+    subject: uniquePishnihadstate.Subject || uniquePishnihadstate.subject,
+    context: uniquePishnihadstate.Context || uniquePishnihadstate.context,
   };
 
   const initialStateValue = {
@@ -264,10 +275,19 @@ const Pishnihad = () => {
                           }`}
                           aria-label=".form-select-lg example"
                         >
-                          <option selected>Open this select menu</option>
-                          <option value="نصاب">ریاست نصاب</option>
-                          <option value="بشری">ریاست منابع بشری</option>
-                          <option value="پلان">ریاست پلان</option>
+                          <option selected>وټاکئ/انتخاب</option>
+                          {presidenciesForSelectOptions.map((group) => (
+                            <optgroup
+                              key={group.optgroup}
+                              label={group.optgroup}
+                            >
+                              {group.options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ))}
                         </select>
                         {errors.recipent && touched.recipent ? (
                           <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
@@ -609,15 +629,49 @@ const Pishnihad = () => {
             </div>
           )}
           {pishnihadId?.length < 15 && (
-            <div className="container print_btn_div text-right mr-5 ">
-              <button
-                onClick={() => {
-                  window.history.go(-1);
-                }}
-                className="print-button-view btn bg-primary px-5 mr-3 "
-              >
-                مخکنۍ صفحه/ صفحه قبلی
-              </button>
+            <div className="container d-flex  print_btn_div   ">
+              <div className=" col-6 text-right">
+                <button
+                  onClick={() => {
+                    {
+                      window.history.go(-1);
+                    }
+                  }}
+                  className="print-button-view btn bg-primary px-5 "
+                >
+                  مخکنۍ صفحه/ صفحه قبلی
+                </button>
+              </div>
+              <div className="text-left col-6">
+                <button
+                  onClick={() => {
+                    {
+                      handlePrint();
+                    }
+                  }}
+                  className=" text-right btn bg-primary px-5  "
+                >
+                  پرنت
+                </button>
+              </div>
+            </div>
+          )}
+          {showDeleteConfirmation && (
+            <div className="divForBackDrop">
+              <div className="confirmation-modal">
+                <p className="">{submissionMessage}</p>
+                <div className="button-container">
+                  <button
+                    className="confirm-button bg-primary"
+                    onClick={() => {
+                      handleDeleteConfirmation();
+                      window.location.reload(true);
+                    }}
+                  >
+                    بیرته / برگشت
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </>
