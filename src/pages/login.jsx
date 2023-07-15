@@ -98,9 +98,10 @@ const Login = () => {
                             ایمیل
                           </label>
                           <input
-                            // type="email"
+                            type="email"
                             id="userId"
                             name="userId"
+                            placeholder="example@tveta.gov.af"
                             className="form-control form-control-lg"
                             value={values.userId}
                             onChange={(e) =>

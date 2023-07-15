@@ -7,6 +7,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
+import { Card } from "antd";
 
 import "./pages.css";
 import axios from "axios";
@@ -21,6 +22,7 @@ const MaktobList = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [searchInputValue, setSearchInputValue] = useState("");
+  const [endPoint, setEndPoint] = useState("/api/maktob/inboxMaktobs");
   const [backgroundVisibility, setBackgroundVisibility] = useState(false);
   const [itemId, setItemId] = useState();
   const [deleteMaktob, setDeletemaktob] = useState(false);
@@ -170,9 +172,17 @@ const MaktobList = () => {
     },
   ];
 
+  const handleToggle = () => {
+    if (endPoint === "/api/maktob/maktobs") {
+      setEndPoint("/api/maktob/inboxMaktobs");
+    } else if (endPoint === "/api/maktob/inboxMaktobs") {
+      setEndPoint("/api/maktob/maktobs");
+    }
+  };
+
   const gettingMakbtobs = () => {
     axios
-      .post("/api/maktob/maktobs", {
+      .post(endPoint, {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
@@ -189,7 +199,7 @@ const MaktobList = () => {
   // Integration
   useEffect(() => {
     gettingMakbtobs();
-  }, []);
+  }, [endPoint]);
 
   // Deleting the maktob
   const handleDelete = () => {
@@ -243,6 +253,56 @@ const MaktobList = () => {
         }
       >
         <h1>د مکتوبونو لست</h1>
+        <br />
+
+        <div className="">
+          {/* <div>
+            <button
+              onClick={() => {
+                handleToggle();
+              }}
+            >
+              {endPoint == "/api/maktob/maktobs"
+                ? "SHow Inbox"
+                : "Show Maktobs"}
+            </button>
+          </div> */}
+          <div
+            className="btn-group btn-group-toggle text-right "
+            data-toggle="buttons"
+          >
+            <label className="btn  bg-pmary px-5">
+              <input
+                type="radio"
+                name="options"
+                id="option1"
+                autocomplete="off"
+                checked
+              />{" "}
+              وارده
+            </label>
+            <label className="btn px-5 ">
+              <input
+                type="radio"
+                name="options"
+                id="option3"
+                autocomplete="off"
+                className="px-5"
+              />{" "}
+              صادره
+            </label>
+            <label className="btn active  px-5 ">
+              <input
+                type="radio"
+                name="options"
+                id="option3"
+                autocomplete="off"
+                className="px-5"
+              />{" "}
+              نوی لیکل شوی/ ایجاد شده جدید
+            </label>
+          </div>
+        </div>
         <Divider />
         <Table
           columns={columns}
@@ -256,6 +316,7 @@ const MaktobList = () => {
           )}
         />
       </div>
+
       {deleteMaktob && (
         <div className="confirmation-modal">
           <p className="">
