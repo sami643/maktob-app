@@ -36,10 +36,10 @@ const Pishnihad = () => {
     window.print();
   };
 
-  // Calling API for getting Istehalaam Number
+  // Calling API for getting Pishnihaad Number
   useEffect(() => {
     axios
-      .post("/api/pishnihad/pishnihads", {
+      .post("/api/pishnihad/pishnihad-no", {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
@@ -47,7 +47,7 @@ const Pishnihad = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        setTotalPishnihad(parseInt(res.data.pishnihadsList.length + 1));
+        setTotalPishnihad(parseInt(res.data.pishnihadNoPlusOne));
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);

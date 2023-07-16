@@ -21,12 +21,14 @@ const MaktobList = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const [searchInputValue, setSearchInputValue] = useState("");
-  const [endPoint, setEndPoint] = useState("/api/maktob/inboxMaktobs");
   const [backgroundVisibility, setBackgroundVisibility] = useState(false);
   const [itemId, setItemId] = useState();
   const [deleteMaktob, setDeletemaktob] = useState(false);
-  const [listItems, setListItems] = useState({});
+  const [newMakobListItems, setNewMaktobsListItems] = useState({});
+  const [sentMakobListItems, setSentMaktobsListItems] = useState({});
+  const [recievedMakobListItems, setRecievedMaktobsListItems] = useState({});
+  const [listFinalItems, setListFinalItems] = useState({});
+  const [buttonActive, setButtonActive] = useState("newMaktob");
 
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
@@ -172,25 +174,56 @@ const MaktobList = () => {
     },
   ];
 
-  const handleToggle = () => {
-    if (endPoint === "/api/maktob/maktobs") {
-      setEndPoint("/api/maktob/inboxMaktobs");
-    } else if (endPoint === "/api/maktob/inboxMaktobs") {
-      setEndPoint("/api/maktob/maktobs");
-    }
-  };
-
-  const gettingMakbtobs = () => {
+  const gettingNewMakbtobs = () => {
     axios
-      .post(endPoint, {
+      .post("/api/maktob/maktobs", {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
+          userStatus: "owner",
+          maktobSent: false,
         },
       })
       .then((res) => {
         console.log("response is1111111111111111: ", res.data);
-        setListItems(res.data.Maktobs_List_data);
+        setNewMaktobsListItems(res.data.Maktobs_List_data);
+        setListFinalItems(res.data.Maktobs_List_data);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+  const gettingSentMakbtobs = () => {
+    axios
+      .post("/api/maktob/maktobs", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+          userStatus: "owner",
+          maktobSent: true,
+        },
+      })
+      .then((res) => {
+        console.log("response is1111111111111111: ", res.data);
+        setSentMaktobsListItems(res.data.Maktobs_List_data);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+  const gettingRecievedMakbtobs = () => {
+    axios
+      .post("/api/maktob/maktobs", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+          userStatus: "receiver",
+          maktobSent: false,
+        },
+      })
+      .then((res) => {
+        console.log("response is1111111111111111: ", res.data);
+        setRecievedMaktobsListItems(res.data.Maktobs_List_data);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -198,8 +231,10 @@ const MaktobList = () => {
   };
   // Integration
   useEffect(() => {
-    gettingMakbtobs();
-  }, [endPoint]);
+    gettingNewMakbtobs();
+    gettingSentMakbtobs();
+    gettingRecievedMakbtobs();
+  }, []);
 
   // Deleting the maktob
   const handleDelete = () => {
@@ -218,8 +253,9 @@ const MaktobList = () => {
           content: "مکتوب په بریالیتوب سره پاک شو/ مکتوب موفقانه حذف گردید",
           className: "success_custom_message",
         });
-
-        gettingMakbtobs();
+        gettingNewMakbtobs();
+        gettingSentMakbtobs();
+        gettingRecievedMakbtobs();
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -238,7 +274,7 @@ const MaktobList = () => {
     setDeletemaktob(true);
   };
 
-  const listItemsArray = Object.values(listItems);
+  const listItemsArray = Object.values(listFinalItems);
   const sortedListItemsArray = listItemsArray.sort(
     (a, b) => parseInt(b.MaktobNo) - parseInt(a.MaktobNo)
   );
@@ -255,54 +291,50 @@ const MaktobList = () => {
         <h1>د مکتوبونو لست</h1>
         <br />
 
-        <div className="">
-          {/* <div>
-            <button
-              onClick={() => {
-                handleToggle();
-              }}
-            >
-              {endPoint == "/api/maktob/maktobs"
-                ? "SHow Inbox"
-                : "Show Maktobs"}
-            </button>
-          </div> */}
-          <div
-            className="btn-group btn-group-toggle text-right "
-            data-toggle="buttons"
-          >
-            <label className="btn  bg-pmary px-5">
-              <input
-                type="radio"
-                name="options"
-                id="option1"
-                autocomplete="off"
-                checked
-              />{" "}
-              وارده
-            </label>
-            <label className="btn px-5 ">
-              <input
-                type="radio"
-                name="options"
-                id="option3"
-                autocomplete="off"
-                className="px-5"
-              />{" "}
-              صادره
-            </label>
-            <label className="btn active  px-5 ">
-              <input
-                type="radio"
-                name="options"
-                id="option3"
-                autocomplete="off"
-                className="px-5"
-              />{" "}
-              نوی لیکل شوی/ ایجاد شده جدید
-            </label>
-          </div>
-        </div>
+        <button
+          type="button"
+          className={
+            buttonActive == "newMaktob"
+              ? "btn btn-primary  px-5 "
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("newMaktob");
+            setListFinalItems(newMakobListItems);
+          }}
+        >
+          نوی مکتوبونه/ مکتبو جدید
+        </button>
+        <button
+          type="button"
+          className={
+            buttonActive == "sentMaktobs"
+              ? "btn btn-primary  px-5"
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("sentMaktobs");
+            setListFinalItems(sentMakobListItems);
+          }}
+        >
+          صادره <span class="badge badge-light">0</span>
+          {/* <span className="badge badge-light">0</span> */}
+        </button>
+        <button
+          type="button"
+          className={
+            buttonActive == "recievedMaktobs"
+              ? "btn btn-primary  px-5 "
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("recievedMaktobs");
+            setListFinalItems(recievedMakobListItems);
+          }}
+        >
+          وارده <span className="badge badge-light">4</span>
+        </button>
+
         <Divider />
         <Table
           columns={columns}

@@ -84,7 +84,7 @@ const Maktob = () => {
   //GettingMakob initial Maktob Number
   useEffect(() => {
     axios
-      .post("/api/istehlaam/istehlaams", {
+      .post("/api/istehlaam/istehlaam-no", {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
@@ -92,7 +92,7 @@ const Maktob = () => {
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        setTotalIstehlaam(parseInt(res.data.IstehlaamsList.length + 1));
+        setTotalIstehlaam(parseInt(res.data.IstehlaamsNoPlusOne));
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -136,9 +136,6 @@ const Maktob = () => {
     context: initialValues?.context,
     recipent: initialValues?.recipent,
   };
-
-  console.log("UpdatedInitial Value", updateInitialValues);
-  console.log("Initial Value", initialStateValue);
 
   return (
     <Sidebar>

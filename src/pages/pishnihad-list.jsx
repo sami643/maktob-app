@@ -17,12 +17,18 @@ const PishnihadList = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const [listItems, setListItems] = useState({});
   const [backgroundVisibility, setBackgroundVisibility] = useState(false);
   const [itemId, setItemId] = useState();
   const [deletePishnihad, setDeletePishnihad] = useState(false);
-
   const [searchInputValue, setSearchInputValue] = useState("");
+  const [newPisnihadListItems, setNewPishnihadListItems] = useState({});
+  const [sentPishnihadListItems, setSentPishnihadListItems] = useState({});
+  const [recievedPishnihadListItems, setRecievedPishnihadListItems] = useState(
+    {}
+  );
+  const [listFinalItems, setListFinalItems] = useState({});
+  const [buttonActive, setButtonActive] = useState("newPishnihad");
+
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -164,25 +170,69 @@ const PishnihadList = () => {
     },
   ];
 
-  const gettingPishnihads = () => {
+  const gettingNewPishnihads = () => {
     axios
       .post("/api/pishnihad/pishnihads", {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
+          userStatus: "owner",
+          pishnihadSent: false,
         },
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        setListItems(res.data.pishnihadsList);
+        setListFinalItems(res.data.pishnihadsList);
+        setNewPishnihadListItems(res.data.pishnihadsList);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   };
 
+  const gettingSentPishnihads = () => {
+    axios
+      .post("/api/pishnihad/pishnihads", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+          userStatus: "owner",
+          pishnihadSent: true,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        setSentPishnihadListItems(res.data.pishnihadsList);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  const gettingRecievedPishnihads = () => {
+    axios
+      .post("/api/pishnihad/pishnihads", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+          userStatus: "receiver",
+          pishnihadSent: false,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        setRecievedPishnihadListItems(res.data.pishnihadsList);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  // console.log("response is111: ", listFinalItems);
   useEffect(() => {
-    gettingPishnihads();
+    gettingNewPishnihads();
+    gettingSentPishnihads();
+    gettingRecievedPishnihads();
   }, []);
 
   // Deleting the pishnihads
@@ -202,8 +252,9 @@ const PishnihadList = () => {
           content: "پیشنهاد په بریالیتوب سره پاک شو/ پیشنهاد موفقانه حذف گردید",
           className: "success_custom_message",
         });
-
-        gettingPishnihads();
+        gettingNewPishnihads();
+        gettingSentPishnihads();
+        gettingRecievedPishnihads();
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -221,8 +272,7 @@ const PishnihadList = () => {
     setBackgroundVisibility(false);
   };
 
-  const listItemsArray = Object.values(listItems);
-
+  const listItemsArray = Object.values(listFinalItems);
   const sortedListItemsArray = listItemsArray.sort(
     (a, b) => parseInt(b.PishnihadNo) - parseInt(a.PishnihadNo)
   );
@@ -237,6 +287,49 @@ const PishnihadList = () => {
         }
       >
         <h1>د پیشنهادونو لست</h1>
+        <button
+          type="button"
+          className={
+            buttonActive == "newPishnihad"
+              ? "btn btn-primary  px-5 "
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("newPishnihad");
+            setListFinalItems(newPisnihadListItems);
+          }}
+        >
+          نوی مکتوبونه/ مکتبو جدید
+        </button>
+        <button
+          type="button"
+          className={
+            buttonActive == "sentPishnihad"
+              ? "btn btn-primary  px-5"
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("sentPishnihad");
+            setListFinalItems(sentPishnihadListItems);
+          }}
+        >
+          صادره <span class="badge badge-light">0</span>
+          {/* <span className="badge badge-light">0</span> */}
+        </button>
+        <button
+          type="button"
+          className={
+            buttonActive == "recievedPishnihad"
+              ? "btn btn-primary  px-5 "
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("recievedPishnihad");
+            setListFinalItems(recievedPishnihadListItems);
+          }}
+        >
+          وارده <span className="badge badge-light">4</span>
+        </button>
         <Divider />
         <Table
           columns={columns}

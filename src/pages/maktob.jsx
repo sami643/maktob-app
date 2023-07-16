@@ -208,14 +208,14 @@ const Maktob = (props) => {
   // getting MaktobNo
   useEffect(() => {
     axios
-      .post("/api/maktob/maktobs", {
+      .post("/api/maktob/maktob-no", {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
         },
       })
       .then((res) => {
-        setTotalMaktob(parseInt(res.data.Maktobs_List_data.length + 1));
+        setTotalMaktob(parseInt(res.data.MaktobNoPlusOne));
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -1047,6 +1047,16 @@ const Maktob = (props) => {
                 </button>
               </div>
               <div className="text-left col-6">
+                <button
+                  onClick={() => {
+                    {
+                      handlePrint();
+                    }
+                  }}
+                  className=" text-right btn bg-primary px-5  mx-4 "
+                >
+                  لیږل / ارسال
+                </button>
                 <button
                   onClick={() => {
                     {

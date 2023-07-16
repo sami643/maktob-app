@@ -22,6 +22,13 @@ const PishnihadList = () => {
   const [backgroundVisibility, setBackgroundVisibility] = useState(false);
   const [itemId, setItemId] = useState();
   const [deleteIstehlaam, setDeleteIstehlaam] = useState(false);
+  const [newIstehlaamListItems, setNewIstehlaamListItems] = useState({});
+  const [sentIstehlaamListItems, setSentIstehlaamListItems] = useState({});
+  const [recievedIstehlaamListItems, setRecievedIstehlaamListItems] = useState(
+    {}
+  );
+  const [listFinalItems, setListFinalItems] = useState({});
+  const [buttonActive, setButtonActive] = useState("newIstehlaam");
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -162,24 +169,69 @@ const PishnihadList = () => {
     },
   ];
 
-  const gettingIstehlaams = () => {
+  const gettingNewIstehlaams = () => {
     axios
       .post("/api/istehlaam/istehlaams", {
         data: {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
+          userStatus: "owner",
+          istehlaamSent: false,
         },
       })
       .then((res) => {
         console.log("response is: ", res.data);
-        setListItems(res.data.IstehlaamsList);
+        setListFinalItems(res.data.IstehlaamsList);
+        setNewIstehlaamListItems(res.data.IstehlaamsList);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   };
+
+  const gettingSentIstehlaams = () => {
+    axios
+      .post("/api/istehlaam/istehlaams", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+          userStatus: "owner",
+          istehlaamSent: true,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        setSentIstehlaamListItems(res.data.IstehlaamsList);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  const gettingRecievedIstehlaams = () => {
+    axios
+      .post("/api/istehlaam/istehlaams", {
+        data: {
+          userId: userData.userId,
+          presidencyName: userData.presidencyName,
+          userStatus: "receiver",
+          istehlaamSent: false,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        setRecievedIstehlaamListItems(res.data.IstehlaamsList);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+
+  // console.log("response is111: ", listFinalItems);
   useEffect(() => {
-    gettingIstehlaams();
+    gettingNewIstehlaams();
+    gettingSentIstehlaams();
+    gettingRecievedIstehlaams();
   }, []);
 
   // Deleting the Istehlaams
@@ -199,8 +251,9 @@ const PishnihadList = () => {
           content: "استعلام په بریالیتوب سره پاک شو/ استعلام موفقانه حذف گردید",
           className: "success_custom_message",
         });
-
-        gettingIstehlaams();
+        gettingNewIstehlaams();
+        gettingSentIstehlaams();
+        gettingRecievedIstehlaams();
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -217,7 +270,7 @@ const PishnihadList = () => {
     setBackgroundVisibility(false);
   };
 
-  const listItemsArray = Object.values(listItems);
+  const listItemsArray = Object.values(listFinalItems);
   const sortedListItemsArray = listItemsArray.sort(
     (a, b) => parseInt(b.IstehlaamNo) - parseInt(a.IstehlaamNo)
   );
@@ -232,6 +285,50 @@ const PishnihadList = () => {
         }
       >
         <h1>د استعلامونو لست</h1>
+
+        <button
+          type="button"
+          className={
+            buttonActive == "newIstehlaam"
+              ? "btn btn-primary  px-5 "
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("newIstehlaam");
+            setListFinalItems(newIstehlaamListItems);
+          }}
+        >
+          نوی مکتوبونه/ مکتبو جدید
+        </button>
+        <button
+          type="button"
+          className={
+            buttonActive == "sentIstehlaam"
+              ? "btn btn-primary  px-5"
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("sentIstehlaam");
+            setListFinalItems(sentIstehlaamListItems);
+          }}
+        >
+          صادره <span class="badge badge-light">0</span>
+          {/* <span className="badge badge-light">0</span> */}
+        </button>
+        <button
+          type="button"
+          className={
+            buttonActive == "recievedIstehlaam"
+              ? "btn btn-primary  px-5 "
+              : "btn btn-light  px-5"
+          }
+          onClick={() => {
+            setButtonActive("recievedIstehlaam");
+            setListFinalItems(recievedIstehlaamListItems);
+          }}
+        >
+          وارده <span className="badge badge-light">4</span>
+        </button>
         <Divider />
         <Table
           pagination={{
