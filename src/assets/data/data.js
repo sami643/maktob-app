@@ -207,6 +207,97 @@ export const presidencies = [
   },
 ];
 
+export const presidenciesSendingDocumentSelectionOption = [
+  {
+    value: "F&AD",
+    label: "معاونیت محترم امور مالی و اداری",
+  },
+  {
+    value: "F&AP",
+    label: "ریاست محترم مالی و حسابی",
+  },
+  {
+    value: "A&KHP",
+    label: "ریاست محترم خدمات و املاک",
+  },
+  {
+    value: "HRP",
+    label: "ریاست محترم منابع بشری",
+  },
+  {
+    value: "D&IP",
+    label: "ریاست محترم دعوت و ارشاد",
+  },
+  {
+    value: "TD",
+    label: "آمریت محترم تدارکات",
+  },
+
+  {
+    value: "PD",
+    label: "آمریت محترم ولایات",
+  },
+  {
+    value: "T&PD",
+    label: "معاونیت محترم امور تخنیکی و مسلکی",
+  },
+  {
+    value: "T&TP",
+    label: "ریاست محترم امور تعلیمی و تحصیلی",
+  },
+
+  {
+    value: "M&MP",
+    label: "ریاست محترم امور متعلمین و محصلین",
+  },
+  {
+    value: "N&TMP",
+    label: "ریاست محترم نصاب و تربیه معلم",
+  },
+  {
+    value: "AT&TP",
+    label: "ریاست محترم ارزیابی نظارت تعلیمی و تحصیلی",
+  },
+
+  {
+    value: "BHP",
+    label: "ریاست محترم تنظیم برنامه های حرفوی",
+  },
+  {
+    value: "T&FP",
+    label: "ریاست محترم ترنم و فرهنگ",
+  },
+  {
+    value: "T&TKP",
+    label: "ریاست محترم تحقیق و تضمین کیفیت",
+  },
+
+  {
+    value: "TA",
+    label: "مشاوریت محترم تخنیکی",
+  },
+  {
+    value: "HA",
+    label: "مشاوریت محترم حقوقی",
+  },
+  {
+    value: "P&HSP",
+    label: "ریاست محترم ّپلان و هماهنگی ستراتیژیک",
+  },
+  {
+    value: "DMP",
+    label: "ریاست محترم دفتر مقام",
+  },
+  {
+    value: "TDP",
+    label: "ریاست محترم تفتیش داخلی",
+  },
+  {
+    value: "IT&MIS",
+    label: "آمریت سیستم های تکنالوژی معلوماتی و احصائیه",
+  },
+];
+
 export const maktobs = [
   {
     key: "1",

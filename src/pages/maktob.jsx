@@ -8,10 +8,14 @@ import { Formik, Field, Form } from "formik";
 import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
+import { Button, Modal, Upload, Select } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+
 import {
   presidencies,
   maktobTypeOptions,
   presidenciesForSelectOptions,
+  presidenciesSendingDocumentSelectionOption,
 } from "./../assets/data/data.js";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { maktobValidationSchema } from "./../assets/data/validation.js";
@@ -29,7 +33,9 @@ message.config({
 
 const Maktob = (props) => {
   const { maktobId } = useParams();
-  console.log(maktobId, "cconsdosjfnosdgn");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const IsMaktobSent = searchParams.get("isMaktobSent");
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
@@ -43,6 +49,10 @@ const Maktob = (props) => {
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
   const [totalMaktob, setTotalMaktob] = useState("");
   const [submissionMessage, setSubmissionMessage] = useState("");
+  const [
+    selectedPresidencieswhileSendigMaktob,
+    setSelectedPresidencieswhileSendigMaktob,
+  ] = useState([]);
   const selectAllPresidencies = () => {
     if (selectedPresidencies.length === presidencies.length) {
       // If all checkboxes are already selected, unselect all
@@ -72,7 +82,6 @@ const Maktob = (props) => {
       ]);
     }
   };
-
   const columns = [];
   const itemsPerColumn = 7;
   for (let i = 0; i < presidencies.length; i += itemsPerColumn) {
@@ -279,6 +288,29 @@ const Maktob = (props) => {
     subject: initialValues.subject,
     context: initialValues.context,
   };
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const handleFileChange = (e) => {
+    setSelectedFiles([...e.target.files]);
+  };
+  const handleUpload = async () => {
+    if (selectedFiles.length === 0) {
+      alert("Please select files first");
+      return;
+    }
+  };
+
+  console.log(selectedFiles, "formData121212");
+
+  // Select Options
+  const handleChange = (value) => {
+    console.log("cacsdafds0", value);
+    setSelectedPresidencieswhileSendigMaktob(value);
+  };
+  console.log(
+    "selectedPresidencieswhileSendigMaktob",
+    selectedPresidencieswhileSendigMaktob
+  );
 
   return (
     <Sidebar>
@@ -707,7 +739,7 @@ const Maktob = (props) => {
                       </div>
                     ))}
                   </div>
-
+                  <hr />
                   {maktobId ? (
                     <>
                       <div className="row">
@@ -907,10 +939,32 @@ const Maktob = (props) => {
               </div>
 
               <br />
-              <div className="closing_signature">
-                <p>والسلام</p>
-                <p>{userData.presidentName}</p>
-                <p>{userData.presidencyName}</p>
+              <div className="closing_signature d-flex">
+                <div className="col-4">
+                  {IsMaktobSent === "ItsReceivedMaktob" && (
+                    <div className="text-right ">
+                      <div className="text-center molahizashod mt-5">
+                        ملا حظه شد
+                      </div>
+                      <p
+                        style={{ fontSize: "15px", fontFamily: "sans-serif" }}
+                        className="text-center"
+                      >
+                        12-24-1444
+                      </p>
+
+                      <p style={{ fontSize: "15px", fontFamily: "sans-serif" }}>
+                        آمریت محترم نظارت و ارزیابی در زمینه اجرات اصولی نماید
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="col-4">
+                  <p>والسلام</p>
+                  <p>{userData.presidentName}</p>
+                  <p>{userData.presidencyName}</p>
+                </div>
+                <div className="col-4"></div>
               </div>
             </div>
 
@@ -995,6 +1049,20 @@ const Maktob = (props) => {
             </div>
           </div>
 
+          {IsMaktobSent === "ItsReceivedMaktob" && (
+            <div className="col-4 main_container">
+              <div className="text-right ">
+                <div className="text-center molahizashod mt-5">ملا حظه شد</div>
+                <div>
+                  checked checkbox should come here and then the Label ملا حظه
+                  شد{" "}
+                </div>
+                then selected input field or the manualy input field
+                <input type="text" />
+              </div>
+            </div>
+          )}
+
           {(!maktobId || maktobId?.length > 15) && (
             <div className=" d-flex container  print_btn_div ">
               <div className=" col-4 text-right ">
@@ -1033,43 +1101,156 @@ const Maktob = (props) => {
           )}
 
           {maktobId?.length < 15 && (
-            <div className="container d-flex  print_btn_div   ">
-              <div className=" col-6 text-right">
-                <button
-                  onClick={() => {
-                    {
-                      window.history.go(-1);
-                    }
-                  }}
-                  className="print-button-view btn bg-primary px-5 "
-                >
-                  مخکنۍ صفحه/ صفحه قبلی
-                </button>
+            <>
+              <div className="container d-flex  print_btn_div   ">
+                <div className=" col-6 text-right">
+                  <button
+                    onClick={() => {
+                      {
+                        window.history.go(-1);
+                      }
+                    }}
+                    className="print-button-view btn bg-primary px-5 "
+                  >
+                    مخکنۍ صفحه/ صفحه قبلی
+                  </button>
+                </div>
+                <div className="text-left col-6">
+                  {IsMaktobSent === "No" && (
+                    <button
+                      className=" text-right btn bg-primary px-5  mx-4 "
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#exampleModalCenter"
+                    >
+                      لیږل / ارسال
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      {
+                        handlePrint();
+                      }
+                    }}
+                    className=" text-right btn bg-primary px-5  "
+                  >
+                    پرنت
+                  </button>
+                </div>
               </div>
-              <div className="text-left col-6">
-                <button
-                  onClick={() => {
-                    {
-                      handlePrint();
+            </>
+          )}
+
+          {/* Modal for Sending Maktob */}
+          <div
+            class="modal fade"
+            id="exampleModalCenter"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+          >
+            <div class="modalDialog modal-dialog-center mt-5" role="document">
+              <div class="modal-content px-5 ">
+                <div class="modalHeader px-5 mt-4">
+                  <h1 class="modalTitle" id="exampleModalLongTitle">
+                    د مکتبول لیږل/ارسال مکتوب
+                  </h1>
+                </div>
+                <hr />
+                <div class="modal-body mb-5">
+                  <Formik
+                    onSubmit={onSubmitForm_1}
+                    initialValues={
+                      maktobId ? updateInitialValues : initialStateValue
                     }
-                  }}
-                  className=" text-right btn bg-primary px-5  mx-4 "
-                >
-                  لیږل / ارسال
-                </button>
-                <button
-                  onClick={() => {
-                    {
-                      handlePrint();
-                    }
-                  }}
-                  className=" text-right btn bg-primary px-5  "
-                >
-                  پرنت
-                </button>
+                    // validationSchema={maktobValidationSchema}
+                    // enableReinitialize={true}
+                  >
+                    {({
+                      values,
+                      setFieldValue,
+                      setFieldTouched,
+                      handleSubmit,
+                      errors,
+                      touched,
+                    }) => (
+                      <Form className="m-5">
+                        <div className="form-outline col text-right mb-4">
+                          <label className="form-label mr-3" htmlFor="subject">
+                            مخاطب
+                            <span
+                              style={{
+                                color: "red",
+                                marginInline: "5px",
+                                paddingTop: "5px",
+                              }}
+                            >
+                              *
+                            </span>
+                          </label>
+
+                          <Select
+                            dropdownRender={(menu) => (
+                              <div style={{ textAlign: "right" }}>
+                                {React.cloneElement(menu, {
+                                  style: { textAlign: "right" },
+                                })}
+                              </div>
+                            )}
+                            mode="tags"
+                            style={{
+                              width: "100%",
+                            }}
+                            onChange={handleChange}
+                            tokenSeparators={[","]}
+                            options={presidenciesSendingDocumentSelectionOption}
+                          />
+                          {errors.recipent && touched.recipent ? (
+                            <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                              {errors.recipent}
+                            </div>
+                          ) : null}
+                        </div>
+                        <div className="form-outline  col text-right my-5 ">
+                          <div>
+                            <label for="formFileLg" class="form-label">
+                              لطفا استاد ضمیمه کړئ/ لطفا اسناد را ضمیمه نماید!
+                            </label>
+                            <input
+                              class="form-control form-control-lg"
+                              id="formFileLg"
+                              multiple
+                              type="file"
+                              onChange={handleFileChange}
+                            />
+                          </div>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+                </div>
+                <hr />
+                <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
+                  <div className="text-right  ml-5 pl-5 col">
+                    <button
+                      type="button"
+                      class="btn bg-primary text-right px-5 ml-5"
+                      data-dismiss="modal"
+                    >
+                      ټرل/ بستن
+                    </button>
+                  </div>
+                  <div className="text-left  col">
+                    <button type="button" class="btn bg-primary text ">
+                      لیږل / ارسال
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          )}
+          </div>
 
           {showDeleteConfirmation && (
             <div className="divForBackDrop">

@@ -8,10 +8,8 @@ import Footer from "../components/footer";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { Card } from "antd";
-
 import "./pages.css";
 import axios from "axios";
-
 const MaktobList = () => {
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
@@ -29,12 +27,12 @@ const MaktobList = () => {
   const [recievedMakobListItems, setRecievedMaktobsListItems] = useState({});
   const [listFinalItems, setListFinalItems] = useState({});
   const [buttonActive, setButtonActive] = useState("newMaktob");
+  const [IsMaktobSent, setIsmaktobSent] = useState("No");
 
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = () => {
     setSearchText("");
     setSearchedColumn("");
@@ -137,7 +135,9 @@ const MaktobList = () => {
 
       width: "30%",
       render: (text, record) => (
-        <a href={`/maktob/${record.MaktobNo}`}>{text}</a>
+        <a href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}`}>
+          {text}
+        </a>
       ),
     },
     {
@@ -181,7 +181,6 @@ const MaktobList = () => {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
           userStatus: "owner",
-          maktobSent: false,
         },
       })
       .then((res) => {
@@ -211,18 +210,16 @@ const MaktobList = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   };
+
   const gettingRecievedMakbtobs = () => {
     axios
-      .post("/api/maktob/maktobs", {
+      .post("/api/maktob/received-maktobs", {
         data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
-          userStatus: "receiver",
-          maktobSent: false,
+          allReceivers: userData.presidencyName,
         },
       })
       .then((res) => {
-        console.log("response is1111111111111111: ", res.data);
+        console.log("response iswerwerwerwerwe: ", res.data);
         setRecievedMaktobsListItems(res.data.Maktobs_List_data);
       })
       .catch((err) => {
@@ -301,6 +298,7 @@ const MaktobList = () => {
           onClick={() => {
             setButtonActive("newMaktob");
             setListFinalItems(newMakobListItems);
+            setIsmaktobSent("No");
           }}
         >
           نوی مکتوبونه/ مکتبو جدید
@@ -315,6 +313,7 @@ const MaktobList = () => {
           onClick={() => {
             setButtonActive("sentMaktobs");
             setListFinalItems(sentMakobListItems);
+            setIsmaktobSent("Yes");
           }}
         >
           صادره <span class="badge badge-light">0</span>
@@ -330,6 +329,7 @@ const MaktobList = () => {
           onClick={() => {
             setButtonActive("recievedMaktobs");
             setListFinalItems(recievedMakobListItems);
+            setIsmaktobSent("ItsReceivedMaktob");
           }}
         >
           وارده <span className="badge badge-light">4</span>

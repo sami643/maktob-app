@@ -176,7 +176,6 @@ const PishnihadList = () => {
           userId: userData.userId,
           presidencyName: userData.presidencyName,
           userStatus: "owner",
-          istehlaamSent: false,
         },
       })
       .then((res) => {
