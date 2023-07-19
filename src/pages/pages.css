@@ -28,6 +28,7 @@
 .success_custom_message {
   color: blue;
   font-size: 25x;
+  z-index: 999;
 }
 .error_custom_message {
   color: blue;
@@ -472,3 +473,7 @@ footer {
 .molahizashod {
   text-decoration: underline;
 }
+
+/* #exampleModalCenter {
+  z-index: 999;
+} */

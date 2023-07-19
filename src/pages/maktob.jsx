@@ -24,6 +24,7 @@ import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
 import ImratName_Pashto from "./../assets/img/Imarat_Name_Pashto.jpg";
 import Imarat_Logo from "./../assets/img/imarat_logo.png";
+import Tickmark from "./../assets/img/tickmark.png";
 import axios from "axios";
 import "./pages.css";
 message.config({
@@ -49,6 +50,9 @@ const Maktob = (props) => {
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
   const [totalMaktob, setTotalMaktob] = useState("");
   const [submissionMessage, setSubmissionMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [checkingPresidencySelected, setCheckingPresidencySeleted] =
+    useState(null);
   const [
     selectedPresidencieswhileSendigMaktob,
     setSelectedPresidencieswhileSendigMaktob,
@@ -289,28 +293,45 @@ const Maktob = (props) => {
     context: initialValues.context,
   };
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const handleFileChange = (e) => {
-    setSelectedFiles([...e.target.files]);
-  };
-  const handleUpload = async () => {
-    if (selectedFiles.length === 0) {
-      alert("Please select files first");
-      return;
-    }
-  };
-
-  console.log(selectedFiles, "formData121212");
-
   // Select Options
-  const handleChange = (value) => {
+  const handleMaktobRecievers = (value) => {
     console.log("cacsdafds0", value);
     setSelectedPresidencieswhileSendigMaktob(value);
   };
-  console.log(
-    "selectedPresidencieswhileSendigMaktob",
-    selectedPresidencieswhileSendigMaktob
-  );
+
+  const handleSendMaktob = async () => {
+    console.log(selectedFile, "handleUploadFile");
+    const formData = new FormData();
+    selectedFile.forEach((file) => formData.append("selectedFile", file));
+    try {
+      await axios({
+        method: "post",
+        url: "/api/maktob/file-upload",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      }).then((response) => {
+        console.log("response: ", response);
+        axios
+          .post("/api/maktob/send-matkob", {
+            data: {
+              userId: userData.userId,
+              maktobNo: maktobId,
+              presidencyName: userData.presidencyName,
+              allReceivers: selectedPresidencieswhileSendigMaktob,
+              attachedDocmuents: response.data.file_urls,
+            },
+          })
+          .then((res) => {
+            console.log("SentManktob: ", res.data.sentMaktob);
+          })
+          .catch((err) => {
+            console.log("send Maktob Error Is called: ", err.response);
+          });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Sidebar>
@@ -1161,7 +1182,7 @@ const Maktob = (props) => {
                 <hr />
                 <div class="modal-body mb-5">
                   <Formik
-                    onSubmit={onSubmitForm_1}
+                    // onSubmit={handleSendMaktob}
                     initialValues={
                       maktobId ? updateInitialValues : initialStateValue
                     }
@@ -1203,50 +1224,63 @@ const Maktob = (props) => {
                             style={{
                               width: "100%",
                             }}
-                            onChange={handleChange}
+                            onChange={handleMaktobRecievers}
                             tokenSeparators={[","]}
                             options={presidenciesSendingDocumentSelectionOption}
                           />
-                          {errors.recipent && touched.recipent ? (
-                            <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
-                              {errors.recipent}
+                          {checkingPresidencySelected && (
+                            <div className=" mr-2 mb-3 mt-0">
+                              "لطفا مخاطب وټاکئ/ لطفا مخاطب را انتخاب نمائید"
                             </div>
-                          ) : null}
+                          )}
                         </div>
                         <div className="form-outline  col text-right my-5 ">
                           <div>
                             <label for="formFileLg" class="form-label">
                               لطفا استاد ضمیمه کړئ/ لطفا اسناد را ضمیمه نماید!
                             </label>
+
                             <input
                               class="form-control form-control-lg"
                               id="formFileLg"
                               multiple
                               type="file"
-                              onChange={handleFileChange}
+                              onChange={(e) => {
+                                setSelectedFile([...e.target.files]);
+                              }}
                             />
+                          </div>
+                        </div>
+                        <hr />
+                        <br />
+                        <br />
+                        <br />
+
+                        <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
+                          <div className="text-right  ml-5 pl-5 col">
+                            <button
+                              type="button"
+                              class="btn bg-primary text-right px-5 ml-5"
+                              data-dismiss="modal"
+                            >
+                              ټرل/ بستن
+                            </button>
+                          </div>
+                          <div className="text-left  col">
+                            <button
+                              // type="submit"
+                              class="btn bg-primary text "
+                              onClick={() => {
+                                handleSendMaktob();
+                              }}
+                            >
+                              لیږل / ارسال
+                            </button>
                           </div>
                         </div>
                       </Form>
                     )}
                   </Formik>
-                </div>
-                <hr />
-                <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
-                  <div className="text-right  ml-5 pl-5 col">
-                    <button
-                      type="button"
-                      class="btn bg-primary text-right px-5 ml-5"
-                      data-dismiss="modal"
-                    >
-                      ټرل/ بستن
-                    </button>
-                  </div>
-                  <div className="text-left  col">
-                    <button type="button" class="btn bg-primary text ">
-                      لیږل / ارسال
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
