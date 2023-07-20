@@ -7,26 +7,23 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import { Card } from "antd";
 import "./pages.css";
 import axios from "axios";
-const MaktobList = () => {
+const ReceivedMakktobList = () => {
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   // console.log("Decoded values", userData);
-  const [matkobIdForUpdate, setMaktobIdForUpdate] = useState();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [backgroundVisibility, setBackgroundVisibility] = useState(false);
   const [itemId, setItemId] = useState();
   const [deleteMaktob, setDeletemaktob] = useState(false);
-  const [newMakobListItems, setNewMaktobsListItems] = useState({});
-  const [sentMakobListItems, setSentMaktobsListItems] = useState({});
-  const [recievedMakobListItems, setRecievedMaktobsListItems] = useState({});
   const [listFinalItems, setListFinalItems] = useState({});
-  const [buttonActive, setButtonActive] = useState("newMaktob");
+  const [buttonActive, setButtonActive] = useState("recievedMaktobs");
   const [IsMaktobSent, setIsmaktobSent] = useState("No");
 
   const handleSearch = (selectedKeys, dataIndex) => {
@@ -41,7 +38,6 @@ const MaktobList = () => {
       searchInput.current.focus(); // Set focus back to the input field
     }
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -108,6 +104,16 @@ const MaktobList = () => {
         text
       ),
   });
+  let navigate = useNavigate();
+  const changeRoute = (data1) => {
+    if (data1 === "true") {
+      let path = `/maktoblist`;
+      navigate(path, { state: "newMaktobButtonClicked" });
+    } else if (data1 === "false") {
+      let path = `/maktoblist`;
+      navigate(path, { state: "sentMaktobButtonClicked" });
+    }
+  };
 
   const columns = [
     {
@@ -174,45 +180,8 @@ const MaktobList = () => {
     },
   ];
 
-  const gettingNewMakbtobs = () => {
-    axios
-      .post("/api/maktob/maktobs", {
-        data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
-          userStatus: "owner",
-          newMaktob: true,
-        },
-      })
-      .then((res) => {
-        console.log("response is1111111111111111: ", res.data);
-        setNewMaktobsListItems(res.data.Maktobs_List_data);
-        setListFinalItems(res.data.Maktobs_List_data);
-      })
-      .catch((err) => {
-        console.log("Axios Request Error After Calling API", err.response);
-      });
-  };
-  const gettingSentMakbtobs = () => {
-    axios
-      .post("/api/maktob/maktobs", {
-        data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
-          userStatus: "owner",
-          maktobSent: true,
-        },
-      })
-      .then((res) => {
-        console.log("response is1111111111111111: ", res.data);
-        setSentMaktobsListItems(res.data.Maktobs_List_data);
-      })
-      .catch((err) => {
-        console.log("Axios Request Error After Calling API", err.response);
-      });
-  };
-
   const gettingRecievedMakbtobs = () => {
+    console.log("userData.presidencyName");
     axios
       .post("/api/maktob/received-maktobs", {
         data: {
@@ -221,7 +190,7 @@ const MaktobList = () => {
       })
       .then((res) => {
         console.log("response iswerwerwerwerwe: ", res.data);
-        setRecievedMaktobsListItems(res.data.Maktobs_List_data);
+        setListFinalItems(res.data.Maktobs_List_data);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -229,8 +198,6 @@ const MaktobList = () => {
   };
   // Integration
   useEffect(() => {
-    gettingNewMakbtobs();
-    gettingSentMakbtobs();
     gettingRecievedMakbtobs();
   }, []);
 
@@ -251,8 +218,6 @@ const MaktobList = () => {
           content: "مکتوب په بریالیتوب سره پاک شو/ مکتوب موفقانه حذف گردید",
           className: "success_custom_message",
         });
-        gettingNewMakbtobs();
-        gettingSentMakbtobs();
         gettingRecievedMakbtobs();
       })
       .catch((err) => {
@@ -289,7 +254,7 @@ const MaktobList = () => {
         <h1>د مکتوبونو لست</h1>
         <br />
 
-        <button
+        {/* <button
           type="button"
           className={
             buttonActive == "newMaktob"
@@ -297,13 +262,12 @@ const MaktobList = () => {
               : "btn btn-light  px-5"
           }
           onClick={() => {
-            setButtonActive("newMaktob");
-            setListFinalItems(newMakobListItems);
-            setIsmaktobSent("No");
+            changeRoute("true");
+            setIsmaktobSent("newMaktob");
           }}
         >
           نوی مکتوبونه/ مکتبو جدید
-        </button>
+        </button> */}
         <button
           type="button"
           className={
@@ -312,9 +276,9 @@ const MaktobList = () => {
               : "btn btn-light  px-5"
           }
           onClick={() => {
-            setButtonActive("sentMaktobs");
-            setListFinalItems(sentMakobListItems);
-            setIsmaktobSent("Yes");
+            // setOneOfTheButtonIsClicked("sentMaktobs");
+            changeRoute("false");
+            setIsmaktobSent("sentMaktobs");
           }}
         >
           صادره <span class="badge badge-light">0</span>
@@ -329,7 +293,6 @@ const MaktobList = () => {
           }
           onClick={() => {
             setButtonActive("recievedMaktobs");
-            setListFinalItems(recievedMakobListItems);
             setIsmaktobSent("ItsReceivedMaktob");
           }}
         >
@@ -376,4 +339,4 @@ const MaktobList = () => {
   );
 };
 
-export default MaktobList;
+export default ReceivedMakktobList;

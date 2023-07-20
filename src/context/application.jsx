@@ -10,6 +10,7 @@ import Istehlaam from "../pages/istehlam";
 import IstehlaamList from "../pages/istehlaam-list";
 import Dashboard from "../pages/dashboard";
 import PageNotFound from "../pages/no-page-found";
+import ReceivedMaktobList from "../pages/received-maktoblist";
 
 export default function Application() {
   return (
@@ -21,6 +22,7 @@ export default function Application() {
         <Route path="/maktob/:maktobId" element={<Maktob />} />
         <Route path="/istehlaam/:istehlaamId" element={<Istehlaam />} />
         <Route path="/maktoblist" element={<MaktobList />} />
+        <Route path="/received-maktoblist" element={<ReceivedMaktobList />} />
         <Route path="/pishnihadlist" element={<PishnihadList />} />
         <Route path="/pishnihad" element={<Pishnihad />} />
         <Route path="/pishnihad/:pishnihadId" element={<Pishnihad />} />

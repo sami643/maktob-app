@@ -10,7 +10,6 @@ import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { Button, Modal, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-
 import {
   presidencies,
   maktobTypeOptions,
@@ -18,7 +17,10 @@ import {
   presidenciesSendingDocumentSelectionOption,
 } from "./../assets/data/data.js";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
-import { maktobValidationSchema } from "./../assets/data/validation.js";
+import {
+  maktobValidationSchema,
+  recipentPresidenciesSchema,
+} from "./../assets/data/validation.js";
 import { Spin, message } from "antd";
 import Logo from "./../assets/img/logo.jpg";
 import ImratName from "./../assets/img/Imarat_Name.jpg";
@@ -51,19 +53,26 @@ const Maktob = (props) => {
   const [totalMaktob, setTotalMaktob] = useState("");
   const [submissionMessage, setSubmissionMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState([]);
-  const [checkingPresidencySelected, setCheckingPresidencySeleted] =
-    useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [
     selectedPresidencieswhileSendigMaktob,
     setSelectedPresidencieswhileSendigMaktob,
   ] = useState([]);
+  const presidenciesSendingDocumentselectingOption =
+    presidenciesSendingDocumentSelectionOption.filter(
+      (option) => option.label !== userData.presidencyName
+    );
+  const filteredPresidencies = presidencies.filter(
+    (option) => option.label !== userData.presidencyName
+  );
+
   const selectAllPresidencies = () => {
-    if (selectedPresidencies.length === presidencies.length) {
+    if (selectedPresidencies.length === filteredPresidencies.length) {
       // If all checkboxes are already selected, unselect all
       setSelectedPresidencies([]);
     } else {
       // Otherwise, select all checkboxes
-      const allPresidencyItems = presidencies.map((item) => ({
+      const allPresidencyItems = filteredPresidencies.map((item) => ({
         label: item.label,
         value: item.value,
       }));
@@ -88,8 +97,8 @@ const Maktob = (props) => {
   };
   const columns = [];
   const itemsPerColumn = 7;
-  for (let i = 0; i < presidencies.length; i += itemsPerColumn) {
-    const columnItems = presidencies.slice(i, i + itemsPerColumn);
+  for (let i = 0; i < filteredPresidencies.length; i += itemsPerColumn) {
+    const columnItems = filteredPresidencies.slice(i, i + itemsPerColumn);
     columns.push(columnItems);
   }
 
@@ -252,7 +261,6 @@ const Maktob = (props) => {
   };
 
   const gettingSpecificMaktob = () => {
-    console.log("Getting", maktobId);
     axios
       .post("/api/maktob/uniquemaktob", {
         data: {
@@ -301,35 +309,41 @@ const Maktob = (props) => {
 
   const handleSendMaktob = async () => {
     console.log(selectedFile, "handleUploadFile");
-    const formData = new FormData();
-    selectedFile.forEach((file) => formData.append("selectedFile", file));
-    try {
-      await axios({
-        method: "post",
-        url: "/api/maktob/file-upload",
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      }).then((response) => {
-        console.log("response: ", response);
-        axios
-          .post("/api/maktob/send-matkob", {
-            data: {
-              userId: userData.userId,
-              maktobNo: maktobId,
-              presidencyName: userData.presidencyName,
-              allReceivers: selectedPresidencieswhileSendigMaktob,
-              attachedDocmuents: response.data.file_urls,
-            },
-          })
-          .then((res) => {
-            console.log("SentManktob: ", res.data.sentMaktob);
-          })
-          .catch((err) => {
-            console.log("send Maktob Error Is called: ", err.response);
-          });
-      });
-    } catch (error) {
-      console.log(error);
+    if (selectedPresidencieswhileSendigMaktob.length === 0) {
+      setErrorMessage(
+        "لطفا خپل مخاطب انتخاب کړئ/ لطفا مخاطب تانرا انتخاب نمایید"
+      );
+    } else {
+      const formData = new FormData();
+      selectedFile.forEach((file) => formData.append("selectedFile", file));
+      try {
+        await axios({
+          method: "post",
+          url: "/api/maktob/file-upload",
+          data: formData,
+          headers: { "Content-Type": "multipart/form-data" },
+        }).then((response) => {
+          console.log("response: ", response);
+          axios
+            .post("/api/maktob/send-matkob", {
+              data: {
+                userId: userData.userId,
+                maktobNo: maktobId,
+                presidencyName: userData.presidencyName,
+                allReceivers: selectedPresidencieswhileSendigMaktob,
+                attachedDocmuents: response.data.file_urls,
+              },
+            })
+            .then((res) => {
+              console.log("SentManktob: ", res.data.sentMaktob);
+            })
+            .catch((err) => {
+              console.log("send Maktob Error Is called: ", err.response);
+            });
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -423,9 +437,6 @@ const Maktob = (props) => {
                         }`}
                         aria-label=".form-select-lg example"
                       >
-                        {/* <option selected disabled>
-                            وټاکئ/ انتخاب
-                          </option> */}
                         {maktobTypeOptions.map((option) => (
                           <option key={option.value} value={option.label}>
                             {option.label}
@@ -484,7 +495,7 @@ const Maktob = (props) => {
                       </div>
                     </div>
                   </div>
-
+                  {/* mokhaatib */}
                   <div className="row ">
                     {!btnChecked ? (
                       <div className="form-outline col">
@@ -522,11 +533,20 @@ const Maktob = (props) => {
                               key={group.optgroup}
                               label={group.optgroup}
                             >
-                              {group.options.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
+                              {group.options.map((option) => {
+                                // Check if the option value matches the current user's value
+                                if (option.label !== userData.presidencyName) {
+                                  return (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  );
+                                }
+                                return null; // Skip rendering this option for the current user
+                              })}
                             </optgroup>
                           ))}
                         </select>
@@ -671,7 +691,8 @@ const Maktob = (props) => {
                         type="checkbox"
                         id="selectAllCheckbox"
                         checked={
-                          selectedPresidencies.length === presidencies.length
+                          selectedPresidencies.length ===
+                          filteredPresidencies.length
                         }
                         onChange={selectAllPresidencies}
                       />
@@ -1181,106 +1202,86 @@ const Maktob = (props) => {
                 </div>
                 <hr />
                 <div class="modal-body mb-5">
-                  <Formik
-                    // onSubmit={handleSendMaktob}
-                    initialValues={
-                      maktobId ? updateInitialValues : initialStateValue
-                    }
-                    // validationSchema={maktobValidationSchema}
-                    // enableReinitialize={true}
-                  >
-                    {({
-                      values,
-                      setFieldValue,
-                      setFieldTouched,
-                      handleSubmit,
-                      errors,
-                      touched,
-                    }) => (
-                      <Form className="m-5">
-                        <div className="form-outline col text-right mb-4">
-                          <label className="form-label mr-3" htmlFor="subject">
-                            مخاطب
-                            <span
-                              style={{
-                                color: "red",
-                                marginInline: "5px",
-                                paddingTop: "5px",
-                              }}
-                            >
-                              *
-                            </span>
-                          </label>
-
-                          <Select
-                            dropdownRender={(menu) => (
-                              <div style={{ textAlign: "right" }}>
-                                {React.cloneElement(menu, {
-                                  style: { textAlign: "right" },
-                                })}
-                              </div>
-                            )}
-                            mode="tags"
-                            style={{
-                              width: "100%",
-                            }}
-                            onChange={handleMaktobRecievers}
-                            tokenSeparators={[","]}
-                            options={presidenciesSendingDocumentSelectionOption}
-                          />
-                          {checkingPresidencySelected && (
-                            <div className=" mr-2 mb-3 mt-0">
-                              "لطفا مخاطب وټاکئ/ لطفا مخاطب را انتخاب نمائید"
-                            </div>
-                          )}
+                  <div className="form-outline col text-right mb-4">
+                    <label className="form-label mr-3" htmlFor="subject">
+                      مخاطب
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <Select
+                      dropdownRender={(menu) => (
+                        <div style={{ textAlign: "right" }}>
+                          {React.cloneElement(menu, {
+                            style: { textAlign: "right" },
+                          })}
                         </div>
-                        <div className="form-outline  col text-right my-5 ">
-                          <div>
-                            <label for="formFileLg" class="form-label">
-                              لطفا استاد ضمیمه کړئ/ لطفا اسناد را ضمیمه نماید!
-                            </label>
+                      )}
+                      mode="tags"
+                      style={{
+                        width: "100%",
+                      }}
+                      onChange={handleMaktobRecievers}
+                      onClick={() => {
+                        setErrorMessage(null);
+                      }}
+                      tokenSeparators={[","]}
+                      options={presidenciesSendingDocumentselectingOption}
+                    />
+                    {errorMessage ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errorMessage}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="form-outline  col text-right my-5 ">
+                    <div>
+                      <label for="formFileLg" class="form-label">
+                        لطفا استاد ضمیمه کړئ/ لطفا اسناد را ضمیمه نماید!
+                      </label>
 
-                            <input
-                              class="form-control form-control-lg"
-                              id="formFileLg"
-                              multiple
-                              type="file"
-                              onChange={(e) => {
-                                setSelectedFile([...e.target.files]);
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <hr />
-                        <br />
-                        <br />
-                        <br />
-
-                        <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
-                          <div className="text-right  ml-5 pl-5 col">
-                            <button
-                              type="button"
-                              class="btn bg-primary text-right px-5 ml-5"
-                              data-dismiss="modal"
-                            >
-                              ټرل/ بستن
-                            </button>
-                          </div>
-                          <div className="text-left  col">
-                            <button
-                              // type="submit"
-                              class="btn bg-primary text "
-                              onClick={() => {
-                                handleSendMaktob();
-                              }}
-                            >
-                              لیږل / ارسال
-                            </button>
-                          </div>
-                        </div>
-                      </Form>
-                    )}
-                  </Formik>
+                      <input
+                        class="form-control form-control-lg"
+                        id="formFileLg"
+                        multiple
+                        type="file"
+                        onChange={(e) => {
+                          setSelectedFile([...e.target.files]);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <hr />
+                  <br />
+                  <br />
+                  <br />
+                  <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
+                    <div className="text-right  ml-5 pl-5 col">
+                      <button
+                        type="button"
+                        class="btn bg-primary text-right px-5 ml-5"
+                        data-dismiss="modal"
+                      >
+                        ټرل/ بستن
+                      </button>
+                    </div>
+                    <div className="text-left  col">
+                      <button
+                        onClick={() => {
+                          handleSendMaktob();
+                        }}
+                        class="btn bg-primary text "
+                      >
+                        لیږل / ارسال
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -23,8 +23,8 @@ export const presidenciesForSelectOptions = [
         label: "مشاوریت محترم حقوقی",
       },
       {
-        value: "ریاست محترم ّپلان و هماهنگی ستراتیژیک",
-        label: "ریاست محترم ّپلان و هماهنگی ستراتیژیک",
+        value: "ریاست محترم پلان و هماهنگی ستراتیژیک",
+        label: "ریاست محترم پلان و هماهنگی ستراتیژیک",
       },
       {
         value: "ریاست محترم دفتر مقام",
@@ -282,7 +282,7 @@ export const presidenciesSendingDocumentSelectionOption = [
   },
   {
     value: "P&HSP",
-    label: "ریاست محترم ّپلان و هماهنگی ستراتیژیک",
+    label: "ریاست محترم پلان و هماهنگی ستراتیژیک",
   },
   {
     value: "DMP",

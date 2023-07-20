@@ -54,3 +54,7 @@ export const LoginValidationSchema = Yup.object().shape({
     .required("ایمیل آدرس اړین دی/ ایمیل آدرس ضروری است"),
   password: Yup.string().required("پسورډ اړین دی/ پسور د ضروری است"),
 });
+
+export const recipentPresidenciesSchema = Yup.object().shape({
+  receipentresidencies: Yup.string().required("مخاطب اړین دی/ مخاطب ضروری است"),
+});
