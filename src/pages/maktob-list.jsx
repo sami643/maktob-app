@@ -26,7 +26,7 @@ const MaktobList = () => {
   const [sentMakobListItems, setSentMaktobsListItems] = useState({});
   const [recievedMakobListItems, setRecievedMaktobsListItems] = useState({});
   const [listFinalItems, setListFinalItems] = useState({});
-  const [buttonActive, setButtonActive] = useState("newMaktob");
+  const [activeList, setActiveList] = useState("newMaktob");
   const [IsMaktobSent, setIsmaktobSent] = useState("No");
 
   const handleSearch = (selectedKeys, dataIndex) => {
@@ -148,30 +148,55 @@ const MaktobList = () => {
       width: "15%",
     },
 
-    {
-      title: "تغیر/حذف",
-      dataIndex: "operation",
-      key: "opeation",
-      width: "30%",
-      render: (_, record) => (
-        <div className="d-flex">
-          <Divider type="vertical" />
-          <a href={`/maktob/${record._id}`}>
-            {" "}
-            <BsPencilSquare />{" "}
-          </a>
+    activeList === "newMaktob"
+      ? {
+          title: "تغیر/حذف",
+          dataIndex: "operation",
+          key: "opeation",
+          width: "30%",
+          render: (_, record) => (
+            <div className="d-flex">
+              <Divider type="vertical" />
+              <a href={`/maktob/${record._id}`}>
+                {" "}
+                <BsPencilSquare />{" "}
+              </a>
 
-          <Divider type="vertical" />
-          <a
-            onClick={() => openDeleteConfirmation(record.MaktobNo)}
-            className="link  p-0"
-            activeclassName="active"
-          >
-            <BsTrashFill id="deleteIcon" outline />
-          </a>
-        </div>
-      ),
-    },
+              <Divider type="vertical" />
+              <a
+                onClick={() => openDeleteConfirmation(record.MaktobNo)}
+                className="link  p-0"
+                activeclassName="active"
+              >
+                <BsTrashFill id="deleteIcon" outline />
+              </a>
+            </div>
+          ),
+        }
+      : {
+          title: "ضمیمه",
+          dataIndex: "operation",
+          key: "opeation",
+          width: "30%",
+          render: (_, record) => (
+            <div className="d-flex">
+              <Divider type="vertical" />
+              <a href={`/maktob/${record._id}`}>
+                {" "}
+                <BsPencilSquare />{" "}
+              </a>
+
+              <Divider type="vertical" />
+              <a
+                onClick={() => openDeleteConfirmation(record.MaktobNo)}
+                className="link  p-0"
+                activeclassName="active"
+              >
+                <BsTrashFill id="deleteIcon" outline />
+              </a>
+            </div>
+          ),
+        },
   ];
 
   const gettingNewMakbtobs = () => {
@@ -238,11 +263,14 @@ const MaktobList = () => {
   const handleDelete = () => {
     setDeletemaktob(false);
     setBackgroundVisibility(false);
+    console.log("recievedMakobListItems", recievedMakobListItems);
     axios
       .delete("/api/maktob/delete", {
         data: {
           maktobId: itemId,
-          userId: userData.userId,
+          // senderPresidency: recievedMakobListItems[0]?.PresidencyName || "",
+          activeList,
+          // presidencyName: userData.presidencyName,
         },
       })
       .then((res) => {
@@ -252,11 +280,16 @@ const MaktobList = () => {
           className: "success_custom_message",
         });
         gettingNewMakbtobs();
-        gettingSentMakbtobs();
-        gettingRecievedMakbtobs();
+        // gettingSentMakbtobs();
+        // gettingRecievedMakbtobs();
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
+        message.error({
+          content:
+            "استول شوی مکتوب نه کیږي/ شما قابلیت حذف مکتبوب ارسال شده را ندارید!",
+          className: "success_custom_message",
+        });
       });
   };
 
@@ -292,12 +325,12 @@ const MaktobList = () => {
         <button
           type="button"
           className={
-            buttonActive == "newMaktob"
+            activeList == "newMaktob"
               ? "btn btn-primary  px-5 "
               : "btn btn-light  px-5"
           }
           onClick={() => {
-            setButtonActive("newMaktob");
+            setActiveList("newMaktob");
             setListFinalItems(newMakobListItems);
             setIsmaktobSent("No");
           }}
@@ -307,12 +340,12 @@ const MaktobList = () => {
         <button
           type="button"
           className={
-            buttonActive == "sentMaktobs"
+            activeList == "sentMaktobs"
               ? "btn btn-primary  px-5"
               : "btn btn-light  px-5"
           }
           onClick={() => {
-            setButtonActive("sentMaktobs");
+            setActiveList("sentMaktobs");
             setListFinalItems(sentMakobListItems);
             setIsmaktobSent("Yes");
           }}
@@ -323,12 +356,12 @@ const MaktobList = () => {
         <button
           type="button"
           className={
-            buttonActive == "recievedMaktobs"
+            activeList == "recievedMaktobs"
               ? "btn btn-primary  px-5 "
               : "btn btn-light  px-5"
           }
           onClick={() => {
-            setButtonActive("recievedMaktobs");
+            setActiveList("recievedMaktobs");
             setListFinalItems(recievedMakobListItems);
             setIsmaktobSent("ItsReceivedMaktob");
           }}
