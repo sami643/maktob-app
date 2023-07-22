@@ -10,6 +10,7 @@ import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { Button, Modal, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+
 import {
   presidencies,
   maktobTypeOptions,
@@ -54,10 +55,14 @@ const Maktob = (props) => {
   const [submissionMessage, setSubmissionMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [sentMatkobSuccessResponse, setSentMatkobSuccessResponse] =
+    useState(null);
   const [
     selectedPresidencieswhileSendigMaktob,
     setSelectedPresidencieswhileSendigMaktob,
   ] = useState([]);
+  const [islangPashto, setIsLangPashto] = useState(false);
+
   const presidenciesSendingDocumentselectingOption =
     presidenciesSendingDocumentSelectionOption.filter(
       (option) => option.label !== userData.presidencyName
@@ -249,6 +254,19 @@ const Maktob = (props) => {
     setIsFromState(false);
     setFormData(values);
     setInitialValues(values);
+
+    // Language Detecter
+    console.log("innerPart si Called");
+    const charactersToDetect = "ټډږړښڅځېۍڼګ";
+    const inputedvalue = values.context
+      .split("")
+      .filter((char) => charactersToDetect.includes(char))
+      .join("");
+    if (inputedvalue.length > 0) {
+      setIsLangPashto(true);
+    } else {
+      setIsLangPashto(false);
+    }
   };
 
   // message after submission
@@ -335,7 +353,8 @@ const Maktob = (props) => {
               },
             })
             .then((res) => {
-              console.log("SentManktob: ", res.data.sentMaktob);
+              console.log("SentManktob: ", res.data);
+              setSentMatkobSuccessResponse("Maktob Sent successfully");
             })
             .catch((err) => {
               console.log("send Maktob Error Is called: ", err.response);
@@ -864,7 +883,7 @@ const Maktob = (props) => {
 
             <div className="date_type_no_div col-12 ">
               <div className="maktob_no col-4 align-self-end">
-                <label>ګڼه:</label>
+                <label>{islangPashto ? "ګڼه" : "شماره"}:</label>
                 <p>
                   &#160;
                   {maktobId && maktobId.length < 15
@@ -873,15 +892,23 @@ const Maktob = (props) => {
                 </p>
               </div>
               <div className="owner col-4">
-                <div>{userData.higherAuthority}</div>
-                <div>{userData.presidencyName}</div>
+                <div>
+                  {islangPashto
+                    ? userData.higherAuthorityPashto
+                    : userData.higherAuthority}
+                </div>
+                <div>
+                  {islangPashto
+                    ? userData.presidencyNamePashto
+                    : userData.presidencyName}
+                </div>
                 <div>{userData.directorate}</div>
-                <div> اجرائیه مدیریت</div>
+                <div>{islangPashto ? " اجرائیه مدیریت" : "مدیریت اجرائیه"}</div>
               </div>
 
               <div className=" col-4 date_type_div align-self-end ">
                 <div className="date d-flex justify-content-end  ">
-                  <label htmlFor="">نیټه:</label>
+                  <label htmlFor="">{islangPashto ? "نیټه" : "تاریخ"}:</label>
                   <p>
                     &#160;
                     {maktobId && maktobId.length < 15
@@ -1003,8 +1030,16 @@ const Maktob = (props) => {
                 </div>
                 <div className="col-4">
                   <p>والسلام</p>
-                  <p>{userData.presidentName}</p>
-                  <p>{userData.presidencyName}</p>
+                  <p>
+                    {islangPashto
+                      ? userData.presidentNamePashto
+                      : userData.presidentName}
+                  </p>
+                  <p>
+                    {islangPashto
+                      ? userData.positionTitlePashto
+                      : userData.positionTitle}
+                  </p>
                 </div>
                 <div className="col-4"></div>
               </div>
@@ -1083,7 +1118,11 @@ const Maktob = (props) => {
             <div className="footer_div">
               <div className="footer_div_content">
                 <div className="footer-item">
-                  آدرس: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل- افغانستان
+                  {islangPashto
+                    ? "پته: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل- افغانستان "
+                    : "آدرس: کارته چهار، جوار وزارت تحصیلات عالی- کابل- افغانستان "}
+
+                  {/* */}
                 </div>
                 <div className="footer-item">Email: {userData.email}</div>
                 <div className="footer-item">Tel: {userData.phoneNo}</div>
@@ -1267,20 +1306,33 @@ const Maktob = (props) => {
                         type="button"
                         class="btn bg-primary text-right px-5 ml-5"
                         data-dismiss="modal"
+                        onClick={() => {
+                          setSentMatkobSuccessResponse(null);
+                        }}
                       >
                         ټرل/ بستن
                       </button>
                     </div>
-                    <div className="text-left  col">
-                      <button
-                        onClick={() => {
-                          handleSendMaktob();
-                        }}
-                        class="btn bg-primary text "
-                      >
-                        لیږل / ارسال
-                      </button>
-                    </div>
+                    {sentMatkobSuccessResponse !==
+                    "Maktob Sent successfully" ? (
+                      <div className="text-left  col">
+                        <button
+                          onClick={() => {
+                            handleSendMaktob();
+                          }}
+                          class="btn bg-primary text "
+                        >
+                          لیږل / ارسال
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <button className="btn disabled">
+                          مکتبوب په بریالیتوب سره ولیږل سو/مکتوب موفقانه ارسال
+                          شد
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -7,7 +7,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { BsTrashFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
-import { Card } from "antd";
+import { FiEye } from "react-icons/fi";
 import "./pages.css";
 import axios from "axios";
 const MaktobList = () => {
@@ -15,7 +15,6 @@ const MaktobList = () => {
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
   // console.log("Decoded values", userData);
-  const [matkobIdForUpdate, setMaktobIdForUpdate] = useState();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -109,6 +108,8 @@ const MaktobList = () => {
       ),
   });
 
+  console.log("recievedMakobListItems", recievedMakobListItems);
+
   const columns = [
     {
       title: "ګڼه/شماره",
@@ -135,9 +136,11 @@ const MaktobList = () => {
 
       width: "30%",
       render: (text, record) => (
-        <a href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}`}>
-          {text}
-        </a>
+        <>
+          <a href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}`}>
+            {text}
+          </a>
+        </>
       ),
     },
     {
@@ -180,19 +183,13 @@ const MaktobList = () => {
           width: "30%",
           render: (_, record) => (
             <div className="d-flex">
-              <Divider type="vertical" />
-              <a href={`/maktob/${record._id}`}>
-                {" "}
-                <BsPencilSquare />{" "}
-              </a>
-
-              <Divider type="vertical" />
+              {/* <Divider type="vertical" /> */}
               <a
-                onClick={() => openDeleteConfirmation(record.MaktobNo)}
-                className="link  p-0"
+                // onClick={() => openDeleteConfirmation(record.MaktobNo)}
+                className="link  py-0 text-center"
                 activeclassName="active"
               >
-                <BsTrashFill id="deleteIcon" outline />
+                <FiEye id="deleteIcon" outline />
               </a>
             </div>
           ),
@@ -245,7 +242,10 @@ const MaktobList = () => {
         },
       })
       .then((res) => {
-        console.log("response iswerwerwerwerwe: ", res.data);
+        console.log(
+          "response iswerwerwerwerwesdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsd: ",
+          res.data.Maktobs_List_data
+        );
         setRecievedMaktobsListItems(res.data.Maktobs_List_data);
       })
       .catch((err) => {
@@ -309,6 +309,7 @@ const MaktobList = () => {
   const sortedListItemsArray = listItemsArray.sort(
     (a, b) => parseInt(b.MaktobNo) - parseInt(a.MaktobNo)
   );
+
   return (
     <Sidebar>
       <Header />
