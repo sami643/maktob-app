@@ -21,6 +21,7 @@ import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import {
   maktobValidationSchema,
   recipentPresidenciesSchema,
+  malahizaShodValidationSchema,
 } from "./../assets/data/validation.js";
 import { Spin, message } from "antd";
 import Logo from "./../assets/img/logo.jpg";
@@ -35,14 +36,17 @@ message.config({
   maxCount: 5,
 });
 
-const Maktob = (props) => {
+const Maktob = () => {
   const { maktobId } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const IsMaktobSent = searchParams.get("isMaktobSent");
+  const PresidencyNameFromReceivedMaktobList = searchParams.get("PN");
+
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  // const localStorage = JSON.parse(localStorage)
   const [formData, setFormData] = useState("");
   const [initialValues, setInitialValues] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -62,13 +66,18 @@ const Maktob = (props) => {
     setSelectedPresidencieswhileSendigMaktob,
   ] = useState([]);
   const [islangPashto, setIsLangPashto] = useState(false);
+  const [loading, setloading] = useState(true);
+
+  // if (IsMaktobSent === "recievedMaktobs") {
+  //   setUserData();
+  // }
 
   const presidenciesSendingDocumentselectingOption =
     presidenciesSendingDocumentSelectionOption.filter(
-      (option) => option.label !== userData.presidencyName
+      (option) => option.label !== userData.PresidencyName
     );
   const filteredPresidencies = presidencies.filter(
-    (option) => option.label !== userData.presidencyName
+    (option) => option.label !== userData.PresidencyName
   );
 
   const selectAllPresidencies = () => {
@@ -209,8 +218,8 @@ const Maktob = (props) => {
           recipent: formData.recipent,
           subject: formData.subject,
           context: formData.context,
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
+          userId: userData.UserId,
+          presidencyName: userData.PresidencyName,
           maktobType: formData.maktobType ? formData.maktobType : "عادی",
           copyTo: {
             label: copyToRecipentsJustLabel_1,
@@ -237,8 +246,8 @@ const Maktob = (props) => {
     axios
       .post("/api/maktob/maktob-no", {
         data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
+          userId: userData.UserId,
+          presidencyName: userData.PresidencyName,
         },
       })
       .then((res) => {
@@ -278,12 +287,19 @@ const Maktob = (props) => {
     setShowDeleteConfirmation(false);
   };
 
+  console.log(
+    "PresidencyNameFromReceivedMaktobList",
+    PresidencyNameFromReceivedMaktobList
+  );
   const gettingSpecificMaktob = () => {
     axios
       .post("/api/maktob/uniquemaktob", {
         data: {
           maktobId,
-          userId: userData.userId,
+          userId:
+            IsMaktobSent === "ItsReceivedMaktob"
+              ? PresidencyNameFromReceivedMaktobList
+              : userData.UserId,
         },
       })
       .then((res) => {
@@ -297,8 +313,26 @@ const Maktob = (props) => {
       });
   };
 
+  const gettingUserDataForRecievedMaktob = () => {
+    axios
+      .post("/api/user/receivedMaktob-userData", {
+        data: {
+          userId: PresidencyNameFromReceivedMaktobList,
+        },
+      })
+      .then((res) => {
+        setUserData(res.data.receviveMaktobUserData);
+        setloading(false);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
   useEffect(() => {
     if (maktobId) gettingSpecificMaktob();
+    if (PresidencyNameFromReceivedMaktobList) {
+      gettingUserDataForRecievedMaktob();
+    }
   }, []);
 
   const updateInitialValues = {
@@ -345,9 +379,9 @@ const Maktob = (props) => {
           axios
             .post("/api/maktob/send-matkob", {
               data: {
-                userId: userData.userId,
+                userId: userData.UserId,
                 maktobNo: maktobId,
-                presidencyName: userData.presidencyName,
+                presidencyName: userData.PresidencyName,
                 allReceivers: selectedPresidencieswhileSendigMaktob,
                 attachedDocmuents: response.data.file_urls,
               },
@@ -366,6 +400,12 @@ const Maktob = (props) => {
     }
   };
 
+  let molihizaShodServerData = false;
+  const handleMolahizaShod = () => {
+    console.log(
+      "handleMoalhizasdfgdgsdfgsfdddddddddd23333333333333333333333333333333333333333333333333333333333333333"
+    );
+  };
   return (
     <Sidebar>
       {isFormState && (!maktobId || maktobId?.length > 15) ? (
@@ -554,7 +594,7 @@ const Maktob = (props) => {
                             >
                               {group.options.map((option) => {
                                 // Check if the option value matches the current user's value
-                                if (option.label !== userData.presidencyName) {
+                                if (option.label !== userData.PresidencyName) {
                                   return (
                                     <option
                                       key={option.value}
@@ -845,517 +885,677 @@ const Maktob = (props) => {
         </>
       ) : (
         <>
-          <div className="main_container">
-            <div className="header-body">
-              <div className=" pashto_headling_div col-md-4 col-xl-4 col-sm-6">
-                <div className=" pastho-side ">
-                  <div className="  tvet_logo ">
-                    <img src={Imarat_Logo} alt="" min-width="100" height="80" />
-                  </div>
-                </div>
-                <div className="pashto-text-div-inner">
-                  <img src={ImratName_Pashto} className="pashto_heading_img" />
-                  <p className="m-0 text-right  pashto_headline_text">
-                    د تخنیکي او مسلکي زده کړو اداره
-                  </p>
-                </div>
-              </div>
-
-              <div className=" pt-4  english_headline_div   col-md-4">
-                <h4 className=" text-center m-0 english_headline_text">
-                  Islamic Imarat of Afghanistan Technical & Vocational Education
-                  Training Authority
-                </h4>
-              </div>
-
-              <div className="col-md-4 col-xl-4 col-sm-6 persian_headline_div">
-                <div className=" persian-text-div-inner ">
-                  <img src={ImratName} className="persian_headline_img " />
-                  <p className="m-0  persian_headline_text">
-                    اداره تعلیمات تخنیکی و مسلکی
-                  </p>
-                </div>
-                <div className="imarat_logo px-0">
-                  <img src={Logo} alt="" min-width="100" height="80" />
-                </div>
-              </div>
-            </div>
-
-            <div className="date_type_no_div col-12 ">
-              <div className="maktob_no col-4 align-self-end">
-                <label>{islangPashto ? "ګڼه" : "شماره"}:</label>
-                <p>
-                  &#160;
-                  {maktobId && maktobId.length < 15
-                    ? uniquemaktob?.MaktobNo
-                    : formData.maktobNo}
-                </p>
-              </div>
-              <div className="owner col-4">
-                <div>
-                  {islangPashto
-                    ? userData.higherAuthorityPashto
-                    : userData.higherAuthority}
-                </div>
-                <div>
-                  {islangPashto
-                    ? userData.presidencyNamePashto
-                    : userData.presidencyName}
-                </div>
-                <div>{userData.directorate}</div>
-                <div>{islangPashto ? " اجرائیه مدیریت" : "مدیریت اجرائیه"}</div>
-              </div>
-
-              <div className=" col-4 date_type_div align-self-end ">
-                <div className="date d-flex justify-content-end  ">
-                  <label htmlFor="">{islangPashto ? "نیټه" : "تاریخ"}:</label>
-                  <p>
-                    &#160;
-                    {maktobId && maktobId.length < 15
-                      ? uniquemaktob?.MaktobDate
-                      : formData.maktobDate}
-                  </p>
-                </div>
-                <div className="maktob_type_div d-flex justify-content-end">
-                  <div className="maktob_type text-left">
-                    <div className="px-2">
-                      <label className="">عادی</label>
-
-                      <input
-                        className="maktob-type-check m-1 "
-                        type="checkbox"
-                        value=""
-                        id="matkobType"
-                        checked={
-                          maktobId && maktobId.length < 15
-                            ? uniquemaktob?.MaktobType === "عادی"
-                            : formData.maktobType === "عادی" ||
-                              formData.maktobType === undefined
-                        }
-                      />
-                    </div>
-                    <div className="px-2">
-                      <label className="">عاجل</label>
-
-                      <input
-                        className="maktob-type-check m-1 "
-                        type="checkbox"
-                        value=""
-                        id="matkobType"
-                        checked={
-                          maktobId && maktobId.length < 15
-                            ? uniquemaktob?.MaktobType === "عاجل"
-                            : formData.maktobType === "عاجل"
-                        }
-                      />
-                    </div>
-                    <div className="px-2">
-                      <label className="">محرم</label>
-
-                      <input
-                        className="maktob-type-check m-1 "
-                        type="checkbox"
-                        value=""
-                        id="matkobType"
-                        checked={
-                          maktobId && maktobId.length < 15
-                            ? uniquemaktob?.MaktobType === "محرم"
-                            : formData.maktobType === "محرم"
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="divider">
-              <Divider className="divider" />
-            </div>
-
-            <div className="body_of_maktob ">
-              <div className="audiance">
-                {" "}
-                <p>
-                  {" "}
-                  {maktobId && maktobId.length < 15
-                    ? uniquemaktob?.Recipent
-                    : formData.recipent}
-                </p>
-              </div>
-              <div className="greating">
-                <p>ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً </p>
-              </div>
-
-              <div className="subject_of_maktob">
-                <label> موضوع </label>
-                <p>
-                  :&#160;&#160;{" "}
-                  {maktobId && maktobId.length < 15
-                    ? uniquemaktob?.Subject
-                    : formData.subject}{" "}
-                </p>
-              </div>
-              <div className="mohtarama">
-                <p>محترما:</p>
-              </div>
-              <div className="matktob_context">
-                <p>
-                  {" "}
-                  {maktobId && maktobId.length < 15
-                    ? uniquemaktob?.Context
-                    : formData.context}
-                </p>
-              </div>
-
-              <br />
-              <div className="closing_signature d-flex">
-                <div className="col-4">
-                  {IsMaktobSent === "ItsReceivedMaktob" && (
-                    <div className="text-right ">
-                      <div className="text-center molahizashod mt-5">
-                        ملا حظه شد
-                      </div>
-                      <p
-                        style={{ fontSize: "15px", fontFamily: "sans-serif" }}
-                        className="text-center"
-                      >
-                        12-24-1444
-                      </p>
-
-                      <p style={{ fontSize: "15px", fontFamily: "sans-serif" }}>
-                        آمریت محترم نظارت و ارزیابی در زمینه اجرات اصولی نماید
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <div className="col-4">
-                  <p>والسلام</p>
-                  <p>
-                    {islangPashto
-                      ? userData.presidentNamePashto
-                      : userData.presidentName}
-                  </p>
-                  <p>
-                    {islangPashto
-                      ? userData.positionTitlePashto
-                      : userData.positionTitle}
-                  </p>
-                </div>
-                <div className="col-4"></div>
-              </div>
-            </div>
-
-            <div className="copy_to_div d-flex align-items-start flex-column ">
-              {copyToRecipentsJustLabel_1.length > 0 ? (
-                <div className="copy_to_title align-self-start">
-                  <p>کاپي :</p>
-                </div>
-              ) : null}
-              <div className="copy_to_body ">
-                {isDeputOrAdvisoryChecked ? (
-                  <>
-                    <div className="copy_body_item">
-                      {arrayA.map((item, index) => (
-                        <p key={index} className="copy_body_item_text">
-                          {item}
-                        </p>
-                      ))}
-                    </div>
-                    <div className="copy_body_item">
-                      {arrayB.map((item, index) => (
-                        <p key={index} className="copy_body_item_text">
-                          {item}
-                        </p>
-                      ))}
-                    </div>
-
-                    <div className="copy_body_item">
-                      {arrayC.map((item, index) => (
-                        <p key={index} className="copy_body_item_text">
-                          {item}
-                        </p>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {" "}
-                    <div className="copy_body_item">
-                      {copyToRecipentsJustLabel_1
-                        .slice(0, 8)
-                        .map((item, index) => (
-                          <p key={index} className="copy_body_item_text">
-                            {item}
-                          </p>
-                        ))}
-                    </div>
-                    <div className="copy_body_item">
-                      {copyToRecipentsJustLabel_1
-                        .slice(8, 16)
-                        .map((item, index) => (
-                          <p key={index} className="copy_body_item_text">
-                            {item}
-                          </p>
-                        ))}
-                    </div>
-                    <div className="copy_body_item">
-                      {copyToRecipentsJustLabel_1
-                        .slice(16, 24)
-                        .map((item, index) => (
-                          <p key={index} className="copy_body_item_text">
-                            {item}
-                          </p>
-                        ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="footer_divider">
-              <Divider className="" />
-            </div>
-
-            <div className="footer_div">
-              <div className="footer_div_content">
-                <div className="footer-item">
-                  {islangPashto
-                    ? "پته: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل- افغانستان "
-                    : "آدرس: کارته چهار، جوار وزارت تحصیلات عالی- کابل- افغانستان "}
-
-                  {/* */}
-                </div>
-                <div className="footer-item">Email: {userData.email}</div>
-                <div className="footer-item">Tel: {userData.phoneNo}</div>
-              </div>
-            </div>
-          </div>
-
-          {IsMaktobSent === "ItsReceivedMaktob" && (
-            <div className="col-4 main_container">
-              <div className="text-right ">
-                <div className="text-center molahizashod mt-5">ملا حظه شد</div>
-                <div>
-                  checked checkbox should come here and then the Label ملا حظه
-                  شد{" "}
-                </div>
-                then selected input field or the manualy input field
-                <input type="text" />
-              </div>
-            </div>
-          )}
-
-          {(!maktobId || maktobId?.length > 15) && (
-            <div className=" d-flex container  print_btn_div ">
-              <div className=" col-4 text-right ">
-                <button
-                  onClick={() => {
-                    setIsFromState(true);
-                    setUniquemaktob(initialValues);
-                  }}
-                  className=" print-button btn bg-primary px-5"
-                >
-                  مخکنۍ صفحه/ صفحه قبلی
-                </button>
-              </div>
-              <div className="col-8 text-left">
-                <button
-                  className="print-button btn bg-primary px-5"
-                  onClick={() => {
-                    onStoreData();
-                    gettingSpecificMaktob();
-                  }}
-                >
-                  ثبت
-                </button>
-
-                <button
-                  onClick={() => {
-                    handlePrint();
-                    onStoreData();
-                  }}
-                  className="print-button btn bg-primary px-5 ml-5"
-                >
-                  پرنت و ثبت
-                </button>
-              </div>
-            </div>
-          )}
-
-          {maktobId?.length < 15 && (
+          {loading ? (
             <>
-              <div className="container d-flex  print_btn_div   ">
-                <div className=" col-6 text-right">
-                  <button
-                    onClick={() => {
-                      {
-                        window.history.go(-1);
-                      }
-                    }}
-                    className="print-button-view btn bg-primary px-5 "
-                  >
-                    مخکنۍ صفحه/ صفحه قبلی
-                  </button>
-                </div>
-                <div className="text-left col-6">
-                  {IsMaktobSent === "No" && (
-                    <button
-                      className=" text-right btn bg-primary px-5  mx-4 "
-                      type="button"
-                      data-toggle="modal"
-                      data-target="#exampleModalCenter"
-                    >
-                      لیږل / ارسال
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      {
-                        handlePrint();
-                      }
-                    }}
-                    className=" text-right btn bg-primary px-5  "
-                  >
-                    پرنت
-                  </button>
+              {/* <div className=" text-center p-5" style={{ marginTop: "20%" }}>
+                <Spin />
+              </div> */}
+              <div
+                className="text-center "
+                style={{
+                  marginTop: "22%",
+                }}
+              >
+                <div
+                  className="spinner-grow text-primary "
+                  role="status"
+                  style={{ width: "80px", height: "80px" }}
+                >
+                  <span class="sr-only">Loading...</span>
                 </div>
               </div>
             </>
-          )}
-
-          {/* Modal for Sending Maktob */}
-          <div
-            class="modal fade"
-            id="exampleModalCenter"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="exampleModalCenterTitle"
-            aria-hidden="true"
-          >
-            <div class="modalDialog modal-dialog-center mt-5" role="document">
-              <div class="modal-content px-5 ">
-                <div class="modalHeader px-5 mt-4">
-                  <h1 class="modalTitle" id="exampleModalLongTitle">
-                    د مکتبول لیږل/ارسال مکتوب
-                  </h1>
-                </div>
-                <hr />
-                <div class="modal-body mb-5">
-                  <div className="form-outline col text-right mb-4">
-                    <label className="form-label mr-3" htmlFor="subject">
-                      مخاطب
-                      <span
-                        style={{
-                          color: "red",
-                          marginInline: "5px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        *
-                      </span>
-                    </label>
-                    <Select
-                      dropdownRender={(menu) => (
-                        <div style={{ textAlign: "right" }}>
-                          {React.cloneElement(menu, {
-                            style: { textAlign: "right" },
-                          })}
-                        </div>
-                      )}
-                      mode="tags"
-                      style={{
-                        width: "100%",
-                      }}
-                      onChange={handleMaktobRecievers}
-                      onClick={() => {
-                        setErrorMessage(null);
-                      }}
-                      tokenSeparators={[","]}
-                      options={presidenciesSendingDocumentselectingOption}
-                    />
-                    {errorMessage ? (
-                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
-                        {errorMessage}
+          ) : (
+            <>
+              <div className="main_container">
+                <div className="header-body">
+                  <div className=" pashto_headling_div col-md-4 col-xl-4 col-sm-6">
+                    <div className=" pastho-side ">
+                      <div className="  tvet_logo ">
+                        <img
+                          src={Imarat_Logo}
+                          alt=""
+                          min-width="100"
+                          height="80"
+                        />
                       </div>
-                    ) : null}
-                  </div>
-                  <div className="form-outline  col text-right my-5 ">
-                    <div>
-                      <label for="formFileLg" class="form-label">
-                        لطفا استاد ضمیمه کړئ/ لطفا اسناد را ضمیمه نماید!
-                      </label>
-
-                      <input
-                        class="form-control form-control-lg"
-                        id="formFileLg"
-                        multiple
-                        type="file"
-                        onChange={(e) => {
-                          setSelectedFile([...e.target.files]);
-                        }}
+                    </div>
+                    <div className="pashto-text-div-inner">
+                      <img
+                        src={ImratName_Pashto}
+                        className="pashto_heading_img"
                       />
+                      <p className="m-0 text-right  pashto_headline_text">
+                        د تخنیکي او مسلکي زده کړو اداره
+                      </p>
                     </div>
                   </div>
-                  <hr />
-                  <br />
-                  <br />
-                  <br />
-                  <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
-                    <div className="text-right  ml-5 pl-5 col">
-                      <button
-                        type="button"
-                        class="btn bg-primary text-right px-5 ml-5"
-                        data-dismiss="modal"
-                        onClick={() => {
-                          setSentMatkobSuccessResponse(null);
-                        }}
-                      >
-                        ټرل/ بستن
-                      </button>
+
+                  <div className=" pt-4  english_headline_div   col-md-4">
+                    <h4 className=" text-center m-0 english_headline_text">
+                      Islamic Imarat of Afghanistan Technical & Vocational
+                      Education Training Authority
+                    </h4>
+                  </div>
+
+                  <div className="col-md-4 col-xl-4 col-sm-6 persian_headline_div">
+                    <div className=" persian-text-div-inner ">
+                      <img src={ImratName} className="persian_headline_img " />
+                      <p className="m-0  persian_headline_text">
+                        اداره تعلیمات تخنیکی و مسلکی
+                      </p>
                     </div>
-                    {sentMatkobSuccessResponse !==
-                    "Maktob Sent successfully" ? (
-                      <div className="text-left  col">
-                        <button
-                          onClick={() => {
-                            handleSendMaktob();
-                          }}
-                          class="btn bg-primary text "
-                        >
-                          لیږل / ارسال
-                        </button>
+                    <div className="imarat_logo px-0">
+                      <img src={Logo} alt="" min-width="100" height="80" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="date_type_no_div col-12 ">
+                  <div className="maktob_no col-4 align-self-end">
+                    <label>{islangPashto ? "ګڼه" : "شماره"}:</label>
+                    <p>
+                      &#160;
+                      {maktobId && maktobId.length < 15
+                        ? uniquemaktob?.MaktobNo
+                        : formData.maktobNo}
+                    </p>
+                  </div>
+
+                  <div className="owner col-4">
+                    <div>
+                      {islangPashto
+                        ? userData.HigherAuthorityPashto
+                        : userData.HigherAuthority}
+                    </div>
+                    <div>
+                      {islangPashto
+                        ? userData.PresidencyNamePashto
+                        : userData.PresidencyName}
+                    </div>
+                    <div>{userData.Directorate}</div>
+
+                    <div>
+                      {islangPashto ? " اجرائیه مدیریت" : "مدیریت اجرائیه"}
+                    </div>
+                  </div>
+
+                  <div className=" col-4 date_type_div align-self-end ">
+                    <div className="date d-flex justify-content-end  ">
+                      <label htmlFor="">
+                        {islangPashto ? "نیټه" : "تاریخ"}:
+                      </label>
+                      <p>
+                        &#160;
+                        {maktobId && maktobId.length < 15
+                          ? uniquemaktob?.MaktobDate
+                          : formData.maktobDate}
+                      </p>
+                    </div>
+                    <div className="maktob_type_div d-flex justify-content-end">
+                      <div className="maktob_type text-left">
+                        <div className="px-2">
+                          <label className="">عادی</label>
+
+                          <input
+                            className="maktob-type-check m-1 "
+                            type="checkbox"
+                            value=""
+                            id="matkobType"
+                            checked={
+                              maktobId && maktobId.length < 15
+                                ? uniquemaktob?.MaktobType === "عادی"
+                                : formData.maktobType === "عادی" ||
+                                  formData.maktobType === undefined
+                            }
+                          />
+                        </div>
+                        <div className="px-2">
+                          <label className="">عاجل</label>
+
+                          <input
+                            className="maktob-type-check m-1 "
+                            type="checkbox"
+                            value=""
+                            id="matkobType"
+                            checked={
+                              maktobId && maktobId.length < 15
+                                ? uniquemaktob?.MaktobType === "عاجل"
+                                : formData.maktobType === "عاجل"
+                            }
+                          />
+                        </div>
+                        <div className="px-2">
+                          <label className="">محرم</label>
+
+                          <input
+                            className="maktob-type-check m-1 "
+                            type="checkbox"
+                            value=""
+                            id="matkobType"
+                            checked={
+                              maktobId && maktobId.length < 15
+                                ? uniquemaktob?.MaktobType === "محرم"
+                                : formData.maktobType === "محرم"
+                            }
+                          />
+                        </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="divider">
+                  <Divider className="divider" />
+                </div>
+
+                <div className="body_of_maktob ">
+                  <div className="audiance">
+                    {" "}
+                    <p>
+                      {" "}
+                      {maktobId && maktobId.length < 15
+                        ? uniquemaktob?.Recipent
+                        : formData.recipent}
+                    </p>
+                  </div>
+                  <div className="greating">
+                    <p>
+                      ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
+                    </p>
+                  </div>
+
+                  <div className="subject_of_maktob">
+                    <label> موضوع </label>
+                    <p>
+                      :&#160;&#160;{" "}
+                      {maktobId && maktobId.length < 15
+                        ? uniquemaktob?.Subject
+                        : formData.subject}{" "}
+                    </p>
+                  </div>
+                  <div className="mohtarama">
+                    <p>محترما:</p>
+                  </div>
+                  <div className="matktob_context">
+                    <p>
+                      {" "}
+                      {maktobId && maktobId.length < 15
+                        ? uniquemaktob?.Context
+                        : formData.context}
+                    </p>
+                  </div>
+
+                  <br />
+                  <div className="closing_signature d-flex">
+                    <div className="col-4">
+                      {IsMaktobSent === "ItsReceivedMaktob" &&
+                        molihizaShodServerData === true && (
+                          <div className="text-right ">
+                            <div className="text-center molahizashod mt-5">
+                              ملا حظه شد
+                            </div>
+                            <p
+                              style={{
+                                fontSize: "15px",
+                                fontFamily: "sans-serif",
+                              }}
+                              className="text-center"
+                            >
+                              12-24-1444
+                            </p>
+
+                            <p
+                              style={{
+                                fontSize: "15px",
+                                fontFamily: "sans-serif",
+                              }}
+                            >
+                              آمریت محترم نظارت و ارزیابی در زمینه اجرات اصولی
+                              نماید
+                            </p>
+                          </div>
+                        )}
+                    </div>
+                    <div className="col-4">
+                      <p>والسلام</p>
+
+                      <p>
+                        {islangPashto
+                          ? userData.PresidentNamePashto
+                          : userData.PresidentName}
+                      </p>
+                      <p>
+                        {islangPashto
+                          ? userData.PositionTitlePashto
+                          : userData.PositionTitle}
+                      </p>
+                    </div>
+                    <div className="col-4"></div>
+                  </div>
+                </div>
+
+                <div className="copy_to_div d-flex align-items-start flex-column ">
+                  {copyToRecipentsJustLabel_1.length > 0 ? (
+                    <div className="copy_to_title align-self-start">
+                      <p>کاپي :</p>
+                    </div>
+                  ) : null}
+                  <div className="copy_to_body ">
+                    {isDeputOrAdvisoryChecked ? (
+                      <>
+                        <div className="copy_body_item">
+                          {arrayA.map((item, index) => (
+                            <p key={index} className="copy_body_item_text">
+                              {item}
+                            </p>
+                          ))}
+                        </div>
+                        <div className="copy_body_item">
+                          {arrayB.map((item, index) => (
+                            <p key={index} className="copy_body_item_text">
+                              {item}
+                            </p>
+                          ))}
+                        </div>
+
+                        <div className="copy_body_item">
+                          {arrayC.map((item, index) => (
+                            <p key={index} className="copy_body_item_text">
+                              {item}
+                            </p>
+                          ))}
+                        </div>
+                      </>
                     ) : (
-                      <div>
-                        <button className="btn disabled">
-                          مکتبوب په بریالیتوب سره ولیږل سو/مکتوب موفقانه ارسال
-                          شد
-                        </button>
-                      </div>
+                      <>
+                        {" "}
+                        <div className="copy_body_item">
+                          {copyToRecipentsJustLabel_1
+                            .slice(0, 8)
+                            .map((item, index) => (
+                              <p key={index} className="copy_body_item_text">
+                                {item}
+                              </p>
+                            ))}
+                        </div>
+                        <div className="copy_body_item">
+                          {copyToRecipentsJustLabel_1
+                            .slice(8, 16)
+                            .map((item, index) => (
+                              <p key={index} className="copy_body_item_text">
+                                {item}
+                              </p>
+                            ))}
+                        </div>
+                        <div className="copy_body_item">
+                          {copyToRecipentsJustLabel_1
+                            .slice(16, 24)
+                            .map((item, index) => (
+                              <p key={index} className="copy_body_item_text">
+                                {item}
+                              </p>
+                            ))}
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
+                <div className="footer_divider">
+                  <Divider className="" />
+                </div>
 
-          {showDeleteConfirmation && (
-            <div className="divForBackDrop">
-              <div className="confirmation-modal">
-                <p className="">{submissionMessage}</p>
-                <div className="button-container">
-                  <button
-                    className="confirm-button bg-primary"
-                    onClick={() => {
-                      handleDeleteConfirmation();
-                      window.location.reload(true);
-                    }}
-                  >
-                    بیرته / برگشت
-                  </button>
+                <div className="footer_div">
+                  <div className="footer_div_content">
+                    <div className="footer-item">
+                      {islangPashto
+                        ? "پته: کارته چهار، د لوړو زده کړو وزارت څیرمه- کابل- افغانستان "
+                        : "آدرس: کارته چهار، جوار وزارت تحصیلات عالی- کابل- افغانستان "}
+
+                      {/* */}
+                    </div>
+                    <div className="footer-item">Email: {userData.Email}</div>
+                    <div className="footer-item">Tel: {userData.PhoneNo}</div>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              {IsMaktobSent === "ItsReceivedMaktob" &&
+                molihizaShodServerData === false && (
+                  <div className="col-  main_container border rounded">
+                    <Formik
+                      onSubmit={handleMolahizaShod}
+                      initialValues={{
+                        molihizaTitle: "ملاحظه شد",
+                        molahizaContext:
+                          "آمریت مربوطه در زمینه اجرأت اصولی نمایید",
+                      }}
+                      validationSchema={malahizaShodValidationSchema}
+                      enableReinitialize={true}
+                    >
+                      {({
+                        values,
+                        setFieldValue,
+                        setFieldTouched,
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        errors,
+                        touched,
+                      }) => (
+                        <Form>
+                          <div className="form-outline  col text-right">
+                            <label
+                              className="form-label mr-3"
+                              htmlFor="subject"
+                            >
+                              عنوان
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginInline: "5px",
+                                  paddingTop: "5px",
+                                }}
+                              >
+                                *
+                              </span>
+                            </label>
+                            <input
+                              type="text"
+                              id="molihizaTitle"
+                              name="molihizaTitle"
+                              className={`form-control form-select-lg ${
+                                errors.molihizaTitle && touched.molihizaTitle
+                                  ? "is-invalid form-select-lg    "
+                                  : ""
+                              }`}
+                              value={values.molihizaTitle}
+                              onChange={(e) =>
+                                setFieldValue("molihizaTitle", e.target.value)
+                              }
+                              onBlur={() =>
+                                setFieldTouched("molihizaTitle", true)
+                              }
+                            />
+                            {errors.molihizaTitle && touched.molihizaTitle ? (
+                              <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                                {errors.molihizaTitle}
+                              </div>
+                            ) : null}
+                          </div>
+
+                          <div className="form-outline  col text-right my-5">
+                            <label
+                              className="form-label mr-3"
+                              htmlFor="subject"
+                            >
+                              متن
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginInline: "5px",
+                                  paddingTop: "5px",
+                                }}
+                              >
+                                *
+                              </span>
+                            </label>
+                            <textarea
+                              type="textarea"
+                              rows={4}
+                              id="molahizaContext"
+                              name="molahizaContext"
+                              className={`form-control form-select-lg ${
+                                errors.molahizaContext &&
+                                touched.molahizaContext
+                                  ? "is-invalid form-select-lg    "
+                                  : ""
+                              }`}
+                              value={values.molahizaContext}
+                              onChange={(e) =>
+                                setFieldValue("molahizaContext", e.target.value)
+                              }
+                              onBlur={() =>
+                                setFieldTouched("molahizaContext", true)
+                              }
+                            />
+                            {errors.molahizaContext &&
+                            touched.molahizaContext ? (
+                              <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                                {errors.molahizaContext}
+                              </div>
+                            ) : null}
+                          </div>
+
+                          <div className="row">
+                            <div className="text-left col"></div>
+                            <div className="text-left col">
+                              <button
+                                type="submit"
+                                className=" btn-sm btn bg-primary  px-5 py-2 ml-5"
+                              >
+                                ثبت
+                              </button>
+                            </div>
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
+                  </div>
+                )}
+              {(!maktobId || maktobId?.length > 15) && (
+                <div className=" d-flex container  print_btn_div ">
+                  <div className=" col-4 text-right ">
+                    <button
+                      onClick={() => {
+                        setIsFromState(true);
+                        setUniquemaktob(initialValues);
+                      }}
+                      className=" print-button btn bg-primary px-5"
+                    >
+                      مخکنۍ صفحه/ صفحه قبلی
+                    </button>
+                  </div>
+                  <div className="col-8 text-left">
+                    <button
+                      className="print-button btn bg-primary px-5"
+                      onClick={() => {
+                        onStoreData();
+                        gettingSpecificMaktob();
+                      }}
+                    >
+                      ثبت
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        handlePrint();
+                        onStoreData();
+                      }}
+                      className="print-button btn bg-primary px-5 ml-5"
+                    >
+                      پرنت و ثبت
+                    </button>
+                  </div>
+                </div>
+              )}
+              {maktobId?.length < 15 && (
+                <>
+                  <div className="container d-flex  print_btn_div   ">
+                    <div className=" col-6 text-right">
+                      <button
+                        onClick={() => {
+                          {
+                            window.history.go(-1);
+                          }
+                        }}
+                        className="print-button-view btn bg-primary px-5 "
+                      >
+                        مخکنۍ صفحه/ صفحه قبلی
+                      </button>
+                    </div>
+                    <div className="text-left col-6">
+                      {IsMaktobSent === "No" && (
+                        <button
+                          className=" text-right btn bg-primary px-5  mx-4 "
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#exampleModalCenter"
+                        >
+                          لیږل / ارسال
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          {
+                            handlePrint();
+                          }
+                        }}
+                        className=" text-right btn bg-primary px-5  "
+                      >
+                        پرنت
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+              {/* Modal for Sending Maktob */}
+              <div
+                class="modal fade"
+                id="exampleModalCenter"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true"
+              >
+                <div
+                  class="modalDialog modal-dialog-center mt-5"
+                  role="document"
+                >
+                  <div class="modal-content px-5 ">
+                    <div class="modalHeader px-5 mt-4">
+                      <h1 class="modalTitle" id="exampleModalLongTitle">
+                        د مکتبول لیږل/ارسال مکتوب
+                      </h1>
+                    </div>
+                    <hr />
+                    <div class="modal-body mb-5">
+                      <div className="form-outline col text-right mb-4">
+                        <label className="form-label mr-3" htmlFor="subject">
+                          مخاطب
+                          <span
+                            style={{
+                              color: "red",
+                              marginInline: "5px",
+                              paddingTop: "5px",
+                            }}
+                          >
+                            *
+                          </span>
+                        </label>
+                        <Select
+                          dropdownRender={(menu) => (
+                            <div style={{ textAlign: "right" }}>
+                              {React.cloneElement(menu, {
+                                style: { textAlign: "right" },
+                              })}
+                            </div>
+                          )}
+                          mode="tags"
+                          style={{
+                            width: "100%",
+                          }}
+                          onChange={handleMaktobRecievers}
+                          onClick={() => {
+                            setErrorMessage(null);
+                          }}
+                          tokenSeparators={[","]}
+                          options={presidenciesSendingDocumentselectingOption}
+                        />
+                        {errorMessage ? (
+                          <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                            {errorMessage}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="form-outline  col text-right my-5 ">
+                        <div>
+                          <label for="formFileLg" class="form-label">
+                            لطفا استاد ضمیمه کړئ/ لطفا اسناد را ضمیمه نماید!
+                          </label>
+
+                          <input
+                            class="form-control form-control-lg"
+                            id="formFileLg"
+                            multiple
+                            type="file"
+                            onChange={(e) => {
+                              setSelectedFile([...e.target.files]);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <hr />
+                      <br />
+                      <br />
+                      <br />
+                      <div class="d-flex text-right p-5 mx-5 mb-5 mt-5 row">
+                        <div className="text-right  ml-5 pl-5 col">
+                          <button
+                            type="button"
+                            class="btn bg-primary text-right px-5 ml-5"
+                            data-dismiss="modal"
+                            onClick={() => {
+                              setSentMatkobSuccessResponse(null);
+                            }}
+                          >
+                            ټرل/ بستن
+                          </button>
+                        </div>
+                        {sentMatkobSuccessResponse !==
+                        "Maktob Sent successfully" ? (
+                          <div className="text-left  col">
+                            <button
+                              onClick={() => {
+                                handleSendMaktob();
+                              }}
+                              class="btn bg-primary text "
+                            >
+                              لیږل / ارسال
+                            </button>
+                          </div>
+                        ) : (
+                          <div>
+                            <button className="btn disabled">
+                              مکتبوب په بریالیتوب سره ولیږل سو/مکتوب موفقانه
+                              ارسال شد
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {showDeleteConfirmation && (
+                <div className="divForBackDrop">
+                  <div className="confirmation-modal">
+                    <p className="">{submissionMessage}</p>
+                    <div className="button-container">
+                      <button
+                        className="confirm-button bg-primary"
+                        onClick={() => {
+                          handleDeleteConfirmation();
+                          window.location.reload(true);
+                        }}
+                      >
+                        بیرته / برگشت
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </>
       )}

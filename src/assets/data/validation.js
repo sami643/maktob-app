@@ -58,3 +58,12 @@ export const LoginValidationSchema = Yup.object().shape({
 export const recipentPresidenciesSchema = Yup.object().shape({
   receipentresidencies: Yup.string().required("مخاطب اړین دی/ مخاطب ضروری است"),
 });
+
+export const malahizaShodValidationSchema = Yup.object().shape({
+  molihizaTitle: Yup.string().required(
+    "د ملاحظه عنوان اړین دی/ عنوان ملاحظه ضروری است"
+  ),
+  molahizaContext: Yup.string().required(
+    "د ملاحظه متن اړین دی/ متن ملاحظه ضروری است"
+  ),
+});

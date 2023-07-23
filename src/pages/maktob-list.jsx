@@ -10,7 +10,9 @@ import { BsPencilSquare } from "react-icons/bs";
 import { FiEye } from "react-icons/fi";
 import "./pages.css";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 const MaktobList = () => {
+  const navigate = useNavigate();
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
@@ -137,7 +139,9 @@ const MaktobList = () => {
       width: "30%",
       render: (text, record) => (
         <>
-          <a href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}`}>
+          <a
+            href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}&PN=${record.UserID}`}
+          >
             {text}
           </a>
         </>
@@ -200,8 +204,8 @@ const MaktobList = () => {
     axios
       .post("/api/maktob/maktobs", {
         data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
+          userId: userData.UserId,
+          presidencyName: userData.PresidencyName,
           userStatus: "owner",
           newMaktob: true,
         },
@@ -219,8 +223,8 @@ const MaktobList = () => {
     axios
       .post("/api/maktob/maktobs", {
         data: {
-          userId: userData.userId,
-          presidencyName: userData.presidencyName,
+          userId: userData.UserId,
+          presidencyName: userData.PresidencyName,
           userStatus: "owner",
           maktobSent: true,
         },
@@ -234,11 +238,16 @@ const MaktobList = () => {
       });
   };
 
+  // const handleProps = (record) => {
+  //   // Navigate to the /profile route with data
+  //   console.log(record, "Records00000000000000");
+  // };
+
   const gettingRecievedMakbtobs = () => {
     axios
       .post("/api/maktob/received-maktobs", {
         data: {
-          allReceivers: userData.presidencyName,
+          allReceivers: userData.PresidencyName,
         },
       })
       .then((res) => {
