@@ -109,19 +109,38 @@ const MaktobList = () => {
         text
       ),
   });
-
   console.log("recievedMakobListItems", recievedMakobListItems);
 
+  
   const columns = [
-    {
-      title: "ګڼه/شماره",
-      dataIndex: "MaktobNo",
-      key: "MaktobNo",
-      width: "15%",
-      ...getColumnSearchProps("MaktobNo"),
-      sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
-      sortDirections: ["descend", "ascend"],
-    },
+    activeList === "recievedMaktobs"
+      ? {
+          title: "وارده",
+          dataIndex: "MaktobNo",
+          key: "MaktobNo",
+          width: "15%",
+          ...getColumnSearchProps("MaktobNo"),
+          sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
+          sortDirections: ["descend", "ascend"],
+        }
+      : {},
+    activeList !== "recievedMaktobs"
+      ? {
+          title: "ګڼه/شماره",
+          dataIndex: "MaktobNo",
+          key: "MaktobNo",
+          width: "15%",
+          ...getColumnSearchProps("MaktobNo"),
+          sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
+          sortDirections: ["descend", "ascend"],
+        }
+      : {
+          title: "ګڼه/شماره",
+          dataIndex: "MaktobNo",
+          key: "MaktobNo",
+          width: "15%",
+          ...getColumnSearchProps("MaktobNo"),
+        },
 
     {
       title: "مخاطب",
@@ -237,11 +256,6 @@ const MaktobList = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   };
-
-  // const handleProps = (record) => {
-  //   // Navigate to the /profile route with data
-  //   console.log(record, "Records00000000000000");
-  // };
 
   const gettingRecievedMakbtobs = () => {
     axios

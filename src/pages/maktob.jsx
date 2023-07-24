@@ -10,6 +10,9 @@ import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { Button, Modal, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import {
   presidencies,
@@ -46,6 +49,8 @@ const Maktob = () => {
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  const [userDataa_1, setUserData_1] = useState(JSON.parse(storedUserData));
+
   // const localStorage = JSON.parse(localStorage)
   const [formData, setFormData] = useState("");
   const [initialValues, setInitialValues] = useState("");
@@ -67,10 +72,12 @@ const Maktob = () => {
   ] = useState([]);
   const [islangPashto, setIsLangPashto] = useState(false);
   const [loading, setloading] = useState(true);
-
-  // if (IsMaktobSent === "recievedMaktobs") {
-  //   setUserData();
-  // }
+  const [maktobJustifyLocalStorageData] = useState(
+    JSON.parse(localStorage.getItem("molahizaShodData"))
+  );
+  const [isMaktobJustified, setIsMaktobJustified] = useState(false);
+  const [serverJustificationData, setServerJustificationData] = useState("");
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const presidenciesSendingDocumentselectingOption =
     presidenciesSendingDocumentSelectionOption.filter(
@@ -263,7 +270,8 @@ const Maktob = () => {
     setIsFromState(false);
     setFormData(values);
     setInitialValues(values);
-
+    setloading(false);
+    console.log(userData, "USerId");
     // Language Detecter
     console.log("innerPart si Called");
     const charactersToDetect = "ټډږړښڅځېۍڼګ";
@@ -287,10 +295,6 @@ const Maktob = () => {
     setShowDeleteConfirmation(false);
   };
 
-  console.log(
-    "PresidencyNameFromReceivedMaktobList",
-    PresidencyNameFromReceivedMaktobList
-  );
   const gettingSpecificMaktob = () => {
     axios
       .post("/api/maktob/uniquemaktob", {
@@ -333,6 +337,7 @@ const Maktob = () => {
     if (PresidencyNameFromReceivedMaktobList) {
       gettingUserDataForRecievedMaktob();
     }
+    gettingMaktobJustification();
   }, []);
 
   const updateInitialValues = {
@@ -400,12 +405,61 @@ const Maktob = () => {
     }
   };
 
-  let molihizaShodServerData = false;
-  const handleMolahizaShod = () => {
-    console.log(
-      "handleMoalhizasdfgdgsdfgsfdddddddddd23333333333333333333333333333333333333333333333333333333333333333"
-    );
+  const handleMolahizaShod = (values) => {
+    axios
+      .post("/api/justification/maktob", {
+        data: {
+          molahizaContext: values.molahizaContext,
+          molahizaTitle: values.molihizaTitle,
+          maktobNo: maktobId,
+          maktobSenderPresidency: PresidencyNameFromReceivedMaktobList,
+          maktobReceiverPresidency: userDataa_1.UserId,
+        },
+      })
+      .then((res) => {
+        console.log("response is: ", res.data);
+        localStorage.setItem("molahizaShodData", JSON.stringify(values));
+        setIsMaktobJustified(true);
+        message.success({
+          content: res.data.message,
+          className: "error_custom_message",
+        });
+      })
+      .catch((err) => {
+        console.log("ErorrMessage: ", err.response.data.message);
+        message.error({
+          content: err.response.data.message,
+          className: "error_custom_message",
+        });
+      });
   };
+
+  const gettingMaktobJustification = () => {
+    if (IsMaktobSent === "ItsReceivedMaktob") {
+      axios
+        .post("/api/justification/gettingJustification", {
+          data: {
+            maktobNo: maktobId,
+            maktobSenderPresidency: PresidencyNameFromReceivedMaktobList,
+            maktobReceiverPresidency: userDataa_1.UserId,
+          },
+        })
+        .then((res) => {
+          console.log("response is: ", res.data);
+          if (res.data.maktobJustified === null) {
+            setIsMaktobJustified(false);
+          } else {
+            setIsMaktobJustified(true);
+          }
+          setServerJustificationData(res.data.maktobJustified);
+        })
+        .catch((err) => {
+          console.log("ErorrMessage: ", err.data.message);
+          setIsMaktobJustified(false);
+        });
+    }
+  };
+
   return (
     <Sidebar>
       {isFormState && (!maktobId || maktobId?.length > 15) ? (
@@ -1089,10 +1143,10 @@ const Maktob = () => {
                   <div className="closing_signature d-flex">
                     <div className="col-4">
                       {IsMaktobSent === "ItsReceivedMaktob" &&
-                        molihizaShodServerData === true && (
+                        isMaktobJustified === true && (
                           <div className="text-right ">
                             <div className="text-center molahizashod mt-5">
-                              ملا حظه شد
+                              {serverJustificationData.MolahizaTitle}
                             </div>
                             <p
                               style={{
@@ -1109,9 +1163,9 @@ const Maktob = () => {
                                 fontSize: "15px",
                                 fontFamily: "sans-serif",
                               }}
+                              className="text-center"
                             >
-                              آمریت محترم نظارت و ارزیابی در زمینه اجرات اصولی
-                              نماید
+                              {serverJustificationData.MolahizaContext}
                             </p>
                           </div>
                         )}
@@ -1220,14 +1274,17 @@ const Maktob = () => {
               </div>
 
               {IsMaktobSent === "ItsReceivedMaktob" &&
-                molihizaShodServerData === false && (
+                isMaktobJustified === false && (
                   <div className="col-  main_container border rounded">
                     <Formik
                       onSubmit={handleMolahizaShod}
                       initialValues={{
-                        molihizaTitle: "ملاحظه شد",
+                        molihizaTitle:
+                          maktobJustifyLocalStorageData?.molihizaTitle ||
+                          "ملاحظه شد",
                         molahizaContext:
-                          "آمریت مربوطه در زمینه اجرأت اصولی نمایید",
+                          maktobJustifyLocalStorageData?.molahizaContext ||
+                          "در زمینه اجرأت اصولی نمایید",
                       }}
                       validationSchema={malahizaShodValidationSchema}
                       enableReinitialize={true}
