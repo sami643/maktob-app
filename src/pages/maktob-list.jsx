@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { Divider, Input, Space, Table, Button, message } from "antd";
 import Sidebar from "../components/Sidebar";
 import { SearchOutlined } from "@ant-design/icons";
@@ -11,6 +17,7 @@ import { FiEye } from "react-icons/fi";
 import "./pages.css";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getMaktobs } from "../api/utils";
 const MaktobList = () => {
   const navigate = useNavigate();
   // Retrieving data from the LocalStorage
@@ -43,7 +50,7 @@ const MaktobList = () => {
     }
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = useCallback((dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -108,10 +115,10 @@ const MaktobList = () => {
       ) : (
         text
       ),
-  });
+  }));
+
   console.log("recievedMakobListItems", recievedMakobListItems);
 
-  
   const columns = [
     activeList === "recievedMaktobs"
       ? {
@@ -219,24 +226,10 @@ const MaktobList = () => {
         },
   ];
 
-  const gettingNewMakbtobs = () => {
-    axios
-      .post("/api/maktob/maktobs", {
-        data: {
-          userId: userData.UserId,
-          presidencyName: userData.PresidencyName,
-          userStatus: "owner",
-          newMaktob: true,
-        },
-      })
-      .then((res) => {
-        console.log("response is1111111111111111: ", res.data);
-        setNewMaktobsListItems(res.data.Maktobs_List_data);
-        setListFinalItems(res.data.Maktobs_List_data);
-      })
-      .catch((err) => {
-        console.log("Axios Request Error After Calling API", err.response);
-      });
+  const gettingNewMakbtobs = async () => {
+    const maktobs = await getMaktobs(userData.UserId, userData.PresidencyName);
+    setNewMaktobsListItems(maktobs);
+    setListFinalItems(maktobs);
   };
   const gettingSentMakbtobs = () => {
     axios
