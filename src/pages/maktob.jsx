@@ -9,10 +9,8 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { Button, Modal, Upload, Select } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { toast } from "react-toastify";
+
 
 import {
   presidencies,
@@ -56,7 +54,7 @@ const Maktob = () => {
   const [initialValues, setInitialValues] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isFormState, setIsFromState] = useState(true);
-  const [uniquemaktob, setUniquemaktob] = useState({});
+  const [uniquemaktob, setUniquemaktob] = useState("");
   const [btnChecked, setBtnChecked] = useState(false);
   const [fetchedCopyTo, setfetchedCopyTo] = useState([]);
   const [selectedPresidencies, setSelectedPresidencies] = useState([]);
@@ -332,31 +330,28 @@ const Maktob = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   };
+  const unseenReceivedMaktob = () => {
+    axios
+      .post("/api/maktob/unseen-doc", {
+        data: {
+          unseenDoc: userData.PresidencyName,
+        },
+      })
+      .then((res) => {
+        console.log("Responce of unseend message", res);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
   useEffect(() => {
     if (maktobId) gettingSpecificMaktob();
     if (PresidencyNameFromReceivedMaktobList) {
       gettingUserDataForRecievedMaktob();
     }
     gettingMaktobJustification();
+    unseenReceivedMaktob();
   }, []);
-
-  const updateInitialValues = {
-    maktobNo: uniquemaktob.MaktobNo || uniquemaktob.maktobNo,
-    maktobDate: uniquemaktob.MaktobDate || uniquemaktob.maktobDate,
-    maktobType: uniquemaktob.MaktobType || uniquemaktob.maktobType,
-    recipent: uniquemaktob.Recipent || uniquemaktob.recipent,
-    subject: uniquemaktob.Subject || uniquemaktob.subject,
-    context: uniquemaktob.Context || uniquemaktob.context,
-    copyTo: uniquemaktob.CopyTo || uniquemaktob.copyTo,
-  };
-  const initialStateValue = {
-    maktobNo: initialValues.maktobNo || totalMaktob,
-    maktobDate: initialValues.maktobDate,
-    maktobType: initialValues.maktobType,
-    recipent: initialValues.recipent,
-    subject: initialValues.subject,
-    context: initialValues.context,
-  };
 
   // Select Options
   const handleMaktobRecievers = (value) => {
@@ -365,7 +360,8 @@ const Maktob = () => {
   };
 
   const handleSendMaktob = async () => {
-    console.log(selectedFile, "handleUploadFile");
+    console.log(userData, "handleUploadFile");
+
     if (selectedPresidencieswhileSendigMaktob.length === 0) {
       setErrorMessage(
         "لطفا خپل مخاطب انتخاب کړئ/ لطفا مخاطب تانرا انتخاب نمایید"
@@ -373,6 +369,16 @@ const Maktob = () => {
     } else {
       const formData = new FormData();
       selectedFile.forEach((file) => formData.append("selectedFile", file));
+
+      const modifiedData = selectedPresidencieswhileSendigMaktob.map(
+        (presidency) => {
+          const concatenatedKey = Object.values(presidency).join("");
+          return {
+            Receiver: concatenatedKey,
+            seen: false,
+          };
+        }
+      );
       try {
         await axios({
           method: "post",
@@ -384,10 +390,10 @@ const Maktob = () => {
           axios
             .post("/api/maktob/send-matkob", {
               data: {
-                userId: userData.UserId,
+                userId: userData.UserID,
                 maktobNo: maktobId,
                 presidencyName: userData.PresidencyName,
-                allReceivers: selectedPresidencieswhileSendigMaktob,
+                allReceivers: modifiedData,
                 attachedDocmuents: response.data.file_urls,
               },
             })
@@ -458,6 +464,24 @@ const Maktob = () => {
           setIsMaktobJustified(false);
         });
     }
+  };
+
+  const updateInitialValues = {
+    maktobNo: uniquemaktob.MaktobNo || uniquemaktob.maktobNo,
+    maktobDate: uniquemaktob.MaktobDate || uniquemaktob.maktobDate,
+    maktobType: uniquemaktob.MaktobType || uniquemaktob.maktobType,
+    recipent: uniquemaktob.Recipent || uniquemaktob.recipent,
+    subject: uniquemaktob.Subject || uniquemaktob.subject,
+    context: uniquemaktob.Context || uniquemaktob.context,
+    copyTo: uniquemaktob.CopyTo || uniquemaktob.copyTo,
+  };
+  const initialStateValue = {
+    maktobNo: initialValues.maktobNo || totalMaktob,
+    maktobDate: initialValues.maktobDate,
+    maktobType: initialValues.maktobType,
+    recipent: initialValues.recipent,
+    subject: initialValues.subject,
+    context: initialValues.context,
   };
 
   return (
