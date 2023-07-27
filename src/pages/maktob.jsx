@@ -9,14 +9,15 @@ import DatePicker from "react-multi-date-picker";
 import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { Button, Modal, Upload, Select } from "antd";
-import "react-toastify/dist/ReactToastify.css";
 
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   presidencies,
   maktobTypeOptions,
   presidenciesForSelectOptions,
   presidenciesSendingDocumentSelectionOption,
+  prsidentsSigns,
 } from "./../assets/data/data.js";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import {
@@ -74,7 +75,8 @@ const Maktob = () => {
     JSON.parse(localStorage.getItem("molahizaShodData"))
   );
   const [isMaktobJustified, setIsMaktobJustified] = useState(false);
-  const [serverJustificationData, setServerJustificationData] = useState("");
+  const [serverJustificationData, setServerJustificationData] = useState({});
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const presidenciesSendingDocumentselectingOption =
@@ -330,27 +332,13 @@ const Maktob = () => {
         console.log("Axios Request Error After Calling API", err.response);
       });
   };
-  const unseenReceivedMaktob = () => {
-    axios
-      .post("/api/maktob/unseen-doc", {
-        data: {
-          unseenDoc: userData.PresidencyName,
-        },
-      })
-      .then((res) => {
-        console.log("Responce of unseend message", res);
-      })
-      .catch((err) => {
-        console.log("Axios Request Error After Calling API", err.response);
-      });
-  };
+
   useEffect(() => {
     if (maktobId) gettingSpecificMaktob();
     if (PresidencyNameFromReceivedMaktobList) {
       gettingUserDataForRecievedMaktob();
     }
     gettingMaktobJustification();
-    unseenReceivedMaktob();
   }, []);
 
   // Select Options
@@ -411,8 +399,8 @@ const Maktob = () => {
     }
   };
 
-  const handleMolahizaShod = (values) => {
-    axios
+  const handleMolahizaShod = async (values) => {
+    await axios
       .post("/api/justification/maktob", {
         data: {
           molahizaContext: values.molahizaContext,
@@ -423,13 +411,10 @@ const Maktob = () => {
         },
       })
       .then((res) => {
-        console.log("response is: ", res.data);
+        console.log("response isBefore: ", res.data.maktobJustified);
+        setServerJustificationData(res.data.maktobJustified);
         localStorage.setItem("molahizaShodData", JSON.stringify(values));
         setIsMaktobJustified(true);
-        message.success({
-          content: res.data.message,
-          className: "error_custom_message",
-        });
       })
       .catch((err) => {
         console.log("ErorrMessage: ", err.response.data.message);
@@ -439,7 +424,7 @@ const Maktob = () => {
         });
       });
   };
-
+  console.log("serverJustificationData", serverJustificationData);
   const gettingMaktobJustification = () => {
     if (IsMaktobSent === "ItsReceivedMaktob") {
       axios
@@ -1190,6 +1175,10 @@ const Maktob = () => {
                               className="text-center"
                             >
                               {serverJustificationData.MolahizaContext}
+                            </p>
+                            <p className="text-center">
+                              {prsidentsSigns[0].name}
+                              <img src={prsidentsSigns[0].src} width="200px" />
                             </p>
                           </div>
                         )}

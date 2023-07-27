@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Divider, Input, Space, Table, Button, message } from "antd";
 import Sidebar from "../components/Sidebar";
 import { SearchOutlined } from "@ant-design/icons";
@@ -36,6 +30,8 @@ const MaktobList = () => {
   const [listFinalItems, setListFinalItems] = useState({});
   const [activeList, setActiveList] = useState("newMaktob");
   const [IsMaktobSent, setIsmaktobSent] = useState("No");
+  const [totalUnseenDoc, setTotalUnseenMaktobs] = useState();
+  const [docSeen, setDocSeen] = useState();
 
   const handleSearch = (selectedKeys, dataIndex) => {
     setSearchText(selectedKeys[0]);
@@ -117,8 +113,6 @@ const MaktobList = () => {
       ),
   }));
 
-  console.log("recievedMakobListItems", recievedMakobListItems);
-
   const columns = [
     activeList === "recievedMaktobs"
       ? {
@@ -167,6 +161,9 @@ const MaktobList = () => {
         <>
           <a
             href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}&PN=${record.UserID}`}
+            onClick={() => {
+              handleDocSeen(record);
+            }}
           >
             {text}
           </a>
@@ -270,11 +267,42 @@ const MaktobList = () => {
   };
   // Integration
   useEffect(() => {
+    unseenReceivedMaktob();
     gettingNewMakbtobs();
     gettingSentMakbtobs();
     gettingRecievedMakbtobs();
   }, []);
 
+  const unseenReceivedMaktob = () => {
+    axios
+      .post("/api/maktob/unseen-doc", {
+        data: {
+          unseenDoc: userData.PresidencyName,
+        },
+      })
+      .then((res) => {
+        console.log("Responce of unseend message", res.data.totalUnseenDoc);
+        setTotalUnseenMaktobs(res.data.totalUnseenDoc);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
+  const handleDocSeen = (record) => {
+    axios
+      .post("/api/maktob/dec-unseen-doc", {
+        data: {
+          unseenDoc: userData.PresidencyName,
+          id: record._id,
+        },
+      })
+      .then((res) => {
+        setSentMaktobsListItems(res.data.Maktobs_List_data);
+      })
+      .catch((err) => {
+        console.log("Axios Request Error After Calling API", err.response);
+      });
+  };
   // Deleting the maktob
   const handleDelete = () => {
     setDeletemaktob(false);
@@ -367,7 +395,7 @@ const MaktobList = () => {
             setIsmaktobSent("Yes");
           }}
         >
-          صادره <span class="badge badge-light">0</span>
+          صادره
           {/* <span className="badge badge-light">0</span> */}
         </button>
         <button
@@ -383,7 +411,7 @@ const MaktobList = () => {
             setIsmaktobSent("ItsReceivedMaktob");
           }}
         >
-          وارده <span className="badge badge-light">4</span>
+          وارده <span className="badge badge-light">{totalUnseenDoc}</span>
         </button>
 
         <Divider />

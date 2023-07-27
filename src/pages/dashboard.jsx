@@ -4,7 +4,9 @@ import Footer from "../components/footer";
 const Dashboard = () => {
   return (
     <Sidebar>
+      
       <Header />
+      
       <div className="main-container text-center">
         <h1>دشبورد</h1>
         <div>

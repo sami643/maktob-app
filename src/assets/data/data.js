@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 // import { AiFillDashboard } from "react-icons/fa/AiFillDashboard";
 import { AiFillDashboard, AiFillFile } from "react-icons/ai";
+import hrSign from "../img/hr.jpg";
 
 export const presidenciesForSelectOptions = [
   {
@@ -452,7 +453,7 @@ export const sidebarMenuItem = [
   },
   {
     path: "/maktoblist",
-    name: "د مکتوبونو ټولګه",
+    name: "د مکتوبونو لست",
     icon: <FaThList />,
   },
   {
@@ -462,7 +463,7 @@ export const sidebarMenuItem = [
   },
   {
     path: "/pishnihadlist",
-    name: "د پیشنهادونو ټولګه",
+    name: "د پیشنهادونو لست",
     icon: <FaThList />,
   },
   {
@@ -472,7 +473,7 @@ export const sidebarMenuItem = [
   },
   {
     path: "/istehlaamlist",
-    name: "د استعلامونو ټولګه",
+    name: "د استعلامونو لست",
     icon: <FaThList />,
   },
   {
@@ -503,3 +504,5 @@ export const maktobTypeOptions = [
   { value: "عاجل", label: "عاجل" },
   { value: "محرم", label: "محرم" },
 ];
+
+export const prsidentsSigns = [{ src: hrSign, name: "رفیع الله ثابت" }];

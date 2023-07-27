@@ -145,6 +145,7 @@ const Sidebar = ({ children }) => {
               </>
             )}
             {children}
+          
           </>{" "}
         </main>
       </div>
