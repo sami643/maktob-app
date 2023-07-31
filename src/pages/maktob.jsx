@@ -44,6 +44,7 @@ const Maktob = () => {
   const searchParams = new URLSearchParams(location.search);
   const IsMaktobSent = searchParams.get("isMaktobSent");
   const PresidencyNameFromReceivedMaktobList = searchParams.get("PN");
+  const receviedMaktobVaridaNo = searchParams.get("VN");
 
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
@@ -76,6 +77,10 @@ const Maktob = () => {
   );
   const [isMaktobJustified, setIsMaktobJustified] = useState(false);
   const [serverJustificationData, setServerJustificationData] = useState({});
+
+  const matchingPresidentSign = prsidentsSigns.find(
+    (president) => president.id === userData.UserID
+  );
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1015,14 +1020,25 @@ const Maktob = () => {
                 </div>
 
                 <div className="date_type_no_div col-12 ">
-                  <div className="maktob_no col-4 align-self-end">
-                    <label>{islangPashto ? "ګڼه" : "شماره"}:</label>
-                    <p>
-                      &#160;
-                      {maktobId && maktobId.length < 15
-                        ? uniquemaktob?.MaktobNo
-                        : formData.maktobNo}
-                    </p>
+                  <div className="col-4 align-self-end bothWaridataAndSadira">
+                    <div className=" d-flex justify-content-start">
+                      <label>{islangPashto ? "ګڼه" : "شماره"}:</label>
+                      <p>
+                        &#160;
+                        {maktobId && maktobId.length < 15
+                          ? uniquemaktob?.MaktobNo
+                          : formData.maktobNo}
+                      </p>
+                    </div>
+                    {IsMaktobSent === "ItsReceivedMaktob" && (
+                      <div className="d-flex justify-content-start">
+                        <label>وارده:</label>
+                        <p>
+                          &#160;
+                          {receviedMaktobVaridaNo}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="owner col-4">
@@ -1177,8 +1193,11 @@ const Maktob = () => {
                               {serverJustificationData.MolahizaContext}
                             </p>
                             <p className="text-center">
-                              {prsidentsSigns[0].name}
-                              <img src={prsidentsSigns[0].src} width="200px" />
+                              {matchingPresidentSign.name}
+                              <img
+                                src={matchingPresidentSign.src}
+                                width="200px"
+                              />
                             </p>
                           </div>
                         )}
