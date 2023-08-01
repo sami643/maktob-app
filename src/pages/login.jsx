@@ -108,6 +108,7 @@ const Login = () => {
                               setFieldValue("userId", e.target.value)
                             }
                             onBlur={() => setFieldTouched("subject", true)}
+                            dir="ltr"
                           />
 
                           {errors.userId && touched.userId ? (
@@ -131,6 +132,7 @@ const Login = () => {
                               setFieldValue("password", e.target.value)
                             }
                             onBlur={() => setFieldTouched("password", true)}
+                            dir="ltr"
                           />
 
                           {errors.password && touched.password ? (

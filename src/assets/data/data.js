@@ -10,6 +10,7 @@ import {
 // import { AiFillDashboard } from "react-icons/fa/AiFillDashboard";
 import { AiFillDashboard, AiFillFile } from "react-icons/ai";
 import hrSign from "../img/hr.jpg";
+import planSign from "../img/plan.jpg";
 
 export const presidenciesForSelectOptions = [
   {
@@ -505,4 +506,8 @@ export const maktobTypeOptions = [
   { value: "محرم", label: "محرم" },
 ];
 
-export const prsidentsSigns = [{ src: hrSign, name: "رفیع الله ثابت" }];
+export const prsidentsSigns = [
+  { src: hrSign, name: "رفیع الله ثابت", id: "hr@tveta.gov.af" },
+  { src: planSign, name: "نیک محمد نیکمل", id: "plan@tveta.gov.af" },
+
+];

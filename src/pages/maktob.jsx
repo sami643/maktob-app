@@ -10,7 +10,7 @@ import arabic from "react-date-object/calendars/arabic";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { Button, Modal, Upload, Select } from "antd";
 
-import "react-toastify/dist/ReactToastify.css";
+
 
 import {
   presidencies,
