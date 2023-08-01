@@ -135,8 +135,8 @@
 
 .persian_headline_text {
   text-align: right;
-  font-size: 1.5vw;
-  font-weight: 900;
+  font-size: 1.4vw;
+  font-weight: 800;
 }
 
 .persian-text-div-inner {
@@ -377,17 +377,6 @@
   /* Other styles for invalid input */
 }
 
-@media print {
-  .sidebar {
-    display: none !important;
-  }
-  .main_container {
-    margin: 0px 15px 0px 0px !important;
-    /* margin: 0px !important; */
-    padding: 0px !important;
-  }
-}
-
 @media screen and (max-width: 768px) {
   .english_headline_div {
     display: none;
@@ -478,7 +467,43 @@ footer {
 .molahizashod {
   text-decoration: underline;
 }
+.imarat_logo img {
+  width: 100px;
+  height: 100px;
+}
 
-/* #exampleModalCenter {
-  z-index: 999;
-} */
+.tvet_logo img {
+  width: 95px;
+  height: 95px;
+}
+
+@media print {
+  .imarat_logo img {
+    width: 250px !important;
+    height: 100px !important;
+  }
+  .tvet_logo img {
+    width: 250px !important;
+    height: 100px !important;
+  }
+
+  .pashto_headline_text {
+    font-size: 20px !important;
+    padding-right: 3px !important;
+  }
+  .persian_headline_text {
+    text-align: right;
+    font-size: 22px;
+  }
+  .sidebar {
+    display: none !important;
+  }
+  .print_btn_div {
+    display: none !important;
+  }
+  .main_container {
+    margin: 0px 15px 0px 0px !important;
+    /* margin: 0px !important; */
+    padding: 0px !important;
+  }
+}

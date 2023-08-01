@@ -979,13 +979,8 @@ const Maktob = () => {
                 <div className="header-body">
                   <div className=" pashto_headling_div col-md-4 col-xl-4 col-sm-6">
                     <div className=" pastho-side ">
-                      <div className="  tvet_logo ">
-                        <img
-                          src={Imarat_Logo}
-                          alt=""
-                          min-width="100"
-                          height="80"
-                        />
+                      <div className=" imarat_logo ">
+                        <img src={Imarat_Logo} alt="" />
                       </div>
                     </div>
                     <div className="pashto-text-div-inner">
@@ -1013,8 +1008,8 @@ const Maktob = () => {
                         اداره تعلیمات تخنیکی و مسلکی
                       </p>
                     </div>
-                    <div className="imarat_logo px-0">
-                      <img src={Logo} alt="" min-width="100" height="80" />
+                    <div className="tvet_logo  px-0">
+                      <img src={Logo} alt="" />
                     </div>
                   </div>
                 </div>
