@@ -11,6 +11,7 @@ import IstehlaamList from "../pages/istehlaam-list";
 import Dashboard from "../pages/dashboard";
 import PageNotFound from "../pages/no-page-found";
 import ReceivedMaktobList from "../pages/received-maktoblist";
+import AddUsers from "../pages/add-user.jsx";
 
 export default function Application() {
   return (
@@ -28,6 +29,7 @@ export default function Application() {
         <Route path="/pishnihad/:pishnihadId" element={<Pishnihad />} />
         <Route path="/istehlaam" element={<Istehlaam />} />
         <Route path="/istehlaamlist" element={<IstehlaamList />} />
+        <Route path="/add-user" element={<AddUsers />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>

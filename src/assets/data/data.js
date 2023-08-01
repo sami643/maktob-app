@@ -482,6 +482,11 @@ export const sidebarMenuItem = [
     name: "پروفایل",
     icon: <FaUserAlt />,
   },
+  {
+    path: "/add-user",
+    name: "addUser",
+    icon: <FaUserAlt />,
+  },
   // {
   //   path: "/logout",
   //   name: "وتل",
@@ -509,5 +514,10 @@ export const maktobTypeOptions = [
 export const prsidentsSigns = [
   { src: hrSign, name: "رفیع الله ثابت", id: "hr@tveta.gov.af" },
   { src: planSign, name: "نیک محمد نیکمل", id: "plan@tveta.gov.af" },
+];
 
+export const userTypeOptions = [
+  { value: "presidency", label: "ریاست" },
+  { value: "directorate", label: "آمریت" },
+  { value: "pazirish", label: "پذیزش" },
 ];

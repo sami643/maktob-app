@@ -12,6 +12,7 @@ import "./pages.css";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getMaktobs } from "../api/utils";
+import { number } from "yup";
 const MaktobList = () => {
   const navigate = useNavigate();
   // Retrieving data from the LocalStorage
@@ -113,116 +114,6 @@ const MaktobList = () => {
       ),
   }));
 
-  const columns = [
-    activeList === "recievedMaktobs"
-      ? {
-          title: "وارده",
-          dataIndex: "MaktobNo",
-          key: "MaktobNo",
-          width: "15%",
-          ...getColumnSearchProps("MaktobNo"),
-          sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
-          sortDirections: ["descend", "ascend"],
-        }
-      : {},
-    activeList !== "recievedMaktobs"
-      ? {
-          title: "ګڼه/شماره",
-          dataIndex: "MaktobNo",
-          key: "MaktobNo",
-          width: "15%",
-          ...getColumnSearchProps("MaktobNo"),
-          sorter: (a, b) => parseInt(a.MaktobNo) - parseInt(b.MaktobNo),
-          sortDirections: ["descend", "ascend"],
-        }
-      : {
-          title: "ګڼه/شماره",
-          dataIndex: "MaktobNo",
-          key: "MaktobNo",
-          width: "15%",
-          ...getColumnSearchProps("MaktobNo"),
-        },
-
-    {
-      title: "مخاطب",
-      dataIndex: "Recipent",
-      key: "Recipent",
-      width: "30%",
-      ...getColumnSearchProps("Recipent"),
-    },
-    {
-      title: "موضوع",
-      dataIndex: "Subject",
-      key: "subject",
-      ...getColumnSearchProps("Subject"),
-
-      width: "30%",
-      render: (text, record) => (
-        <>
-          <a
-            href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}&PN=${record.UserID}`}
-            onClick={() => {
-              handleDocSeen(record);
-            }}
-          >
-            {text}
-          </a>
-        </>
-      ),
-    },
-    {
-      title: "نیټه/ تاریخ",
-      dataIndex: "MaktobDate",
-      key: "MaktobDate",
-      ...getColumnSearchProps("MaktobDate"),
-      width: "15%",
-    },
-
-    activeList === "newMaktob"
-      ? {
-          title: "تغیر/حذف",
-          dataIndex: "operation",
-          key: "opeation",
-          width: "30%",
-          render: (_, record) => (
-            <div className="d-flex">
-              <Divider type="vertical" />
-              <a href={`/maktob/${record._id}`}>
-                {" "}
-                <BsPencilSquare />{" "}
-              </a>
-
-              <Divider type="vertical" />
-              <a
-                onClick={() => openDeleteConfirmation(record.MaktobNo)}
-                className="link  p-0"
-                activeclassName="active"
-              >
-                <BsTrashFill id="deleteIcon" outline />
-              </a>
-            </div>
-          ),
-        }
-      : {
-          title: "ضمیمه",
-          dataIndex: "operation",
-          key: "opeation",
-          width: "30%",
-          render: (_, record) => (
-            <div className="d-flex">
-              {/* <Divider type="vertical" /> */}
-              <a
-                // onClick={() => openDeleteConfirmation(record.MaktobNo)}
-                className="link  py-0 text-center"
-                activeclassName="active"
-              >
-                <FiEye id="deleteIcon" outline />
-              </a>
-            </div>
-          ),
-        },
-  ];
-
   const gettingNewMakbtobs = async () => {
     const maktobs = await getMaktobs(userData.UserId, userData.PresidencyName);
     setNewMaktobsListItems(maktobs);
@@ -255,10 +146,6 @@ const MaktobList = () => {
         },
       })
       .then((res) => {
-        console.log(
-          "response iswerwerwerwerwesdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsd: ",
-          res.data.Maktobs_List_data
-        );
         setRecievedMaktobsListItems(res.data.Maktobs_List_data);
       })
       .catch((err) => {
@@ -349,10 +236,131 @@ const MaktobList = () => {
     setDeletemaktob(true);
   };
 
+  const columns = [
+    activeList === "recievedMaktobs"
+      ? {
+          title: "وارده",
+          dataIndex: "number1",
+          key: "number1",
+          width: "10%",
+          ...getColumnSearchProps("number1"),
+          sorter: (a, b) => b.number1 - a.number1,
+          sortDirections: ["descend", "ascend"],
+        }
+      : {},
+    activeList !== "recievedMaktobs"
+      ? {
+          title: "ګڼه/شماره",
+          dataIndex: "MaktobNo",
+          key: "MaktobNo",
+          width: "10%",
+          ...getColumnSearchProps("MaktobNo"),
+          sorter: (a, b) => b.MaktobNo - a.MaktobNo,
+          sortDirections: ["descend", "ascend"],
+        }
+      : {
+          title: "ګڼه/شماره",
+          dataIndex: "MaktobNo",
+          key: "MaktobNo",
+          width: "10%",
+          ...getColumnSearchProps("MaktobNo"),
+          sorter: (a, b) => b.MaktobNo - a.MaktobNo,
+          sortDirections: ["descend", "ascend"],
+        },
+
+    {
+      title: "مخاطب",
+      dataIndex: "Recipent",
+      key: "Recipent",
+      width: "30%",
+      ...getColumnSearchProps("Recipent"),
+    },
+    {
+      title: "موضوع",
+      dataIndex: "Subject",
+      key: "subject",
+      ...getColumnSearchProps("Subject"),
+
+      width: "30%",
+      render: (text, record) => (
+        <>
+          <a
+            href={`/maktob/${record.MaktobNo}?isMaktobSent=${IsMaktobSent}&PN=${record.UserID}&VN=${record.number1}`}
+            onClick={() => {
+              handleDocSeen(record);
+            }}
+          >
+            {text}
+          </a>
+        </>
+      ),
+    },
+    {
+      title: "نیټه/ تاریخ",
+      dataIndex: "MaktobDate",
+      key: "MaktobDate",
+      ...getColumnSearchProps("MaktobDate"),
+      width: "15%",
+      sorter: (a, b) => b.MaktobDate - a.MaktobDate,
+      sortDirections: ["descend", "ascend"],
+    },
+
+    activeList === "newMaktob"
+      ? {
+          title: "تغیر/حذف",
+          dataIndex: "operation",
+          key: "opeation",
+          width: "30%",
+          render: (_, record) => (
+            <div className="d-flex">
+              <Divider type="vertical" />
+              <a href={`/maktob/${record._id}`}>
+                {" "}
+                <BsPencilSquare />{" "}
+              </a>
+
+              <Divider type="vertical" />
+              <a
+                onClick={() => openDeleteConfirmation(record.MaktobNo)}
+                className="link  p-0"
+                activeclassName="active"
+              >
+                <BsTrashFill id="deleteIcon" outline />
+              </a>
+            </div>
+          ),
+        }
+      : {
+          title: "ضمیمه",
+          dataIndex: "operation",
+          key: "opeation",
+          width: "30%",
+          render: (_, record) => (
+            <div className="d-flex">
+              {/* <Divider type="vertical" /> */}
+              <a
+                // onClick={() => openDeleteConfirmation(record.MaktobNo)}
+                className="link  py-0 text-center"
+                activeclassName="active"
+              >
+                <FiEye id="deleteIcon" outline />
+              </a>
+            </div>
+          ),
+        },
+  ];
+
   const listItemsArray = Object.values(listFinalItems);
-  const sortedListItemsArray = listItemsArray.sort(
-    (a, b) => parseInt(b.MaktobNo) - parseInt(a.MaktobNo)
-  );
+  let sortedListItemsArray;
+  if (activeList === "recievedMaktobs") {
+    sortedListItemsArray = listItemsArray.sort(
+      (a, b) => new Date(b.MaktobDate) - new Date(a.MaktobDate)
+    );
+  } else {
+    sortedListItemsArray = listItemsArray.sort(
+      (a, b) => parseInt(b.MaktobNo) - parseInt(a.MaktobNo)
+    );
+  }
 
   return (
     <Sidebar>
@@ -417,14 +425,16 @@ const MaktobList = () => {
         <Divider />
         <Table
           columns={columns}
-          dataSource={sortedListItemsArray.filter((record) =>
-            columns.some(
-              (column) =>
-                column.hasOwnProperty("onFilter") &&
-                record.hasOwnProperty(column.dataIndex) &&
-                column.onFilter(searchText, record)
+          dataSource={sortedListItemsArray
+            .filter((record) =>
+              columns.some(
+                (column) =>
+                  column.hasOwnProperty("onFilter") &&
+                  record.hasOwnProperty(column.dataIndex) &&
+                  column.onFilter(searchText, record)
+              )
             )
-          )}
+            .map((record, index) => ({ ...record, number1: index + 1 }))}
         />
       </div>
 
