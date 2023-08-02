@@ -11,7 +11,7 @@ import arabic_ar from "react-date-object/locales/arabic_ar";
 
 import {
   presidencies,
-  userTypeOptions,
+  higherAuthorityOptions,
   presidenciesForSelectOptions,
   presidenciesSendingDocumentSelectionOption,
   prsidentsSigns,
@@ -19,7 +19,10 @@ import {
 
 const SignUp = () => {
   const [isBtnChecked, setIsBtnChecked] = useState(false);
+  const [isNameNotExistInList, setIsNameNotExistInList] = useState(false);
+  const [higherAuthority1, setHigherAutority1] = useState("");
   const addUserInitialValue = { userId: "" };
+  console.log("hello", higherAuthority1);
   return (
     <Sidebar>
       <Header />
@@ -76,6 +79,186 @@ const SignUp = () => {
 
                 <div className="form-outline col">
                   <label className="form-label mr-3" htmlFor="subject">
+                    لوړپوړی/ مقام بلندپایه
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="higherAuthority"
+                    value={values.higherAuthority}
+                    name="higherAuthority"
+                    style={{ height: "35px" }}
+                    onChange={(e) => {
+                      setFieldValue("higherAuthority", e.target.value);
+                      setHigherAutority1(e.target.value);
+                    }}
+                    className={`form-control form-select-lg ${
+                      errors.higherAuthority && touched.higherAuthority
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="row mb-4">
+                <div className="col">
+                  <div className="form-outline">
+                    <label className="form-label mr-3" htmlFor="password">
+                      پسورد
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      onChange={(e) =>
+                        setFieldValue("password", e.target.value)
+                      }
+                      onBlur={() => setFieldTouched("password", true)}
+                      className={`form-control ${
+                        errors.password && touched.password ? "is-invalid" : ""
+                      }`}
+                    />
+                    {errors.password && touched.password ? (
+                      <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                        {errors.password}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+                {!isNameNotExistInList ? (
+                  <div className="form-outline col">
+                    <label className="form-label mr-3" htmlFor="subject">
+                      نوم/ نام
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <select
+                      id="userType"
+                      value={values.userType}
+                      name="userType"
+                      style={{ height: "35px" }}
+                      onChange={(e) => {
+                        setFieldValue("higherAuthority", e.target.value);
+                        setHigherAutority1(e.target.value);
+                      }}
+                      className={`form-control form-select-lg ${
+                        errors.userType && touched.userType
+                          ? "is-invalid form-select-lg    "
+                          : ""
+                      }`}
+                      aria-label=".form-select-lg example"
+                    >
+                      {presidencies.map((option) => {
+                        // Check if the option value matches the current user's value
+                        if (option.higherAutority === higherAuthority1) {
+                          return (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          );
+                        }
+                        return null; // Skip rendering this option for the current user
+                      })}
+                    </select>
+                    {errors.userType && touched.userType ? (
+                      <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                        {errors.userType}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <div className="col">
+                    <div className="form-outline">
+                      <label className="form-label mr-3" htmlFor="maktobNo">
+                        نوم/ نام
+                        <span
+                          style={{
+                            color: "red",
+                            marginInline: "5px",
+                            paddingTop: "5px",
+                          }}
+                        >
+                          *
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        id="userId"
+                        name="userId"
+                        onChange={(e) =>
+                          setFieldValue("userId", e.target.value)
+                        }
+                        onBlur={() => setFieldTouched("userId", true)}
+                        className={`form-control ${
+                          errors.userId && touched.userId ? "is-invalid" : ""
+                        }`}
+                      />
+                      {errors.userId && touched.userId ? (
+                        <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                          {errors.userId}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="form-check ">
+                <div style={{ marginTop: "-12px", marginRight: "4px" }}>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckIndeterminate"
+                    onChange={(e) => setIsBtnChecked(e.target.checked)}
+                  />
+                </div>
+                <label
+                  className="form-check-label"
+                  htmlFor="flexCheckIndeterminate"
+                  style={{ marginInline: "24px", fontSize: "11px" }}
+                >
+                  په لست کې شتون نه لري؟
+                </label>
+              </div>
+              <div className="row mb-4">
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
                     ډول/ نوع
                     <span
                       style={{
@@ -100,7 +283,281 @@ const SignUp = () => {
                     }`}
                     aria-label=".form-select-lg example"
                   >
-                    {userTypeOptions.map((option) => (
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="row mb-4">
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+              <div className="row mb-4">
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="row mb-4">
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
+                      <option key={option.value} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.userType && touched.userType ? (
+                    <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                      {errors.userType}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="form-outline col">
+                  <label className="form-label mr-3" htmlFor="subject">
+                    ډول/ نوع
+                    <span
+                      style={{
+                        color: "red",
+                        marginInline: "5px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <select
+                    id="userType"
+                    value={values.userType}
+                    name="userType"
+                    style={{ height: "35px" }}
+                    onChange={(e) => setFieldValue("userType", e.target.value)}
+                    className={`form-control form-select-lg ${
+                      errors.userType && touched.userType
+                        ? "is-invalid form-select-lg    "
+                        : ""
+                    }`}
+                    aria-label=".form-select-lg example"
+                  >
+                    {higherAuthorityOptions.map((option) => (
                       <option key={option.value} value={option.label}>
                         {option.label}
                       </option>
@@ -169,7 +626,7 @@ const SignUp = () => {
                 ) : (
                   <div className="form-outline  col">
                     <label className="form-label mr-3" htmlFor="subject">
-                      مخاطب
+                      معاونیت/ریاست/سکرتریت
                       <span
                         style={{
                           color: "red",
@@ -234,6 +691,7 @@ const SignUp = () => {
                   ) : null}
                 </div>
               </div>
+
               <div className="form-check ">
                 <div style={{ marginTop: "-12px", marginRight: "4px" }}>
                   <input
@@ -252,39 +710,7 @@ const SignUp = () => {
                   په لست کې شتون نه لري؟
                 </label>
               </div>
-              <div className="form-outline mb-4 mt-5">
-                <label className="form-label mr-3" htmlFor="context">
-                  متن
-                  <span
-                    style={{
-                      color: "red",
-                      marginInline: "5px",
-                      paddingTop: "5px",
-                    }}
-                  >
-                    *
-                  </span>
-                </label>
-                <textarea
-                  className={`form-control ${
-                    errors.context && touched.context ? "is-invalid" : ""
-                  }`}
-                  id="context"
-                  name="context"
-                  rows="6"
-                  value={values.context}
-                  onChange={(e) => setFieldValue("context", e.target.value)}
-                  onBlur={() => setFieldTouched("context", true)}
-                ></textarea>
-                {errors.context && touched.context ? (
-                  <div
-                    className="invalid-feedback d-block errorMessageStyle mr-2"
-                    style={{ fontWeight: "bolder" }}
-                  >
-                    {errors.context}
-                  </div>
-                ) : null}
-              </div>
+
               <>
                 <div className="row">
                   <div className=" col container print_btn_div text-right  ">

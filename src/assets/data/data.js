@@ -122,90 +122,132 @@ export const presidencies = [
   {
     value: 1,
     label: "معاونیت محترم امور مالی و اداری",
+    higherAutority: "maali",
+    type: "P",
   },
   {
     value: 2,
     label: "ریاست محترم مالی و حسابی",
+    higherAutority: "maali",
+    type: "P",
   },
   {
     value: 3,
     label: "ریاست محترم خدمات و املاک",
+    higherAutority: "maali",
+    type: "P",
   },
   {
     value: 4,
     label: "ریاست محترم منابع بشری",
+    higherAutority: "maali",
+    type: "P",
   },
   {
     value: 6,
     label: "ریاست محترم دعوت و ارشاد",
+    higherAutority: "maali",
+    type: "P",
   },
   {
     value: 7,
     label: "آمریت محترم تدارکات",
+    higherAutority: "maali",
+    type: "P",
   },
 
   {
     value: 8,
     label: "آمریت محترم ولایات",
+    higherAutority: "maali",
+    type: "P",
   },
   {
     value: 9,
     label: "معاونیت محترم امور تخنیکی و مسلکی",
+    higherAutority: "Technical",
+    type: "P",
   },
   {
     value: 10,
     label: "ریاست محترم امور تعلیمی و تحصیلی",
+    higherAutority: "Technical",
+    type: "P",
   },
 
   {
     value: 11,
     label: "ریاست محترم امور متعلمین و محصلین",
+    higherAutority: "Technical",
+    type: "P",
   },
   {
     value: 12,
     label: "ریاست محترم نصاب و تربیه معلم",
+    higherAutority: "Technical",
+    type: "P",
   },
   {
     value: 13,
     label: "ریاست محترم ارزیابی نظارت تعلیمی و تحصیلی",
+    higherAutority: "Technical",
+    type: "P",
   },
 
   {
     value: 14,
     label: "ریاست محترم تنظیم برنامه های حرفوی",
+    higherAutority: "Technical",
+    type: "P",
   },
   {
     value: 15,
     label: "ریاست محترم ترنم و فرهنگ",
+    higherAutority: "Technical",
+    type: "P",
   },
   {
     value: 16,
     label: "ریاست محترم تحقیق و تضمین کیفیت",
+    higherAutority: "Technical",
+    type: "P",
   },
 
   {
     value: 17,
     label: "مشاوریت محترم تخنیکی",
+    higherAutority: "Admin",
+    type: "P",
   },
   {
     value: 18,
     label: "مشاوریت محترم حقوقی",
+    higherAutority: "Admin",
+    type: "P",
   },
   {
     value: 19,
     label: "ریاست محترم ّپلان و هماهنگی ستراتیژیک",
+    higherAutority: "Admin",
+    type: "P",
   },
   {
     value: 20,
     label: "ریاست محترم دفتر مقام",
+    higherAutority: "Admin",
+    type: "P",
   },
   {
     value: 21,
     label: "ریاست محترم تفتیش داخلی",
+    higherAutority: "Admin",
+    type: "P",
   },
   {
     value: 22,
     label: "آمریت سیستم های تکنالوژی معلوماتی و احصائیه",
+    higherAutority: "Admin",
+    type: "P",
   },
 ];
 
@@ -516,8 +558,10 @@ export const prsidentsSigns = [
   { src: planSign, name: "نیک محمد نیکمل", id: "plan@tveta.gov.af" },
 ];
 
-export const userTypeOptions = [
-  { value: "presidency", label: "ریاست" },
-  { value: "directorate", label: "آمریت" },
-  { value: "pazirish", label: "پذیزش" },
+export const higherAuthorityOptions = [
+  { value: "Admin", label: "مقام اداره" },
+  { value: "maali", label: "معاونیت محترم امور تخنیکی و مسلکی" },
+  { value: "Technical", label: "معاونیت محترم تخنیکی و مسلکی" },
+  { value: "Technical", label: "ریاست عمومی" },
+  { value: "Technical", label: "ریاست عمومی" },
 ];
