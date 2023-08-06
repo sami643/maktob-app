@@ -70,6 +70,20 @@ const Maktob = () => {
   ] = useState([]);
   const [islangPashto, setIsLangPashto] = useState(false);
   const [loading, setloading] = useState(true);
+
+  const presidencyOptions = [];
+  presidenciesForSelectOptions.forEach((group) => {
+    presidencyOptions.push({
+      optgroup: group.optgroup,
+      options: group.options.map((option) =>
+        islangPashto
+          ? { value: option.valuePashto, label: option.label }
+          : { value: option.value, label: option.label }
+      ),
+    });
+  });
+
+  console.log("presidencyOptions: ", presidencyOptions);
   const [maktobJustifyLocalStorageData] = useState(
     JSON.parse(localStorage.getItem("molahizaShodData"))
   );
@@ -274,9 +288,7 @@ const Maktob = () => {
     setFormData(values);
     setInitialValues(values);
     setloading(false);
-    console.log(userData, "USerId");
     // Language Detecter
-    console.log("innerPart si Called");
     const charactersToDetect = "ټډږړښڅځېۍڼګ";
     const inputedvalue = values.context
       .split("")
@@ -287,6 +299,21 @@ const Maktob = () => {
     } else {
       setIsLangPashto(false);
     }
+  };
+
+  const [contextForLangageDetection, setCotextForLangageDetection] = useState();
+  const languageDetector = () => {
+    const charactersToDetect = "ټډږړښڅځېۍڼګ";
+    const inputedvalue = contextForLangageDetection
+      .split("")
+      .filter((char) => charactersToDetect.includes(char))
+      .join("");
+    if (inputedvalue.length > 0) {
+      setIsLangPashto(true);
+    } else {
+      setIsLangPashto(false);
+    }
+    console.log("Pashto111", islangPashto);
   };
 
   // message after submission
@@ -310,10 +337,20 @@ const Maktob = () => {
         },
       })
       .then((res) => {
-        console.log("Unique MaktobData: ", res.data);
+        console.log("Unique MaktobData2222222212: ", res.data);
+
         setUniquemaktob(res.data.uniqueMaktob);
         setfetchedCopyTo(res.data.uniqueMaktob.CopyTo[0]);
-        // console.log("copyTo Value: ", res.data.uniqueMaktob.CopyTo[0].label);
+        const charactersToDetect = "ټډږړښڅځېۍڼګ";
+        const inputedvalue = res.data.uniqueMaktob.Context.split("")
+          .filter((char) => charactersToDetect.includes(char))
+          .join("");
+        if (inputedvalue.length > 0) {
+          setIsLangPashto(true);
+        } else {
+          setIsLangPashto(false);
+        }
+        setloading(false);
       })
       .catch((err) => {
         console.log("Axios Request Error After Calling API", err.response);
@@ -491,7 +528,6 @@ const Maktob = () => {
                 values,
                 setFieldValue,
                 setFieldTouched,
-                handleSubmit,
                 errors,
                 touched,
               }) => (
@@ -574,8 +610,44 @@ const Maktob = () => {
                         </div>
                       ) : null}
                     </div>
-                    <div className="col">
-                      <div className="form-outline">
+                  </div>
+                  {/* Subject and date */}
+                  <div className="row ">
+                    <div className="form-outline mb-4 col">
+                      <label className="form-label mr-3" htmlFor="subject">
+                        موضوع
+                        <span
+                          style={{
+                            color: "red",
+                            marginInline: "5px",
+                            paddingTop: "5px",
+                          }}
+                        >
+                          *
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        className={`form-control ${
+                          errors.subject && touched.subject ? "is-invalid" : ""
+                        }`}
+                        value={values.subject}
+                        onChange={(e) =>
+                          setFieldValue("subject", e.target.value)
+                        }
+                        onBlur={() => setFieldTouched("subject", true)}
+                      />
+                      {errors.subject && touched.subject ? (
+                        <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                          {errors.subject}
+                        </div>
+                      ) : null}
+                    </div>
+                    {/* date */}
+                    <div className="col-6">
+                      <div className="form-outline " style={{ width: "100%" }}>
                         <label className="form-label mr-3" htmlFor="maktobDate">
                           نیټه/تاریخ
                           <span
@@ -620,10 +692,53 @@ const Maktob = () => {
                       </div>
                     </div>
                   </div>
-                  {/* mokhaatib */}
-                  <div className="row ">
+
+                  {/* context */}
+                  <div className="form-outline mb-4 mt-5">
+                    <label className="form-label mr-3" htmlFor="context">
+                      متن
+                      <span
+                        style={{
+                          color: "red",
+                          marginInline: "5px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <textarea
+                      className={`form-control ${
+                        errors.context && touched.context ? "is-invalid" : ""
+                      }`}
+                      id="context"
+                      name="context"
+                      rows="6"
+                      value={values.context}
+                      onChange={(e) => {
+                        setFieldValue("context", e.target.value);
+                        // setCotextForLangageDetection(e.target.value);
+                        languageDetector(
+                          setCotextForLangageDetection(e.target.value)
+                        );
+                      }}
+                      onBlur={() => setFieldTouched("context", true)}
+                    ></textarea>
+                    {errors.context && touched.context ? (
+                      <div
+                        className="invalid-feedback d-block errorMessageStyle mr-2"
+                        style={{ fontWeight: "bolder" }}
+                      >
+                        {errors.context}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Recipent */}
+                  <div className="row mb-4">
+                    {" "}
                     {!btnChecked ? (
-                      <div className="form-outline col">
+                      <div className="form-outline col-6">
                         <label className="form-label mr-3" htmlFor="subject">
                           مخاطب
                           <span
@@ -653,7 +768,7 @@ const Maktob = () => {
                         >
                           <option selected>وټاکئ/انتخاب</option>
 
-                          {presidenciesForSelectOptions.map((group) => (
+                          {presidencyOptions.map((group) => (
                             <optgroup
                               key={group.optgroup}
                               label={group.optgroup}
@@ -717,41 +832,9 @@ const Maktob = () => {
                         ) : null}
                       </div>
                     )}
-
-                    <div className="form-outline mb-4 col">
-                      <label className="form-label mr-3" htmlFor="subject">
-                        موضوع
-                        <span
-                          style={{
-                            color: "red",
-                            marginInline: "5px",
-                            paddingTop: "5px",
-                          }}
-                        >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        className={`form-control ${
-                          errors.subject && touched.subject ? "is-invalid" : ""
-                        }`}
-                        value={values.subject}
-                        onChange={(e) =>
-                          setFieldValue("subject", e.target.value)
-                        }
-                        onBlur={() => setFieldTouched("subject", true)}
-                      />
-                      {errors.subject && touched.subject ? (
-                        <div className="invalid-feedback d-block errorMessageStyle mr-2">
-                          {errors.subject}
-                        </div>
-                      ) : null}
-                    </div>
                   </div>
 
+                  {/* Checking list */}
                   <div className="form-check ">
                     <div style={{ marginTop: "-12px", marginRight: "4px" }}>
                       <input
@@ -769,40 +852,6 @@ const Maktob = () => {
                     >
                       په لست کې شتون نه لري؟
                     </label>
-                  </div>
-
-                  <div className="form-outline mb-4 mt-5">
-                    <label className="form-label mr-3" htmlFor="context">
-                      متن
-                      <span
-                        style={{
-                          color: "red",
-                          marginInline: "5px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        *
-                      </span>
-                    </label>
-                    <textarea
-                      className={`form-control ${
-                        errors.context && touched.context ? "is-invalid" : ""
-                      }`}
-                      id="context"
-                      name="context"
-                      rows="6"
-                      value={values.context}
-                      onChange={(e) => setFieldValue("context", e.target.value)}
-                      onBlur={() => setFieldTouched("context", true)}
-                    ></textarea>
-                    {errors.context && touched.context ? (
-                      <div
-                        className="invalid-feedback d-block errorMessageStyle mr-2"
-                        style={{ fontWeight: "bolder" }}
-                      >
-                        {errors.context}
-                      </div>
-                    ) : null}
                   </div>
 
                   <div>
@@ -953,9 +1002,6 @@ const Maktob = () => {
         <>
           {loading ? (
             <>
-              {/* <div className=" text-center p-5" style={{ marginTop: "20%" }}>
-                <Spin />
-              </div> */}
               <div
                 className="text-center "
                 style={{
@@ -1014,7 +1060,7 @@ const Maktob = () => {
 
                 <div className="date_type_no_div col-12 ">
                   <div className="col-4 align-self-end bothWaridataAndSadira">
-                    <div className=" d-flex justify-content-start">
+                    <div className=" d-flex justify-content-start maktobNo">
                       <label>{islangPashto ? "ګڼه" : "شماره"}:</label>
                       <p>
                         &#160;
@@ -1024,7 +1070,7 @@ const Maktob = () => {
                       </p>
                     </div>
                     {IsMaktobSent === "ItsReceivedMaktob" && (
-                      <div className="d-flex justify-content-start">
+                      <div className="d-flex justify-content-start receviedMaktobVaridaNo">
                         <label>وارده:</label>
                         <p>
                           &#160;
@@ -1053,7 +1099,7 @@ const Maktob = () => {
                   </div>
 
                   <div className=" col-4 date_type_div align-self-end ">
-                    <div className="date d-flex justify-content-end  ">
+                    <div className="maktobData d-flex justify-content-end  ">
                       <label htmlFor="">
                         {islangPashto ? "نیټه" : "تاریخ"}:
                       </label>
@@ -1123,7 +1169,10 @@ const Maktob = () => {
                 <div className="body_of_maktob ">
                   <div className="audiance">
                     {" "}
-                    <p>
+                    <p
+                      className={islangPashto ? "pashtofont" : "persianfont"}
+                      style={{ fontSize: "50px" }}
+                    >
                       {" "}
                       {maktobId && maktobId.length < 15
                         ? uniquemaktob?.Recipent
@@ -1131,14 +1180,19 @@ const Maktob = () => {
                     </p>
                   </div>
                   <div className="greating">
-                    <p>
+                    <p style={{ fontSize: "40px" }}>
                       ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّهِ وَبَرَكَاتُهُ ً{" "}
                     </p>
                   </div>
 
                   <div className="subject_of_maktob">
-                    <label> موضوع </label>
-                    <p>
+                    <label
+                      className={islangPashto ? "pashtofont" : "persianfont"}
+                    >
+                      {" "}
+                      موضوع{" "}
+                    </label>
+                    <p className={islangPashto ? "pashtofont" : "persianfont"}>
                       :&#160;&#160;{" "}
                       {maktobId && maktobId.length < 15
                         ? uniquemaktob?.Subject
@@ -1146,10 +1200,12 @@ const Maktob = () => {
                     </p>
                   </div>
                   <div className="mohtarama">
-                    <p>محترما:</p>
+                    <p className={islangPashto ? "pashtofont" : "persianfont"}>
+                      محترما:
+                    </p>
                   </div>
                   <div className="matktob_context">
-                    <p>
+                    <p className={islangPashto ? "pashtofont" : "persianfont"}>
                       {" "}
                       {maktobId && maktobId.length < 15
                         ? uniquemaktob?.Context
@@ -1181,7 +1237,11 @@ const Maktob = () => {
                                 fontSize: "15px",
                                 fontFamily: "sans-serif",
                               }}
-                              className="text-center"
+                              className={
+                                islangPashto
+                                  ? "pashtofont text-center "
+                                  : "persianfont text-center"
+                              }
                             >
                               {serverJustificationData.MolahizaContext}
                             </p>
@@ -1198,12 +1258,16 @@ const Maktob = () => {
                     <div className="col-4">
                       <p>والسلام</p>
 
-                      <p>
+                      <p
+                        className={islangPashto ? "pashtofont" : "persianfont"}
+                      >
                         {islangPashto
                           ? userData.PresidentNamePashto
                           : userData.PresidentName}
                       </p>
-                      <p>
+                      <p
+                        className={islangPashto ? "pashtofont" : "persianfont"}
+                      >
                         {islangPashto
                           ? userData.PositionTitlePashto
                           : userData.PositionTitle}
@@ -1216,7 +1280,7 @@ const Maktob = () => {
                 <div className="copy_to_div d-flex align-items-start flex-column ">
                   {copyToRecipentsJustLabel_1.length > 0 ? (
                     <div className="copy_to_title align-self-start">
-                      <p>کاپي :</p>
+                      <p className="pashtofont">کاپي :</p>
                     </div>
                   ) : null}
                   <div className="copy_to_body ">
@@ -1224,14 +1288,28 @@ const Maktob = () => {
                       <>
                         <div className="copy_body_item">
                           {arrayA.map((item, index) => (
-                            <p key={index} className="copy_body_item_text">
+                            <p
+                              key={index}
+                              className={
+                                islangPashto
+                                  ? "pashtofont copy_body_item_text"
+                                  : "persianfont copy_body_item_text"
+                              }
+                            >
                               {item}
                             </p>
                           ))}
                         </div>
                         <div className="copy_body_item">
                           {arrayB.map((item, index) => (
-                            <p key={index} className="copy_body_item_text">
+                            <p
+                              key={index}
+                              className={
+                                islangPashto
+                                  ? "pashtofont copy_body_item_text"
+                                  : "persianfont copy_body_item_text"
+                              }
+                            >
                               {item}
                             </p>
                           ))}
@@ -1239,7 +1317,14 @@ const Maktob = () => {
 
                         <div className="copy_body_item">
                           {arrayC.map((item, index) => (
-                            <p key={index} className="copy_body_item_text">
+                            <p
+                              key={index}
+                              className={
+                                islangPashto
+                                  ? "pashtofont copy_body_item_text"
+                                  : "persianfont copy_body_item_text"
+                              }
+                            >
                               {item}
                             </p>
                           ))}
@@ -1252,7 +1337,14 @@ const Maktob = () => {
                           {copyToRecipentsJustLabel_1
                             .slice(0, 8)
                             .map((item, index) => (
-                              <p key={index} className="copy_body_item_text">
+                              <p
+                                key={index}
+                                className={
+                                  islangPashto
+                                    ? "pashtofont copy_body_item_text"
+                                    : "persianfont copy_body_item_text"
+                                }
+                              >
                                 {item}
                               </p>
                             ))}
@@ -1261,7 +1353,14 @@ const Maktob = () => {
                           {copyToRecipentsJustLabel_1
                             .slice(8, 16)
                             .map((item, index) => (
-                              <p key={index} className="copy_body_item_text">
+                              <p
+                                key={index}
+                                className={
+                                  islangPashto
+                                    ? "pashtofont copy_body_item_text"
+                                    : "persianfont copy_body_item_text"
+                                }
+                              >
                                 {item}
                               </p>
                             ))}
@@ -1270,7 +1369,14 @@ const Maktob = () => {
                           {copyToRecipentsJustLabel_1
                             .slice(16, 24)
                             .map((item, index) => (
-                              <p key={index} className="copy_body_item_text">
+                              <p
+                                key={index}
+                                className={
+                                  islangPashto
+                                    ? "pashtofont copy_body_item_text"
+                                    : "persianfont copy_body_item_text"
+                                }
+                              >
                                 {item}
                               </p>
                             ))}
@@ -1503,7 +1609,7 @@ const Maktob = () => {
               )}
               {/* Modal for Sending Maktob */}
               <div
-                class="modal fade"
+                class="modal"
                 id="exampleModalCenter"
                 tabindex="-1"
                 role="dialog"

@@ -76,6 +76,15 @@
   font-family: AMoshref;
   src: url("../assets/font/amoshref.ttf");
 }
+@font-face {
+  font-family: PashtonFont;
+  src: url("../assets/font/Bahij_Zar/Bahij_Zar/Bahij_Zar-Regular.ttf");
+}
+@font-face {
+  font-family: farsiFont;
+  src: url("../assets/font/B_NAZANIN//B_NAZANIN/B-NAZANIN.TTF");
+}
+
 /* Buttons */
 .button-1 {
   margin: 2%;
@@ -185,7 +194,7 @@
   /* background-color: chocolate; */
 }
 
-.date {
+.maktobData {
   display: flex;
   flex-direction: row;
   font-weight: bold;
@@ -307,7 +316,7 @@
 .copy_body_item p {
   padding: 0px !important;
   margin: 0%;
-  font-size: 15px !important;
+  font-size: 20px !important;
 }
 .copy_to_title {
   font-weight: bold;
@@ -477,6 +486,16 @@ footer {
   height: 95px;
 }
 
+.pashtofont {
+  font-family: PashtonFont;
+  font-size: 30px;
+}
+
+.persianfont {
+  font-family: Arabictypesetting;
+  font-size: 35px;
+}
+
 @media print {
   .imarat_logo img {
     width: 250px !important;
@@ -495,6 +514,52 @@ footer {
     text-align: right;
     font-size: 22px;
   }
+  .maktobNo label {
+    font-size: 18px !important;
+  }
+  .maktobNo p {
+    font-size: 18px !important;
+  }
+  .receviedMaktobVaridaNo label {
+    font-size: 18px !important;
+  }
+  .receviedMaktobVaridaNo p {
+    font-size: 18px !important;
+  }
+
+  .owner {
+    font-size: 18px !important;
+  }
+  .date_type_div {
+    font-size: 18px !important;
+  }
+  .maktobData {
+    padding-left: 8px !important;
+  }
+  .divider {
+    border-bottom: solid 0.1px black;
+  }
+
+  .footer_divider {
+    border-top: solid 0.1px black;
+    position: absolute;
+    top: 100px;
+  }
+  .footer_div {
+    font-size: 17px;
+    position: absolute;
+    top: 1500px;
+    border-top: solid 0.1px black;
+    width: 100vw;
+  }
+
+  .body_of_maktob {
+    margin-inline: 30px !important;
+  }
+  .copy_to_body .copy_body_item p {
+    font-size: 22px !important;
+    margin-top: -10px !important;
+  }
   .sidebar {
     display: none !important;
   }
@@ -505,5 +570,9 @@ footer {
     margin: 0px 15px 0px 0px !important;
     /* margin: 0px !important; */
     padding: 0px !important;
+    position: relative;
+    height: 1010px !important;
+    /* border: solid 0.1px black; */
   }
 }
+
