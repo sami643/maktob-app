@@ -544,9 +544,38 @@ export const sidebarMenuItem = [
     name: "پروفایل",
     icon: <FaUserAlt />,
   },
+  // {
+  //   path: "/logout",
+  //   name: "وتل",
+  //   icon: <FaSignOutAlt />,
+  // },
+
+  // {
+  //   path: "/logout",
+  //   name: "وتل",
+  //   icon: <FaSignOutAlt />,
+  // },
+  // {
+  //   path: "/login",
+  //   name: "login",
+  //   icon: <FaSignOutAlt />,
+  // },
+];
+export const sidebarMenuAdmin = [
+  {
+    path: "/",
+    name: "دشبورد",
+    icon: <AiFillDashboard />,
+  },
+  {
+    path: "/profile",
+    name: "پروفایل",
+    icon: <FaUserAlt />,
+  },
+
   {
     path: "/add-user",
-    name: "addUser",
+    name: "اکونت جدید",
     icon: <FaUserAlt />,
   },
   // {
@@ -579,18 +608,27 @@ export const prsidentsSigns = [
 ];
 
 export const higherAuthorityOptions = [
-  { value: "Admin", label: "مقام اداره" },
-  { value: "maali", label: "معاونیت محترم امور تخنیکی و مسلکی" },
-  { value: "Technical", label: "معاونیت محترم تخنیکی و مسلکی" },
-  { value: "Technical", label: "ریاست عمومی" },
-  { value: "Technical", label: "ریاست عمومی" },
+  { value: "مقام محترم اداره", label: "مقام محترم اداره" },
+  { value: "معاونیت امور مالی و اداری", label: "معاونیت امور مالی و اداری" },
+  {
+    value: "معاونیت امور تخنیکی و مسلکی",
+    label: "معاونیت امور تخنیکی و مسلکی",
+  },
+  { value: "ریاست عمومی", label: "ریاست عمومی" },
+  { value: "ریاست عمومی", label: "ریاست عمومی" },
 ];
 export const higherAuthorityOptionsPashto = [
-  { value: "Admin", label: "مقامیییییی اداره" },
-  { value: "maali", label: "معاونیت محترم امور تخنیکی و مسلکی" },
-  { value: "Technical", label: "معاونیت محترم تخنیکی و مسلکی" },
-  { value: "Technical", label: "ریاست عمومی" },
-  { value: "Technical", label: "ریاست عمومی" },
+  { value: "د ادارې محترم مقام", label: "د ادارې محترم مقام" },
+  {
+    value: "د مالي او اداري چارو معینیت",
+    label: "د مالي او اداري چارو معینیت",
+  },
+  {
+    value: "د تخنیکي او مسلکي چارو معاونیت",
+    label: "د تخنیکي او مسلکي چارو معاونیت",
+  },
+  { value: "ریاست عمومی", label: "ریاست عمومی" },
+  { value: "ریاست عمومی", label: "ریاست عمومی" },
 ];
 
 export const userTypesOptions = [

@@ -1,7 +1,6 @@
 import axios from "axios";
 export async function getMaktobs(
   userId,
-  presidencyName,
   userStatus = "owner",
   newMaktob = true
 ) {
@@ -9,7 +8,6 @@ export async function getMaktobs(
     const response = await axios.post("/api/maktob/maktobs", {
       data: {
         userId,
-        presidencyName,
         userStatus,
         newMaktob,
       },

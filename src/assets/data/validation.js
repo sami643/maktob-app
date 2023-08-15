@@ -53,6 +53,7 @@ export const LoginValidationSchema = Yup.object().shape({
     .email("ستاسو ایمیل سم ندی/ لطفا ایمیل آدرس درست را وارد نماید")
     .required("ایمیل آدرس اړین دی/ ایمیل آدرس ضروری است"),
   password: Yup.string().required("پسورډ اړین دی/ پسور د ضروری است"),
+  userType: Yup.string().required("د یوزر ډول اړین دی/نوع یوزر د ضروری است"),
 });
 
 export const recipentPresidenciesSchema = Yup.object().shape({
@@ -66,4 +67,66 @@ export const malahizaShodValidationSchema = Yup.object().shape({
   molahizaContext: Yup.string().required(
     "د ملاحظه متن اړین دی/ متن ملاحظه ضروری است"
   ),
+  molahizaDate: Yup.string().required(
+    "د مکتوب نیټه اړینه ده/ تاریخ مکتوب ضروری است"
+  ),
+  directorate: Yup.string().required(
+    "د مکتوب نیټه اړینه ده/ تاریخ مکتوب ضروری است"
+  ),
+});
+
+export const addingPresidencyValidationSchema = Yup.object().shape({
+  higherAuthority: Yup.string().required(
+    "د لوړپوری مقام اړین دی/ مقام بلندپایه ضروری است"
+  ),
+  higherAuthorityPashto: Yup.string().required(
+    "لوړپوری مقام اړین دی/ مقام بلندپایه ضروری است"
+  ),
+  presidencyName: Yup.string().required(
+    "د ریاست نوم اړین دی/ نام ریاست ضروری است"
+  ),
+  presidencyNamePashto: Yup.string().required(
+    "د ریاست نوم اړین دی/ نام ریاست ضروری است"
+  ),
+  positionTitle: Yup.string().required(
+    "د رئیس نوم + ریاست اړین دی/ نام رئیس + ریاست ضروری است"
+  ),
+  positionTitlePashto: Yup.string().required(
+    "ریاست + د رئیس نوم اړین دی/ نام ریاست + نام رئیس ضروری است"
+  ),
+  presidentName: Yup.string().required(
+    "د رئیس نوم اړین دی/ نام رئیس ضروری است"
+  ),
+  phoneNo: Yup.string().required(
+    "د اړیکې شمیره اړینه ده/ شماره تماس ضروری است"
+  ),
+
+  email: Yup.string()
+    .email()
+    .required("د ریاست برښنالیک اړین دی/ ایمیل آدرس ضروری است"),
+
+  presidencyId: Yup.string().required(
+    "د ریاست آیډی اړینه ده/ آیدی ریاست ضروری است"
+  ),
+  password: Yup.string().required("پسورد اړین دی/ پسورد ضروری است"),
+  userType: Yup.string().required("د یوزر ډول اړین دی/نوع یوزر د ضروری است"),
+});
+
+export const addingAmiryatValidationSchema = Yup.object().shape({
+  director: Yup.string().required("د آمر نوم اړین د/ نام آمر ضروری است"),
+
+  directorate: Yup.string().required("د آمریت نوم اړین د/ نام آمریت ضروری است"),
+
+  directoratePashto: Yup.string().required(
+    "د آمریت نوم اړین ده/ نام آمریت ضروری است"
+  ),
+  directorateId: Yup.string().required(
+    "د آمریت آیډی اړینه ده/ آیدی آمریت ضروری است"
+  ),
+
+  presidencyId: Yup.string().required(
+    "د ریاست آیډی اړینه ده/ آیدی ریاست ضروری است"
+  ),
+  password: Yup.string().required("پسورد اړین دی/ پسورد ضروری است"),
+  userType: Yup.string().required("د یوزر ډول اړین دی/نوع یوزر د ضروری است"),
 });

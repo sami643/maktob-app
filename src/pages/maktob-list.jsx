@@ -14,7 +14,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getMaktobs } from "../api/utils";
 import { number } from "yup";
 const MaktobList = () => {
-  const navigate = useNavigate();
+  const storedAmiryatData = localStorage.getItem("amiryatToken");
+  const [amiryatData, setAmiryatData] = useState(JSON.parse(storedAmiryatData));
+
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
@@ -114,11 +116,13 @@ const MaktobList = () => {
       ),
   }));
 
+  console.log("Usdoererwr", userData.UserId);
   const gettingNewMakbtobs = async () => {
-    const maktobs = await getMaktobs(userData.UserId, userData.PresidencyName);
+    const maktobs = await getMaktobs(userData.UserId);
     setNewMaktobsListItems(maktobs);
     setListFinalItems(maktobs);
   };
+
   const gettingSentMakbtobs = () => {
     axios
       .post("/api/maktob/maktobs", {
@@ -142,7 +146,7 @@ const MaktobList = () => {
     axios
       .post("/api/maktob/received-maktobs", {
         data: {
-          allReceivers: userData.PresidencyName,
+          allReceivers: userData.PresidencyName || amiryatData.PresidencyName,
         },
       })
       .then((res) => {

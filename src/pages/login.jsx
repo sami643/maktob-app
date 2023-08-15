@@ -9,11 +9,18 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import "./pages.css";
 import { UserContext } from "../context/userContext";
+
 const Login = () => {
   const { setUser } = useContext(UserContext);
   const [initialValues, setInitialValues] = useState("");
   const [userIdErrorMessage, setuserIdErrorMessage] = useState("");
   const [sessionExpired, setSessionExpired] = useState(false);
+  const userTypeOption = [
+    { value: "presidency", label: "معاونیت/ریاست/آمریت مستقل" },
+    { value: "directorate", label: "آمریت" },
+    { value: "admin", label: "ادمین" },
+  ];
+
   const onSubmitForm_1 = (values) => {
     setInitialValues(values);
     console.log("valuse", values);
@@ -22,6 +29,7 @@ const Login = () => {
         data: {
           userId: values.userId,
           password: values.password,
+          userType: values.userType,
         },
       })
       .then((res) => {
@@ -34,12 +42,6 @@ const Login = () => {
           localStorage.removeItem("user");
           setUser(null);
         }, 60 * 60 * 60 * 1000);
-        // .then(() => {
-        //   setTimeout(() => {
-        //     setSessionExpiration(true);
-        //     alert("Innier pages is callsed");
-        //   }, 1 * 5 * 1000);
-        // });
       })
       .catch((err) => {
         setuserIdErrorMessage(err.response.data.message);
@@ -65,6 +67,7 @@ const Login = () => {
                   initialValues={{
                     userId: "",
                     password: "",
+                    userType: "",
                   }}
                   onSubmit={onSubmitForm_1}
                   validationSchema={LoginValidationSchema}
@@ -140,6 +143,61 @@ const Login = () => {
                               {errors.password}
                             </div>
                           ) : null}
+                        </div>
+
+                        {/* userType */}
+                        <div className="row mb-5">
+                          <div className="form-outline col-6">
+                            <label
+                              className="form-label mr-3"
+                              htmlFor="subject"
+                            >
+                              کارونکی/ یوزر
+                              <span
+                                style={{
+                                  color: "red",
+                                  marginInline: "5px",
+                                  paddingTop: "5px",
+                                }}
+                              >
+                                *
+                              </span>
+                            </label>
+                            <select
+                              id="userType"
+                              value={values.userType}
+                              name="userType"
+                              style={{ height: "35px" }}
+                              onChange={(e) =>
+                                setFieldValue("userType", e.target.value)
+                              }
+                              className={`form-control form-select-lg ${
+                                errors.userType && touched.userType
+                                  ? "is-invalid form-select-lg    "
+                                  : ""
+                              }`}
+                              aria-label=".form-select-lg example"
+                            >
+                              <option>وټاکئ/انتخاب</option>
+
+                              {userTypeOption.map((option) => {
+                                // Check if the option value matches the current user's value
+                                return (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                            {errors.userType && touched.userType ? (
+                              <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                                {errors.userType}
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
 
                         <button

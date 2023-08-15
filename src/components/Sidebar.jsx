@@ -4,25 +4,21 @@ import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 
 import "./components-style.css";
 import { NavLink } from "react-router-dom";
-import { sidebarMenuItem } from "./../assets/data/data.js";
+import { sidebarMenuItem, sidebarMenuAdmin } from "./../assets/data/data.js";
 import { useLocation } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 import { UserContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
+  const storedUserData = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(storedUserData));
   const { setUser } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const location = useLocation();
   const navigate = useNavigate();
-  // const [isSidebarVisible, setIsSidebarVisible] = useState(
-  //   shouldSidebarBeVisible(location.pathname)
-  // );
   const [isScrolled, setIsScrolled] = useState(false);
-  // useEffect(() => {
-  //   setIsSidebarVisible(shouldSidebarBeVisible(location.pathname));
-  // }, [location]);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop =
@@ -86,23 +82,47 @@ const Sidebar = ({ children }) => {
               )}
             </div>
           </div>
-          {sidebarMenuItem.map((item, index) => (
-            <NavLink
-              to={item.path}
-              key={index}
-              className="link"
-              activeclassName="active"
-              style={{ textDecoration: "none" }}
-            >
-              <div className="icon">{item.icon}</div>
-              <div
-                style={{ display: isOpen ? "block" : "none" }}
-                className="link_text"
-              >
-                {item.name}
-              </div>
-            </NavLink>
-          ))}
+          {userData.UserType === "admin" ? (
+            <>
+              {sidebarMenuAdmin.map((item, index) => (
+                <NavLink
+                  to={item.path}
+                  key={index}
+                  className="link"
+                  activeclassName="active"
+                  style={{ textDecoration: "none" }}
+                >
+                  <div className="icon">{item.icon}</div>
+                  <div
+                    style={{ display: isOpen ? "block" : "none" }}
+                    className="link_text"
+                  >
+                    {item.name}
+                  </div>
+                </NavLink>
+              ))}{" "}
+            </>
+          ) : (
+            <>
+              {sidebarMenuItem.map((item, index) => (
+                <NavLink
+                  to={item.path}
+                  key={index}
+                  className="link"
+                  activeclassName="active"
+                  style={{ textDecoration: "none" }}
+                >
+                  <div className="icon">{item.icon}</div>
+                  <div
+                    style={{ display: isOpen ? "block" : "none" }}
+                    className="link_text"
+                  >
+                    {item.name}
+                  </div>
+                </NavLink>
+              ))}
+            </>
+          )}
           <a
             onClick={openConfirmation}
             className="link "
@@ -145,7 +165,6 @@ const Sidebar = ({ children }) => {
               </>
             )}
             {children}
-          
           </>{" "}
         </main>
       </div>

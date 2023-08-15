@@ -41,12 +41,14 @@ const Maktob = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const IsMaktobSent = searchParams.get("isMaktobSent");
-  const PresidencyNameFromReceivedMaktobList = searchParams.get("PN");
+  const PresidencyIdFromReceivedMaktobList = searchParams.get("PN");
   const receviedMaktobVaridaNo = searchParams.get("VN");
 
   // Retrieving data from the LocalStorage
   const storedUserData = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(storedUserData));
+  const storedAmiryatData = localStorage.getItem("amiryatToken");
+  const [amiryatData, setAmiryatData] = useState(JSON.parse(storedAmiryatData));
   const [userDataa_1, setUserData_1] = useState(JSON.parse(storedUserData));
 
   // const localStorage = JSON.parse(localStorage)
@@ -233,6 +235,7 @@ const Maktob = () => {
 
   // Adding and updating maktobs
   const onStoreData = () => {
+    console.log("formDsata", userData);
     axios
       .post("/api/maktob/new-maktob", {
         data: {
@@ -243,7 +246,9 @@ const Maktob = () => {
           subject: formData.subject,
           context: formData.context,
           userId: userData.UserId,
-          presidencyName: userData.PresidencyName,
+          presidencyName: userData.PresidencyName || amiryatData.PresidencyName,
+          directorate: userData.Directorate,
+          directoratePashto: userData.DirectoratePashto,
           maktobType: formData.maktobType ? formData.maktobType : "عادی",
           copyTo: {
             label: copyToRecipentsJustLabel_1,
@@ -271,7 +276,6 @@ const Maktob = () => {
       .post("/api/maktob/maktob-no", {
         data: {
           userId: userData.UserId,
-          presidencyName: userData.PresidencyName,
         },
       })
       .then((res) => {
@@ -332,7 +336,7 @@ const Maktob = () => {
           maktobId,
           userId:
             IsMaktobSent === "ItsReceivedMaktob"
-              ? PresidencyNameFromReceivedMaktobList
+              ? PresidencyIdFromReceivedMaktobList
               : userData.UserId,
         },
       })
@@ -361,11 +365,12 @@ const Maktob = () => {
     axios
       .post("/api/user/receivedMaktob-userData", {
         data: {
-          userId: PresidencyNameFromReceivedMaktobList,
+          userId: PresidencyIdFromReceivedMaktobList,
         },
       })
       .then((res) => {
-        setUserData(res.data.receviveMaktobUserData);
+        if (IsMaktobSent === "ItsReceivedMaktob")
+          setUserData(res.data.receviveMaktobUserData);
         setloading(false);
       })
       .catch((err) => {
@@ -375,7 +380,7 @@ const Maktob = () => {
 
   useEffect(() => {
     if (maktobId) gettingSpecificMaktob();
-    if (PresidencyNameFromReceivedMaktobList) {
+    if (PresidencyIdFromReceivedMaktobList) {
       gettingUserDataForRecievedMaktob();
     }
     gettingMaktobJustification();
@@ -440,14 +445,17 @@ const Maktob = () => {
   };
 
   const handleMolahizaShod = async (values) => {
+    // console.log("Malhizar value", values);
     await axios
       .post("/api/justification/maktob", {
         data: {
           molahizaContext: values.molahizaContext,
           molahizaTitle: values.molihizaTitle,
           maktobNo: maktobId,
-          maktobSenderPresidency: PresidencyNameFromReceivedMaktobList,
+          maktobSenderPresidency: PresidencyIdFromReceivedMaktobList,
           maktobReceiverPresidency: userDataa_1.UserId,
+          molahizaDate: values.molahizaDate,
+          directorate: values.directorate,
         },
       })
       .then((res) => {
@@ -464,14 +472,14 @@ const Maktob = () => {
         });
       });
   };
-  console.log("serverJustificationData", serverJustificationData);
+
   const gettingMaktobJustification = () => {
     if (IsMaktobSent === "ItsReceivedMaktob") {
       axios
         .post("/api/justification/gettingJustification", {
           data: {
             maktobNo: maktobId,
-            maktobSenderPresidency: PresidencyNameFromReceivedMaktobList,
+            maktobSenderPresidency: PresidencyIdFromReceivedMaktobList,
             maktobReceiverPresidency: userDataa_1.UserId,
           },
         })
@@ -508,6 +516,8 @@ const Maktob = () => {
     subject: initialValues.subject,
     context: initialValues.context,
   };
+
+  console.log("userdataDirectorate122222222223333333333333", uniquemaktob);
 
   return (
     <Sidebar>
@@ -614,7 +624,10 @@ const Maktob = () => {
                   {/* Subject and date */}
                   <div className="row ">
                     <div className="form-outline mb-4 col">
-                      <label className="form-label mr-3" htmlFor="subject">
+                      <label
+                        className="form-label mr-HigherAuthorityPashto3"
+                        htmlFor="subject"
+                      >
                         موضوع
                         <span
                           style={{
@@ -1083,15 +1096,23 @@ const Maktob = () => {
                   <div className="owner col-4">
                     <div>
                       {islangPashto
-                        ? userData.HigherAuthorityPashto
-                        : userData.HigherAuthority}
+                        ? userData.HigherAuthorityPashto ||
+                          amiryatData.HigherAuthorityPashto
+                        : userData.HigherAuthority ||
+                          amiryatData.HigherAuthority}
                     </div>
                     <div>
                       {islangPashto
-                        ? userData.PresidencyNamePashto
-                        : userData.PresidencyName}
+                        ? userData.PresidencyNamePashto ||
+                          amiryatData.PresidencyNamePashto
+                        : userData.PresidencyName || amiryatData.PresidencyName}
                     </div>
-                    <div>{userData.Directorate}</div>
+                    <div>
+                      {islangPashto
+                        ? userData.DirectoratePashto ||
+                          uniquemaktob.DirectoratePashto
+                        : userData.Directorate || uniquemaktob.Directorate}
+                    </div>
 
                     <div>
                       {islangPashto ? " اجرائیه مدیریت" : "مدیریت اجرائیه"}
@@ -1229,7 +1250,7 @@ const Maktob = () => {
                               }}
                               className="text-center"
                             >
-                              12-24-1444
+                              {serverJustificationData.MolahizaDate}
                             </p>
 
                             <p
@@ -1246,7 +1267,6 @@ const Maktob = () => {
                               {serverJustificationData.MolahizaContext}
                             </p>
                             <p className="text-center">
-                              {matchingPresidentSign.name}
                               <img
                                 src={matchingPresidentSign.src}
                                 width="200px"
@@ -1262,15 +1282,17 @@ const Maktob = () => {
                         className={islangPashto ? "pashtofont" : "persianfont"}
                       >
                         {islangPashto
-                          ? userData.PresidentNamePashto
-                          : userData.PresidentName}
+                          ? userData.PresidentNamePashto ||
+                            amiryatData.PresidentNamePashto
+                          : userData.PresidentName || amiryatData.PresidentName}
                       </p>
                       <p
                         className={islangPashto ? "pashtofont" : "persianfont"}
                       >
                         {islangPashto
-                          ? userData.PositionTitlePashto
-                          : userData.PositionTitle}
+                          ? userData.PositionTitlePashto ||
+                            amiryatData.PositionTitlePashto
+                          : userData.PositionTitle || amiryatData.PositionTitle}
                       </p>
                     </div>
                     <div className="col-4"></div>
@@ -1398,15 +1420,20 @@ const Maktob = () => {
 
                       {/* */}
                     </div>
-                    <div className="footer-item">Email: {userData.Email}</div>
-                    <div className="footer-item">Tel: {userData.PhoneNo}</div>
+                    <div className="footer-item">
+                      Email: {userData.Email || amiryatData.Email}
+                    </div>
+                    <div className="footer-item">
+                      Tel: {userData.PhoneNo || amiryatData.PhoneNo}
+                    </div>
                   </div>
                 </div>
               </div>
 
               {IsMaktobSent === "ItsReceivedMaktob" &&
+                userData.UserType === "presidency" &&
                 isMaktobJustified === false && (
-                  <div className="col-  main_container border rounded">
+                  <div className="col- main_container border rounded">
                     <Formik
                       onSubmit={handleMolahizaShod}
                       initialValues={{
@@ -1416,6 +1443,8 @@ const Maktob = () => {
                         molahizaContext:
                           maktobJustifyLocalStorageData?.molahizaContext ||
                           "در زمینه اجرأت اصولی نمایید",
+                        directorate: [],
+                        molahizaDate: "",
                       }}
                       validationSchema={malahizaShodValidationSchema}
                       enableReinitialize={true}
@@ -1469,6 +1498,112 @@ const Maktob = () => {
                                 {errors.molihizaTitle}
                               </div>
                             ) : null}
+                          </div>
+                          <div className="row mx-1 text-right mt-5 ">
+                            <div className="form-outline col-6">
+                              <label
+                                className="form-label mr-3"
+                                htmlFor="subject"
+                              >
+                                آمریت
+                                <span
+                                  style={{
+                                    color: "red",
+                                    marginInline: "5px",
+                                    paddingTop: "5px",
+                                  }}
+                                >
+                                  *
+                                </span>
+                              </label>
+                              <select
+                                id="directorate"
+                                value={values.directorate}
+                                name="directorate"
+                                style={{ height: "35px" }}
+                                onChange={(e) =>
+                                  setFieldValue("directorate", e.target.value)
+                                }
+                                className={`form-control form-select-lg ${
+                                  errors.directorate && touched.directorate
+                                    ? "is-invalid form-select-lg    "
+                                    : ""
+                                }`}
+                                aria-label=".form-select-lg example"
+                              >
+                                {maktobTypeOptions.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.label}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                              {errors.directorate && touched.directorate ? (
+                                <div className="invalid-feedback  errorMessageStyle mr-2 mb-3 mt-0">
+                                  {errors.directorate}
+                                </div>
+                              ) : null}
+                            </div>
+
+                            {/* date */}
+                            <div className="col-6">
+                              <div
+                                className="form-outline "
+                                style={{ width: "100%" }}
+                              >
+                                <label
+                                  className="form-label mr-3"
+                                  htmlFor="molahizaDate"
+                                >
+                                  نیټه/تاریخ
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      marginInline: "5px",
+                                      paddingTop: "5px",
+                                    }}
+                                  >
+                                    *
+                                  </span>
+                                </label>
+                                <br />
+                                <DatePicker
+                                  style={{
+                                    width: "inherit",
+                                    padding: "16px",
+                                    marginTop: "-1px",
+                                    border: `${
+                                      errors.molahizaDate &&
+                                      touched.molahizaDate
+                                        ? "1px solid red"
+                                        : ""
+                                    }`,
+                                  }}
+                                  calendar={arabic}
+                                  locale={arabic_ar}
+                                  id="maktobDate"
+                                  name="maktobDate"
+                                  value={values.molahizaDate}
+                                  onChange={(e) =>
+                                    setFieldValue(
+                                      "molahizaDate",
+                                      e.year +
+                                        "/" +
+                                        e.month.number +
+                                        "/" +
+                                        e.day
+                                    )
+                                  }
+                                />
+                                {errors.molahizaDate && touched.molahizaDate ? (
+                                  <div className="invalid-feedback d-block errorMessageStyle mr-2">
+                                    {errors.molahizaDate}
+                                  </div>
+                                ) : null}
+                              </div>
+                            </div>
                           </div>
 
                           <div className="form-outline  col text-right my-5">
@@ -1582,16 +1717,17 @@ const Maktob = () => {
                       </button>
                     </div>
                     <div className="text-left col-6">
-                      {IsMaktobSent === "No" && (
-                        <button
-                          className=" text-right btn bg-primary px-5  mx-4 "
-                          type="button"
-                          data-toggle="modal"
-                          data-target="#exampleModalCenter"
-                        >
-                          لیږل / ارسال
-                        </button>
-                      )}
+                      {IsMaktobSent === "No" &&
+                        userData.UserType !== "directorate" && (
+                          <button
+                            className=" text-right btn bg-primary px-5  mx-4 "
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#exampleModalCenter"
+                          >
+                            لیږل / ارسال
+                          </button>
+                        )}
 
                       <button
                         onClick={() => {
